@@ -1,5 +1,6 @@
 GEM
   remote: https://rubygems.org/
+  remote: http://systems.extension.org/rubygems/
   specs:
     actionmailer (3.2.3)
       actionpack (= 3.2.3)
@@ -30,6 +31,15 @@ GEM
       multi_json (~> 1.0)
     arel (3.0.2)
     builder (3.0.0)
+    capatross (0.1.0)
+      capistrano (>= 2.11)
+      grit (>= 2.4)
+    capistrano (2.12.0)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -37,9 +47,15 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.3.1)
+    diff-lcs (1.1.3)
     erubis (2.7.0)
     execjs (1.3.0)
       multi_json (~> 1.0)
+    grit (2.5.0)
+      diff-lcs (~> 1.1)
+      mime-types (~> 1.15)
+      posix-spawn (~> 0.3.6)
+    highline (1.6.11)
     hike (1.2.1)
     i18n (0.6.0)
     journey (1.0.3)
@@ -53,7 +69,15 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.18)
     multi_json (1.3.2)
+    net-scp (1.0.4)
+      net-ssh (>= 1.99.1)
+    net-sftp (2.0.5)
+      net-ssh (>= 2.0.9)
+    net-ssh (2.3.0)
+    net-ssh-gateway (1.1.0)
+      net-ssh (>= 1.99.1)
     polyglot (0.3.3)
+    posix-spawn (0.3.6)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -103,6 +127,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capatross
   coffee-rails (~> 3.2.1)
   jquery-rails
   rails (= 3.2.3)

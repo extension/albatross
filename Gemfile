@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
-
+source 'http://systems.extension.org/rubygems/'
 gem 'rails', '3.2.3'
+
+gem 'capatross'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -33,6 +35,7 @@ gem 'jquery-rails'
 
 # Deploy with Capistrano
 # gem 'capistrano'
+
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
