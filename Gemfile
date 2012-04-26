@@ -1,13 +1,15 @@
 source 'https://rubygems.org'
 source 'http://systems.extension.org/rubygems/'
-gem 'rails', '3.2.3'
 
-gem 'capatross'
+gem 'rails', '~> 3.2.3'
+
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+# storage
+gem 'mysql2'
+
 
 
 # Gems used only for assets and not required
@@ -20,22 +22,36 @@ group :assets do
   # gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
+  # files for bootstrap-in-asset-pipeline integration
+  gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
 end
 
+# server settings
+gem "rails_config"
+
+# authentication
+gem 'omniauth', "~> 1.0"
+gem 'omniauth-github'
+
+# jquery magick
 gem 'jquery-rails'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
+gem 'capatross'
+
+# exception handling for now
+gem 'exception_notification'
+
+# background jobs
+gem 'delayed_job_active_record'
+gem 'daemons'
+
+# campfire integration
+gem 'tinder'
 
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+group :development do
+  # require the powder gem
+  gem 'powder'
+end

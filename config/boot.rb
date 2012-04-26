@@ -1,3 +1,8 @@
+# === COPYRIGHT:
+# Copyright (c) 2012 North Carolina State University
+# === LICENSE:
+# see LICENSE file
+
 require 'rubygems'
 
 # Set up gems listed in the Gemfile.
