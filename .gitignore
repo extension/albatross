@@ -7,3 +7,4 @@ config/database.yml
 config/settings.local.yml
 log/*.lck
 .rvmrc
+.powenv
