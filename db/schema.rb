@@ -14,30 +14,44 @@
 ActiveRecord::Schema.define(:version => 20120426175155) do
 
   create_table "applications", :force => true do |t|
+    t.string   "name"
+    t.string   "github_url"
+    t.string   "appkey"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "coders", :force => true do |t|
-    t.string   "uid",           :default => "", :null => false
-    t.string   "name",          :default => "", :null => false
-    t.string   "nickname",      :default => "", :null => false
-    t.string   "email",         :default => "", :null => false
+    t.string   "uid"
+    t.string   "name"
+    t.string   "nickname"
+    t.string   "email"
     t.datetime "last_login_at"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "coders", ["email"], :name => "index_coders_on_email", :unique => true
 
   create_table "deploy_logs", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "deploy_id"
+    t.text     "output",     :limit => 16777215
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
+  add_index "deploy_logs", ["deploy_id"], :name => "deploy_ndx"
+
   create_table "deploys", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "deployer_id"
+    t.integer  "application_id"
+    t.string   "previous_revision"
+    t.string   "deployed_revision"
+    t.string   "location"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
+
+  add_index "deploys", ["deployer_id", "application_id", "location"], :name => "search_ndx"
 
 end
