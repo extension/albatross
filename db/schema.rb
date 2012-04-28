@@ -43,15 +43,20 @@ ActiveRecord::Schema.define(:version => 20120426175155) do
   add_index "deploy_logs", ["deploy_id"], :name => "deploy_ndx"
 
   create_table "deploys", :force => true do |t|
+    t.string   "capatross_id"
     t.integer  "deployer_id"
     t.integer  "application_id"
     t.string   "previous_revision"
     t.string   "deployed_revision"
     t.string   "location"
+    t.datetime "start"
+    t.datetime "finish"
+    t.boolean  "success"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
 
+  add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
   add_index "deploys", ["deployer_id", "application_id", "location"], :name => "search_ndx"
 
 end
