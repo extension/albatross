@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(:version => 20120426175155) do
 
   create_table "deploys", :force => true do |t|
     t.string   "capatross_id"
-    t.integer  "deployer_id"
+    t.integer  "coder_id"
     t.integer  "application_id"
     t.string   "previous_revision"
     t.string   "deployed_revision"
@@ -57,6 +57,6 @@ ActiveRecord::Schema.define(:version => 20120426175155) do
   end
 
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
-  add_index "deploys", ["deployer_id", "application_id", "location"], :name => "search_ndx"
+  add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
 
 end
