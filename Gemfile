@@ -36,6 +36,9 @@ gem 'omniauth-github'
 # jquery magick
 gem 'jquery-rails'
 
+# pagination
+gem 'kaminari'
+
 # Deploy with Capistrano
 gem 'capistrano'
 gem 'capatross'
