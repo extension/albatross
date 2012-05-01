@@ -4,6 +4,9 @@
 # see LICENSE file
 
 class Deploy < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
+  default_url_options[:host] = Settings.urlwriter_host
+  
   attr_accessible :application, :coder, :capatross_id, :previous_revision, :deployed_revision, :location, :start, :finish, :success
   belongs_to :application
   belongs_to :coder
@@ -42,9 +45,10 @@ class Deploy < ActiveRecord::Base
     
     deploy
   end
-
-    
-    
-      
+  
+  def campout_url
+    deploy_url(self)
+  end
+        
     
 end
