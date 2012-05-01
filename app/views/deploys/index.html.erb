@@ -5,6 +5,7 @@
 
 <div class="row-fluid">
   <div class="span12">
-    <h3>TBD</h3>
+	  <%= paginate @deploylist %>
+	  <%= render(:partial => 'list', :locals => {:deploylist => @deploylist} )%>
   </div>
 </div>

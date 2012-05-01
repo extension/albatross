@@ -1,0 +1,25 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+        <th>Time (UTC)</th>
+        <th>Application</th>
+        <th>Location</th>
+        <th>Coder</th>
+        <th>Revision</th>
+        <th>&nbsp;</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <%- for deploy in deploylist -%>
+  	<tr>
+      <td><%= deploy.finish.to_s %></td>
+      <td><%= deploy.application.name %></td>
+      <td><%= deploy.location %></td>
+      <td><%= deploy.coder.name %></td>
+      <td><%= deploy.deployed_revision %></td>
+      <td><%= link_to('details', deploy_path(deploy)) %></td>
+    </tr>
+  <%- end -%>
+  </tbody>
+</table>
