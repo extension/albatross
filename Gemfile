@@ -51,7 +51,7 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 
 # campfire integration
-gem 'tinder'
+gem "tinder", "~> 1.8.0"
 
 
 group :development do
