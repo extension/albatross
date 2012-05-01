@@ -8,3 +8,4 @@ config/settings.local.yml
 log/*.lck
 .rvmrc
 .powenv
+/capatross_logs
