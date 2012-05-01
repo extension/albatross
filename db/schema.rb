@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20120426175155) do
     t.datetime "start"
     t.datetime "finish"
     t.boolean  "success"
+    t.text     "comment"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end

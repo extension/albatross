@@ -10,6 +10,7 @@ class CreateDeploys < ActiveRecord::Migration
       t.datetime   "start"
       t.datetime   "finish"
       t.boolean    "success"
+      t.text       "comment"
       t.timestamps
     end
 
