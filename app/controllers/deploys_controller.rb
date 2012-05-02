@@ -17,7 +17,6 @@ class DeploysController < ApplicationController
   
   def create
     if(deploy = Deploy.create_or_update_from_params(params))
-      Campout.deploy_notification(deploy)
       returninformation = {'message' => 'Updated deploy database'}
       return render :json => returninformation.to_json, :status => :ok
     else

@@ -43,6 +43,15 @@ class Deploy < ActiveRecord::Base
       deploy_log.update_attribute(:output,provided_params['deploy_log'])
     end
     
+    # notifications
+    if(deploy.finish.nil?)
+      # first post, verbose only
+      Campout.verbose_deploy_start_notification(deploy)
+    else
+      Campout.deploy_notification(deploy,{'from_cli' => provided_params['from_cli']})
+      Campout.verbose_deploy_finish_notification(deploy,{'from_cli' => provided_params['from_cli']})
+    end
+  
     deploy
   end
   
