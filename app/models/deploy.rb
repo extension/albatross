@@ -36,6 +36,7 @@ class Deploy < ActiveRecord::Base
     deploy.start = provided_params['start']
     deploy.finish = provided_params['finish']
     deploy.success = provided_params['success']
+    deploy.comment = provided_params['comment']
     deploy.save!
     
     if(provided_params['deploy_log'])
