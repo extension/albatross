@@ -6,7 +6,7 @@
         <th>Location</th>
         <th>Coder</th>
         <th>Revision</th>
-        <th>&nbsp;</th>
+        <th>Details</th>
     </tr>
   </thead>
   
@@ -18,7 +18,13 @@
       <td><%= deploy.location %></td>
       <td><%= deploy.coder.name %></td>
       <td><%= deploy.deployed_revision %></td>
-      <td><%= link_to('details', deploy_path(deploy)) %></td>
+      <td>
+		  <%- if deploy.success? -%>
+		  <%= link_to('success', deploy_path(deploy), :class => 'label label-success') %></td>
+		  <%- else -%>
+		  <%= link_to('failed', deploy_path(deploy), :class => 'label label-important') %></td>
+		  <%- end -%>
+	  </td>
     </tr>
   <%- end -%>
   </tbody>

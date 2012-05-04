@@ -13,6 +13,7 @@ class DeploysController < ApplicationController
   end
   
   def show
+    @deploy = Deploy.find(params[:id])
   end
   
   def create
