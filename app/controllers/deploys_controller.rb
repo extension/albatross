@@ -6,10 +6,21 @@ class DeploysController < ApplicationController
   skip_before_filter :verify_authenticity_token
   
   def index
-    @deploylist = Deploy.page(params[:page])
-  end
-  
-  def production
+    deploylist_scope = Deploy.order("start DESC")
+    
+    if(params[:coder] and coder = Coder.find_by_id(params[:coder]))
+      deploylist_scope = deploylist_scope.bycoder(coder)
+    end
+    
+    if(params[:application] and application = Application.find_by_id(params[:coder]))
+      deploylist_scope = deploylist_scope.byapplication(application)
+    end
+    
+    if(params[:location])
+      deploylist_scope = deploylist_scope.bylocation(params[:location])
+    end
+        
+    @deploylist = deploylist_scope.page(params[:page])
   end
   
   def show

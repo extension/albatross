@@ -1,6 +1,6 @@
 <%- flash.each do |type,message| -%>
   <div class='<%= twitter_alert_class(type) %>'>
-    <a class='close' href='#'>×</a>
+    <a class='close' data-dismiss="alert" href='#'>×</a>
     <p><%= message %></p>
   </div>
 <%- end -%>

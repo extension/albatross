@@ -32,16 +32,17 @@ class AuthController < ApplicationController
       coder.update_attributes(:uid => uid, :nickname => nickname, :name => name)
       coder.login
       session[:coder_id] = coder.id
-      @currentcoder = coder.id
+      @currentcoder = coder
     else
       coder = Coder.create(:uid => uid, :email => email, :nickname => nickname, :name => name)
       if(coder)
         coder.login
         session[:coder_id] = coder.id
-        @currentcoder = coder.id
+        @currentcoder = coder
       end
     end
   
+    flash[:success] = "You are signed in as #{@currentcoder.name}"
     return redirect_to(root_url)
 
   end

@@ -6,6 +6,7 @@
         <th>Location</th>
         <th>Coder</th>
         <th>Revision</th>
+        <th>Comment</th>
         <th>Details</th>
     </tr>
   </thead>
@@ -17,7 +18,12 @@
       <td><%= deploy.application.name %></td>
       <td><%= deploy.location %></td>
       <td><%= deploy.coder.name %></td>
-      <td><%= deploy.deployed_revision %></td>
+	  <%- if(!deploy.deployed_revision.blank?) -%>
+	  <td><%= link_to(deploy.deployed_revision,github_url_for_deploy(deploy)) %></td>
+  	  <%- else -%>
+	  	<td>n/a</td>
+	  <%- end -%>
+      <td><%= deploy.comment %></td>	  
       <td>
 		  <%- if deploy.success? -%>
 		  <%= link_to('success', deploy_path(deploy), :class => 'label label-success') %></td>

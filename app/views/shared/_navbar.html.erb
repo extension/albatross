@@ -4,8 +4,51 @@
 
 <!-- Core Navigation -->
 <ul class="nav">
-	<%= nav_item(deploys_path,'Deploys') %>  
+
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Applications<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<% Deploy.applications_with_deploys.keys.each do |application| %>
+			<%= nav_item(deploys_path(:application => application.id),application.name) %>
+			<%- end -%>  
+		</ul>
+	</li>
+	
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Locations<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<% Deploy.locations_with_deploys.keys.each do |location| %>
+			<%= nav_item(deploys_path(:location => location),location) %>
+			<%- end -%>  
+		</ul>
+	</li>
+	
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Coders<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<% Deploy.coders_with_deploys.keys.each do |coder| %>
+			<%= nav_item(deploys_path(:coder => coder.id),coder.name) %>
+			<%- end -%>  
+		</ul>
+	</li>
+	
+
 </ul>
 
 
 
+<ul class="nav pull-right">
+	<%- if @currentcoder -%>
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= @currentcoder.name %><b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<%= nav_item(deploys_path(:coder => @currentcoder.id),'Your Deploys') %>  
+			<li class="divider"></li>
+			<%= nav_item(logout_path,'Sign out') %>
+		</ul>
+	</li>
+	<%- else -%>
+	<%= nav_item(url_for(:controller => 'auth', :action => 'github'),'Sign in with GitHub') %>  
+	<%- end -%>
+	
+</ul>

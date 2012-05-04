@@ -12,6 +12,10 @@ class Deploy < ActiveRecord::Base
   belongs_to :coder
   has_one :deploy_log
   
+  
+  scope :byapplication, lambda{|application| where(:application_id => application.id)}
+  scope :bylocation, lambda{|location| where(:location => location)}
+  scope :bycoder, lambda{|coder| where(:coder_id => coder.id)}
 
   
   def self.create_or_update_from_params(provided_params)
@@ -55,6 +59,20 @@ class Deploy < ActiveRecord::Base
   
     deploy
   end
+  
+  def self.coders_with_deploys
+    Deploy.group(:coder).count
+  end
+  
+  def self.applications_with_deploys
+    Deploy.group(:application).count
+  end
+  
+  def self.locations_with_deploys
+    Deploy.group(:location).count
+  end
+  
+  
   
   def campout_url
     deploy_url(self)

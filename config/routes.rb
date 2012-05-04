@@ -1,5 +1,5 @@
 Albatross::Application.routes.draw do
-  root :to => 'deploys#production'
+  root :to => 'deploys#index'
   
   resources :deploys, :only => [:show, :index, :create] do
     collection do
