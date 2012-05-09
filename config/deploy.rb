@@ -4,7 +4,10 @@ require 'capistrano/ext/multistage'
 
 require 'capatross'
 require "bundler/capistrano"
-require "delayed/recipes" 
+require "delayed/recipes"
+require './config/boot'
+require 'airbrake/capistrano'
+ 
 set :application, "albatross"
 set :repository,  "git@github.com:extension/albatross.git"
 set :branch, "master"
