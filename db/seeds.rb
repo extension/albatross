@@ -7,4 +7,7 @@ Application.create(name: 'Albatross', github_url: 'https://github.com/extension/
 Application.create(name: 'AaE', github_url: 'https://github.com/extension/aae')
 Application.create(name: 'Create', github_url: 'https://github.com/extension/drupal')
 Application.create(name: 'Positronic', github_url: 'https://github.com/extension/positronic')
-# TBD wordpress stuff
+Application.create(name: 'About', github_url: 'https://github.com/extension/about')
+Application.create(name: 'Milfam', github_url: 'https://github.com/extension/milfam')
+Application.create(name: 'Blogs', github_url: 'https://github.com/extension/blogs')
+
