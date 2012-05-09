@@ -21,10 +21,13 @@ class AuthController < ApplicationController
     email = authresult['info']['email']
     name = authresult['info']['name']
     nickname = authresult['info']['nickname']
-
-    if(email)
-      coder = Coder.find_by_email(email)
+    
+    if(email.blank?)
+      flash[:error] = "You'll need to set a public email address for your GitHub account matched with your .gitconfig settings to sign in here."
+      return redirect_to(root_url)
     end
+      
+    coder = Coder.find_by_email(email)
     
     if(coder)
       # update uid, nickname, name, it's possible the coder was created
