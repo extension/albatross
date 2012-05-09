@@ -35,7 +35,7 @@ GEM
       sass
     arel (3.0.2)
     builder (3.0.0)
-    capatross (1.0.0)
+    capatross (1.0.1)
       capistrano (>= 2.11)
       grit (>= 2.4)
       httparty (>= 0.8)
