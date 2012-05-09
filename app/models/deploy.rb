@@ -6,6 +6,9 @@
 class Deploy < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   default_url_options[:host] = Settings.urlwriter_host
+  default_scope where("finish IS NOT NULL")
+  
+  
   
   attr_accessible :application, :coder, :capatross_id, :previous_revision, :deployed_revision, :location, :start, :finish, :success
   belongs_to :application
