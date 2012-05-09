@@ -2,16 +2,6 @@ set :stages, %w(production development)
 set :default_stage, "development"
 require 'capistrano/ext/multistage'
 
-task :production do
-  set :deploy_to, '/services/deploys/'
-  server 'deploys.extension.org', :app, :web, :db, :primary => true
-end
-
-task :development do
-  set :deploy_to, '/services/deploys/'
-  server 'dev.deploys.extension.org', :app, :web, :db, :primary => true
-end
-
 require 'capatross'
 require "bundler/capistrano"
 require "delayed/recipes" 
