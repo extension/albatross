@@ -12,7 +12,7 @@ class DeploysController < ApplicationController
       deploylist_scope = deploylist_scope.bycoder(coder)
     end
     
-    if(params[:application] and application = Application.find_by_id(params[:coder]))
+    if(params[:application] and application = Application.find_by_id(params[:application]))
       deploylist_scope = deploylist_scope.byapplication(application)
     end
     
