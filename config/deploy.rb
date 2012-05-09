@@ -34,6 +34,7 @@ before "deploy", "deploy:web:disable"
 after "deploy:update_code", "deploy:update_maint_msg"
 after "deploy:update_code", "deploy:link_and_copy_configs"
 after "deploy:update_code", "deploy:cleanup"
+after "deploy:update_code", "deploy:compile_assets"
 after "deploy", "deploy:web:enable"
 # delayed job
 after "deploy:stop",    "delayed_job:stop"
@@ -61,6 +62,11 @@ namespace :deploy do
     run "cd #{release_path} && bundle install"
   end
   
+  # compile assets
+  desc "runs bundle exec rake assets:precompile"
+  task :compile_assets do
+    run "cd #{release_path} && bundle exec rake assets:precompile"
+  end
   
   desc "Update maintenance mode page/graphics (valid after an update code invocation)"
   task :update_maint_msg, :roles => :app do
