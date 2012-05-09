@@ -15,6 +15,8 @@ class Deploy < ActiveRecord::Base
   belongs_to :coder
   has_one :deploy_log
   
+  before_save :standardize_location
+  
   
   scope :byapplication, lambda{|application| where(:application_id => application.id)}
   scope :bylocation, lambda{|location| where(:location => location)}
@@ -75,8 +77,16 @@ class Deploy < ActiveRecord::Base
     Deploy.group(:location).count
   end
   
-  
-  
+  def standardize_location
+    if(self.location == 'prod')
+      self.location = 'production'
+    elsif(self.location == 'dev')
+      self.location = 'development'
+    elsif(self.location == 'demo')
+      self.location = 'staging'
+    end
+  end
+    
   def campout_url
     deploy_url(self)
   end
