@@ -36,9 +36,12 @@ class Campout
     if(options['from_cli'])
       message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{deploy.location} using the cli. Details: #{deploy.campout_url}"
     else
-      message = "#{deploy.coder.name} deployed #{deploy.application.name} to #{deploy.location}. Details: #{deploy.campout_url}"
+      if(deploy.success?)
+        message = "#{deploy.coder.name} deployed #{deploy.application.name} to #{deploy.location}. Details: #{deploy.campout_url}"
+      else
+        message = ":warning: The deploy for #{deploy.application.name} to #{deploy.location} has FAILED!. Details: #{deploy.campout_url}"
+      end
     end
-      
     delay.speak(message)
   end
   
@@ -51,9 +54,15 @@ class Campout
     if(options['from_cli'])
       message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{deploy.location} using the cli. Details: #{deploy.campout_url}"
     else
-      message = "#{deploy.coder.name} deployed #{deploy.application.name} to #{deploy.location}. Details: #{deploy.campout_url}"
+      if(deploy.success?)
+        message = "#{deploy.coder.name} deployed #{deploy.application.name} to #{deploy.location}. Details: #{deploy.campout_url}"
+        sound = 'tada'
+      else
+        message = ":warning: The deploy for #{deploy.application.name} to #{deploy.location} has FAILED!. Details: #{deploy.campout_url}"
+        sound = 'dangerzone'
+      end
     end
-    delay.verbose_speak(message)
+    delay.verbose_speak(message,sound)
   end
   
   
