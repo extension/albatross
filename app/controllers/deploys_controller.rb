@@ -29,10 +29,10 @@ class DeploysController < ApplicationController
   
   def create
     if(deploy = Deploy.create_or_update_from_params(params))
-      returninformation = {'message' => 'Updated deploy database'}
+      returninformation = {'message' => 'Updated deploy database', 'success' => true}
       return render :json => returninformation.to_json, :status => :ok
     else
-      returninformation = {'message' => 'Update to create or update the deploy database'}
+      returninformation = {'message' => 'Update to create or update the deploy database', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end    
   end
