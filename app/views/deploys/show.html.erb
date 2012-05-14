@@ -49,8 +49,12 @@
 		  
 		  <tr>
 			  <td>Comment</td>
-			  <td><%= @deploy.comment %></td>
-		  </tr>
+				<%- if @currentcoder -%>
+					<td><%= best_in_place(@deploy, :comment, { :type => :textarea, :path => setcomment_deploy_path(:id => @deploy.id)})%></td>
+		  	<%- else -%>
+					<td><%= @deploy.comment %></td>
+				<%- end -%>
+			</tr>
 	  </tbody>
 	</table>
   </div>

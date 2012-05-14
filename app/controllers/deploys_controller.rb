@@ -4,6 +4,8 @@
 # see LICENSE file
 class DeploysController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  before_filter :signin_required, :only => [:setcomment]   
+  
   
   def index
     deploylist_scope = Deploy.order("start DESC")
@@ -36,6 +38,19 @@ class DeploysController < ApplicationController
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end    
   end
+  
+  
+  def setcomment
+    @deploy = Deploy.find_by_id(params[:id])
+    if(@deploy)
+      @deploy.update_attribute(:comment,params[:deploy][:comment])
+    end
+    
+    respond_to do |format|
+      format.json { respond_with_bip(@deploy) }
+    end
+  end
+  
   
 
 end

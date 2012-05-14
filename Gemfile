@@ -36,6 +36,9 @@ gem 'omniauth-github'
 # jquery magick
 gem 'jquery-rails'
 
+# in place editing
+gem 'best_in_place'
+
 # pagination
 gem 'kaminari'
 

@@ -37,6 +37,9 @@ GEM
       railties (>= 3.0)
       sass
     arel (3.0.2)
+    best_in_place (1.1.0)
+      jquery-rails
+      rails (~> 3.1)
     builder (3.0.0)
     capatross (1.0.1)
       capistrano (>= 2.11)
@@ -194,6 +197,7 @@ PLATFORMS
 DEPENDENCIES
   airbrake
   anjlab-bootstrap-rails (>= 2.0)
+  best_in_place
   capatross
   capistrano
   coffee-rails (~> 3.2.1)

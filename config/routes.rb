@@ -5,6 +5,10 @@ Albatross::Application.routes.draw do
     collection do
       get :production
     end
+    
+    member do
+      put :setcomment
+    end
   end
   
   match '/logout' => 'auth#end', :as => 'logout'
