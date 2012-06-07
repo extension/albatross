@@ -209,7 +209,7 @@ DEPENDENCIES
   omniauth (~> 1.0)
   omniauth-github
   powder
-  rails (~> 3.2.3)
+  rails (~> 3.2.5)
   rails_config
   sass-rails (~> 3.2.3)
   tinder (~> 1.8.0)
