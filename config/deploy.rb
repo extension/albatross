@@ -4,7 +4,6 @@ require 'capistrano/ext/multistage'
 
 require 'capatross'
 require "bundler/capistrano"
-require "delayed/recipes"
 require './config/boot'
 require 'airbrake/capistrano'
  
@@ -13,7 +12,7 @@ set :repository,  "git@github.com:extension/albatross.git"
 set :branch, "master"
 set :scm, "git"
 set :user, "pacecar"
-set :use_sudo, true
+set :use_sudo, false
 set :keep_releases, 3
 ssh_options[:forward_agent] = true
 set :port, 24
@@ -32,7 +31,7 @@ after "deploy", "deploy:web:enable"
 # delayed job
 after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
-after "deploy:restart", "delayed_job:restart"
+after "deploy:restart", "delayed_job:reload"
 
 namespace :deploy do
   
@@ -81,6 +80,7 @@ namespace :deploy do
     task t, :roles => :app do ; end
   end
   
+  
   # Override default web enable/disable tasks
   namespace :web do
       
@@ -97,3 +97,19 @@ namespace :deploy do
   end  
 end
 
+  namespace :delayed_job do
+    desc "stops delayed_job"
+    task :stop, :roles => :app do
+      run "sudo god stop delayed_jobs'"
+    end
+
+    desc "reloads delayed_job"
+    task :reload, :roles => :app do
+      run "sudo god load #{release_path}/config/delayed_job.god"
+    end
+
+    desc "starts delayed_job"
+    task :start, :roles => :app do
+      run "sudo god start delayed_jobs"
+    end
+  end
