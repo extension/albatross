@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120501125539) do
+ActiveRecord::Schema.define(:version => 20120613022517) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -75,5 +75,13 @@ ActiveRecord::Schema.define(:version => 20120501125539) do
 
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
   add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
+
+  create_table "notification_prefs", :force => true do |t|
+    t.integer  "coder_id"
+    t.integer  "application_id"
+    t.boolean  "notify"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
 end

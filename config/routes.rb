@@ -11,6 +11,8 @@ Albatross::Application.routes.draw do
     end
   end
   
+  resources :notifications, :only => [:show, :index, :create, :update] 
+  
   match '/logout' => 'auth#end', :as => 'logout'
   match '/auth/:provider/callback' => 'auth#success'
   match '/:controller(/:action(/:id))'

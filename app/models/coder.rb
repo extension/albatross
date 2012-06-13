@@ -6,6 +6,7 @@
 class Coder < ActiveRecord::Base
   attr_accessible :uid, :name, :nickname, :email
   has_many :deploys
+  has_many :notification_prefs, dependent: :destroy
   
   def login
     self.update_attribute(:last_login_at, Time.now.utc)
