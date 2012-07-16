@@ -60,7 +60,7 @@ class Deploy < ActiveRecord::Base
     else
       Campout.deploy_notification(deploy,{'from_cli' => provided_params['from_cli']})
       Campout.verbose_deploy_finish_notification(deploy,{'from_cli' => provided_params['from_cli']})
-      self.application.coders_to_notify.each{|recipient| DeployMailer.delay.deploy(recipient: recipient.email, deploy: self) }
+      #deploy.application.coders_to_notify.each{|recipient| DeployMailer.delay.deploy(recipient: recipient.email, deploy: self) }
     end
   
     deploy
