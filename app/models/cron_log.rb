@@ -16,8 +16,7 @@ class CronLog < ActiveRecord::Base
     
     if(provided_params['stdout'] and provided_params['server'])
       
-      cron_log = CronLog.create(provided_params[:cron_log])
-      cron_log.cron = cron
+      cron_log = CronLog.create(provided_params[:cron_log].merge(cron: cron))
       cron_log.save!
 
     end
