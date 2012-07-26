@@ -11,6 +11,8 @@ Albatross::Application.routes.draw do
     end
   end
   
+  resources :cron_logs, :only => [:show, :index, :create]
+  resources :crons, :only => [:show, :index] 
   resources :notifications, :only => [:show, :index, :create, :update] 
   
   match '/logout' => 'auth#end', :as => 'logout'

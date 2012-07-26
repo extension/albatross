@@ -1,0 +1,29 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+        <th>Cron</th>
+        <th>Server</th>
+        <th>Time</th>
+        <th>Runtime</th>
+        <th>Details</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <%- for cronlog in @cronlogs -%>
+  	<tr>
+      <td><%= cronlog.cron.name %></td>
+      <td><%= cronlog.server %></td>
+      <td><%= cronlog.started_at %></td>
+      <td><%= cronlog.runtime %></td>
+      <td>
+		  <%- if cronlog.success? -%>
+		  <%= link_to('success', cron_log_path(cronlog), :class => 'label label-success') %></td>
+		  <%- else -%>
+		  <%= link_to('failed', cron_log_path(cronlog), :class => 'label label-important') %></td>
+		  <%- end -%>
+	  </td>
+    </tr>
+  <%- end -%>
+  </tbody>
+</table>
