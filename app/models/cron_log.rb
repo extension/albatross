@@ -30,7 +30,7 @@ class CronLog < ActiveRecord::Base
   end
   
   def generate_error_notifications
-     EventMailer.delay.cron_error(cron_log: self)
+     EventMailer.delay.cron_error(cron_log: self) if !self.success?
   end
   
 end
