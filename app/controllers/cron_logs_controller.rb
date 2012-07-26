@@ -31,5 +31,5 @@ class CronLogsController < ApplicationController
       end
     end    
   end
-
+  
 end

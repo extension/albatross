@@ -18,5 +18,12 @@ Albatross::Application.routes.draw do
   match '/logout' => 'auth#end', :as => 'logout'
   match '/auth/:provider/callback' => 'auth#success'
   match '/:controller(/:action(/:id))'
+  
+  # webmail example routing
+  namespace "webmail" do
+    namespace "examples" do
+      match "/:action"
+    end
+  end
 
 end

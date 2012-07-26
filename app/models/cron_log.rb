@@ -7,6 +7,7 @@ class CronLog < ActiveRecord::Base
   
   belongs_to :cron
   scope :bycron, lambda{|cron| where(:cron_id => cron.id)}
+  after_create :generate_error_notifications
   
   
   def self.create_or_update_from_params(provided_params)
@@ -28,6 +29,9 @@ class CronLog < ActiveRecord::Base
   def success?
     self.stderr.blank?
   end
-    
+  
+  def generate_error_notifications
+     EventMailer.delay.cron_error(cron_log: self)
+  end
   
 end

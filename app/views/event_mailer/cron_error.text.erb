@@ -1,0 +1,18 @@
+===================================================
+Server:  <%= @server %>
+Date:  <%= @cronlog.finished_at %>
+Command:  <%= @cronlog.command %>
+Start time: <%= @cronlog.started_at %>
+Finish time: <%= @cronlog.finished_at %>
+Runtime: <%= @cronlog.runtime%>
+Logs for <%= @cron_name %>: <%= link_to("here", cron_url(@cronlog.cron.id)) -%>
+===================================================
+
+
+Cron error output:
+
+Non US-ASCII detected and no charset defined.
+Defaulting to UTF-8, set your own if this is incorrect.
+
+
+Cron standard output:
