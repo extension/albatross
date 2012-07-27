@@ -5,7 +5,7 @@ Command:  <%= @cronlog.command %>
 Start time: <%= @cronlog.started_at %>
 Finish time: <%= @cronlog.finished_at %>
 Runtime: <%= @cronlog.runtime%>
-Logs for <%= @cron_name %>: <%= link_to("here", cron_url(@cronlog.cron.id)) -%>
+Logs for <%= @cron_name %>: <%= cron_url(@cronlog.cron.id) -%>
 ===================================================
 
 
