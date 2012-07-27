@@ -12,8 +12,11 @@ Logs for <%= @cron_name %>: <%= cron_url(@cronlog.cron.id) -%>
 
 Cron error output:
 
-Non US-ASCII detected and no charset defined.
-Defaulting to UTF-8, set your own if this is incorrect.
+<%= @cronlog.stderr %>
+
 
 
 Cron standard output:
+
+<%= @cronlog.stdout %>
+
