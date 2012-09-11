@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120723151153) do
+ActiveRecord::Schema.define(:version => 20120911172324) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -21,36 +21,44 @@ ActiveRecord::Schema.define(:version => 20120723151153) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "coder_emails", :force => true do |t|
+    t.integer  "coder_id"
+    t.string   "email"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "coder_emails", ["email"], :name => "index_coder_emails_on_email", :unique => true
+
   create_table "coders", :force => true do |t|
     t.string   "uid"
     t.string   "name"
     t.string   "nickname"
-    t.string   "email"
     t.datetime "last_login_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "coders", ["email"], :name => "index_coders_on_email", :unique => true
+  add_index "coders", ["uid"], :name => "index_coders_on_uid", :unique => true
 
   create_table "cron_logs", :force => true do |t|
     t.integer  "cron_id"
-    t.string   "stdout"
-    t.string   "stderr"
+    t.text     "stdout",      :limit => 16777215
+    t.text     "stderr",      :limit => 16777215
     t.string   "command"
     t.string   "server"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.float    "runtime"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "crons", :force => true do |t|
-    t.string   "name"
-    t.boolean  "notify_on_error"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.string   "name",                              :null => false
+    t.boolean  "notify_on_error", :default => true, :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "delayed_jobs", :force => true do |t|

@@ -30,7 +30,7 @@ class Deploy < ActiveRecord::Base
     
     if(!(deploy = self.unscoped.find_by_capatross_id(provided_params['capatross_id'])))
 
-      coder = Coder.find_or_create_with_options({email: provided_params['deployer_email'], name: provided_params['deployer_name']})
+      coder = Coder.find_by_deploy_email(provided_params['deployer_email'])
       if(!(application = Application.find_by_appkey(provided_params['appkey'])))
         return nil
       end

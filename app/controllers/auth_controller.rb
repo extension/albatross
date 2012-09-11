@@ -4,6 +4,7 @@
 # see LICENSE file
 class AuthController < ApplicationController
   skip_before_filter :signin_required
+  skip_before_filter :verify_authenticity_token
 
   def start
   end
@@ -21,31 +22,24 @@ class AuthController < ApplicationController
     email = authresult['info']['email']
     name = authresult['info']['name']
     nickname = authresult['info']['nickname']
-    
-    if(email.blank?)
-      flash[:error] = "You'll need to set a public email address for your GitHub account matched with your .gitconfig settings to sign in here."
-      return redirect_to(root_url)
-    end
-      
-    coder = Coder.find_by_email(email)
+
+    logger.debug "#{authresult.inspect}"
+     
+    coder = Coder.find_by_uid(uid)
     
     if(coder)
-      # update uid, nickname, name, it's possible the coder was created
-      # from commits, and not via login
-      coder.update_attributes(:uid => uid, :nickname => nickname, :name => name)
+      coder.update_attributes(:nickname => nickname, :name => name)
+      if(!coder.coder_emails.map(&:email).include?(email))
+        coder.coder_emails.create(email: email)
+      end
       coder.login
       session[:coder_id] = coder.id
       @currentcoder = coder
+      flash[:success] = "You are signed in as #{@currentcoder.name}"
     else
-      coder = Coder.create(:uid => uid, :email => email, :nickname => nickname, :name => name)
-      if(coder)
-        coder.login
-        session[:coder_id] = coder.id
-        @currentcoder = coder
-      end
+      flash[:error] = "Unable to find your account, please contact an Engineering staff member to create your account"
     end
   
-    flash[:success] = "You are signed in as #{@currentcoder.name}"
     return redirect_to(root_url)
 
   end
