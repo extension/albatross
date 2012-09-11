@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120613022517) do
+ActiveRecord::Schema.define(:version => 20120723151153) do
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -32,6 +32,26 @@ ActiveRecord::Schema.define(:version => 20120613022517) do
   end
 
   add_index "coders", ["email"], :name => "index_coders_on_email", :unique => true
+
+  create_table "cron_logs", :force => true do |t|
+    t.integer  "cron_id"
+    t.string   "stdout"
+    t.string   "stderr"
+    t.string   "command"
+    t.string   "server"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.float    "runtime"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "crons", :force => true do |t|
+    t.string   "name"
+    t.boolean  "notify_on_error"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0

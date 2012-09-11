@@ -31,7 +31,19 @@
 			<%- end -%>  
 		</ul>
 	</li>
-	
+
+	<%- if @currentcoder -%>
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Crons<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+		  <%= nav_item(cron_logs_path,"Most recent") %>
+		  <li class="divider"></li>
+			<% Cron.order("name ASC").each do |cron| %>
+			<%= nav_item(crons_path(:cron => cron.id),cron.name) %>
+			<%- end -%>  
+		</ul>
+	</li>
+	<%- end -%>
 
 </ul>
 

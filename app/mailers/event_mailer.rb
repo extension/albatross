@@ -4,7 +4,7 @@
 # === LICENSE:
 # see LICENSE file
 
-class DeployMailer < ActionMailer::Base
+class EventMailer < ActionMailer::Base
   default_url_options[:host] = 'deploys.extension.org'
   default from: "exsys@extension.org"
   default bcc: "systemsmirror@extension.org"
@@ -19,11 +19,22 @@ class DeployMailer < ActionMailer::Base
     return_email = mail(to: @recipient.email, subject: @subject)
     return_email
   end
+  
+  def cron_error(options = {})
+    @cronlog = options[:cron_log]
+    @server = @cronlog.server
+    @cron_name = @cronlog.cron.name
+    @subject = "#{@server}: error encountered running #{@cron_name}"
+    @recipient = Settings.cron_notification_email
+    
+    return_email = mail(to: @recipient, subject: @subject)
+    return_email
+  end
 
   def mailtest(options = {})
     @subject = "This is a test of the Deploys Email System."
     @coder = options[:coder]  
-    @recipient = options[:recipient]    
+    @recipient = options[:coder]    
     return_email = mail(to: @recipient.email, subject: @subject)
     return_email
   end

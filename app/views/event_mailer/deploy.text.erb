@@ -1,0 +1,5 @@
+Deployment Notification: <%= @app.name %>(<%= @app.location%>)
+==============================================================
+<%= @coder.name %> just deployed <%= @app.name %>(<%= @app.location%>)
+     
+<%= link_to("More details", deploy_url(@deploy.id)) -%>

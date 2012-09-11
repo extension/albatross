@@ -1,0 +1,11 @@
+<% @page_title = "Cron Logs" %>
+<div class="page-header">
+  <h1>Cron Logs</h1>
+</div>  
+
+<div class="row-fluid">
+  <div class="span12">
+	  <%= paginate @cronlogs %>
+	  <%= render(:partial => 'list', :locals => {:deploylist => @cronlogs} )%>
+  </div>
+</div>

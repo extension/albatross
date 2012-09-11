@@ -13,10 +13,19 @@ Albatross::Application.routes.draw do
     end
   end
   
+  resources :cron_logs, :only => [:show, :index, :create]
+  resources :crons, :only => [:show, :index] 
   resources :notifications, :only => [:show, :index, :create, :update] 
   
   match '/logout' => 'auth#end', :as => 'logout'
   match '/auth/:provider/callback' => 'auth#success'
   match '/:controller(/:action(/:id))'
+  
+  # webmail example routing
+  namespace "webmail" do
+    namespace "examples" do
+      match "/:action"
+    end
+  end
 
 end
