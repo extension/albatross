@@ -47,7 +47,7 @@ gem 'capistrano'
 gem 'capatross'
 
 # exception handling for now
-gem 'airbrake'
+gem 'airbrake', '3.1.2'
 
 # background jobs
 gem 'delayed_job_active_record'
