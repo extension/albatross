@@ -4,6 +4,8 @@ Albatross::Application.routes.draw do
   resources :deploys, :only => [:show, :index, :create] do
     collection do
       get :production
+      get :fakeit
+      post :fakeit
     end
     
     member do
