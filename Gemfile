@@ -31,7 +31,7 @@ gem "rails_config"
 
 # authentication
 gem 'omniauth', "~> 1.0"
-gem 'omniauth-github'
+gem 'omniauth-openid'
 
 # jquery magick
 gem 'jquery-rails'
@@ -61,4 +61,5 @@ group :development do
   # require the powder gem
   gem 'powder'
   gem 'pry'
+  gem 'quiet_assets'
 end
