@@ -62,9 +62,32 @@
 
 <div class="row-fluid">
   <div class="span12">
-	  <h3>Deploy Log </h3>
-  <pre>
-	  <%= @deploy.deploy_log.output %>
-  </pre>
+
+    
+
+  <%= button_tag(@deploy.success? ? 'Show Log' : 'Hide Log', id: 'logtoggler', class: 'btn btn-danger', data: {toggle: 'collapse', target: '#showlog'}) %>
+
+  <div id="showlog" class="collapse<%= @deploy.success? ? '': ' in'%>"> 
+    <pre>
+      <%= @deploy.deploy_log.output %>
+    </pre>
+  </div>
+
   </div>
 </div>
+
+
+<script type="text/javascript">
+
+$('#showlog').on('show', function () {
+  $('#logtoggler').html('Hide Log');
+});
+
+$('#showlog').on('hide', function () {
+  $('#logtoggler').html('Show Log');
+});
+
+</script>
+
+
+
