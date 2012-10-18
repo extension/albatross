@@ -4,7 +4,7 @@
 # === LICENSE:
 # see LICENSE file
 module ApplicationHelper
-  
+
   def twitter_alert_class(type)
     baseclass = "alert"
     case type
@@ -20,22 +20,22 @@ module ApplicationHelper
       "#{baseclass} #{type.to_s}"
     end
   end
-  
+
   def nav_item(path,label)
     list_item_class = current_page?(path) ? " class='active'" : ''
     "<li#{list_item_class}>#{link_to(label,path)}</li>".html_safe
   end
-  
+
   def github_url_for_deploy(deploy)
-    baseurl = deploy.application.github_url      
+    baseurl = deploy.application.github_url
     if(deploy.deployed_revision != deploy.previous_revision)
       "#{baseurl}/compare/#{deploy.previous_revision}...#{deploy.deployed_revision}"
     else
       "#{baseurl}/commit/#{deploy.deployed_revision}"
     end
   end
-    
-  
+
+
   # Takes a period of time in seconds and returns it in human-readable form (down to minutes)
   # code from http://www.postal-code.com/binarycode/2007/04/04/english-friendly-timespan/
   def time_period_to_s(time_period,abbreviated=false,defaultstring='')
@@ -60,6 +60,6 @@ module ApplicationHelper
      return out_str
    end
   end
-  
-  
+
+
 end
