@@ -7,6 +7,7 @@
         <th>Coder</th>
         <th>Revision</th>
         <th>Comment</th>
+        <th>Runtime</th>
         <th>Details</th>
     </tr>
   </thead>
@@ -28,6 +29,9 @@
 		  	<%- else -%>
 					<td><%= deploy.comment %></td>
 				<%- end -%>
+      <td>
+        <%= time_period_to_s(deploy.finish - deploy.start,true) %>
+      </td>
       <td>
 		  <%- if deploy.success? -%>
 		  <%= link_to('success', deploy_path(deploy), :class => 'label label-success') %></td>
