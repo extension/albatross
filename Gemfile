@@ -58,6 +58,8 @@ gem 'daemons'
 # campfire integration
 gem "tinder", "~> 1.9.0"
 
+# command line integration
+gem 'thor'
 
 group :development do
   # require the powder gem
