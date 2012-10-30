@@ -1,5 +1,5 @@
-set :stages, %w(prod dev)
-set :default_stage, "dev"
+set :stages, %w(prod data)
+set :default_stage, "prod"
 require 'capistrano/ext/multistage'
 
 require 'capatross'
@@ -27,6 +27,7 @@ after "deploy:update_code", "deploy:update_maint_msg"
 after "deploy:update_code", "deploy:link_and_copy_configs"
 after "deploy:update_code", "deploy:cleanup"
 after "deploy", "deploy:web:enable"
+
 # delayed job
 after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
@@ -93,16 +94,16 @@ end
   namespace :delayed_job do
     desc "stops delayed_job"
     task :stop, :roles => :app do
-      run "sudo god stop delayed_jobs'"
+      run "sudo god stop delayed_jobs'" if use_delayed_job
     end
 
     desc "reloads delayed_job"
     task :reload, :roles => :app do
-      run "sudo god load #{release_path}/config/delayed_job.god"
+      run "sudo god load #{release_path}/config/delayed_job.god" if use_delayed_job
     end
 
     desc "starts delayed_job"
     task :start, :roles => :app do
-      run "sudo god start delayed_jobs"
+      run "sudo god start delayed_jobs" if use_delayed_job
     end
   end
