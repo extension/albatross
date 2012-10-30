@@ -11,7 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120911172324) do
+ActiveRecord::Schema.define(:version => 20121026141709) do
+
+  create_table "app_data", :force => true do |t|
+    t.integer  "application_id"
+    t.string   "dbtype"
+    t.string   "dbname"
+    t.boolean  "scrub",          :default => false
+    t.text     "scrubbers"
+    t.datetime "last_dumped_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "app_data", ["application_id"], :name => "app_ndx"
 
   create_table "applications", :force => true do |t|
     t.string   "name"
