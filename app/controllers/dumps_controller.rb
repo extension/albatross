@@ -7,7 +7,7 @@ class DumpsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
 
-  def getdata
+  def dumpinfo
     if(params[:appkey])
       application = Application.find_by_appkey(params[:appkey])
     elsif(params[:appname])
