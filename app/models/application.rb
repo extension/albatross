@@ -8,14 +8,14 @@ class Application < ActiveRecord::Base
   has_many :deploys
   has_many :notification_prefs, dependent: :destroy
   has_many :coders_to_notify, through: :notification_prefs, source: :coder, :conditions => "notification_prefs.notify = true", uniq: true
-  
-  
+  has_many :app_dumps
+
   before_create :generate_appkey
-  
-  
+
+
   def generate_appkey
     randval = rand
     self.appkey = Digest::SHA1.hexdigest(Settings.session_token+self.name+randval.to_s)
   end
-    
+
 end

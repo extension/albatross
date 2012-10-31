@@ -26,6 +26,35 @@ ActiveRecord::Schema.define(:version => 20121026141709) do
 
   add_index "app_data", ["application_id"], :name => "app_ndx"
 
+  create_table "app_dump_logs", :force => true do |t|
+    t.integer  "app_dump_id"
+    t.boolean  "success"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.integer  "size"
+    t.float    "runtime"
+    t.text     "additionaldata"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "app_dump_logs", ["app_dump_id"], :name => "app_dump_ndx"
+
+  create_table "app_dumps", :force => true do |t|
+    t.integer  "application_id"
+    t.string   "dbtype"
+    t.string   "dbname"
+    t.boolean  "daily",          :default => true
+    t.boolean  "scrub",          :default => false
+    t.text     "scrubbers"
+    t.boolean  "in_progress",    :default => false
+    t.datetime "last_dumped_at"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "app_dumps", ["application_id"], :name => "app_ndx"
+
   create_table "applications", :force => true do |t|
     t.string   "name"
     t.string   "github_url"

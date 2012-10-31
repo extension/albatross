@@ -4,9 +4,39 @@
 # see LICENSE file
 require 'fileutils'
 
-class AppData < ActiveRecord::Base
+class AppDump < ActiveRecord::Base
   serialize :scrubbers
   belongs_to :application
+  has_many :app_dump_logs
+
+  scope :production, where(dbtype: 'production')
+  scope :daily, where(daily: true)
+
+  def dumpinfo
+    if(self.scrub?)
+      dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}_scrubbed.sql.gz"
+    else
+      dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.gz"
+    end
+
+    if(!File.exists?(dumpfile))
+      return {'success' => false, 'error' => "dumpfile does not exist"}
+    end
+
+    if(self.in_progress?)
+      return {'success' => false, 'error' => "dump currently in progress"}
+    end
+
+    return {'success' => true, 'file' => dumpfile, 'server' => 'data.engineering.extension.org', 'size' => File.size(dumpfile), 'last_dumped_at' => self.last_dumped_at, 'dbtype' => self.dbtype}
+  end
+
+  def mark_in_progress
+    self.update_attribute(:in_progress,true)
+  end
+
+  def mark_complete
+    self.update_attribute(:in_progress,false)
+  end
 
 
   def dump(debug=false)
@@ -15,11 +45,24 @@ class AppData < ActiveRecord::Base
       return {success: false, error: "#{Settings.data_dump_dir_dump} does not exist"}
     end
 
-    if(self.scrub?)
-      scrubbed_dump(debug)
-    else
-      normal_dump(debug)
+    if(self.in_progress?)
+      return {success: false, error: "Dump already in progress"}
     end
+
+    self.mark_in_progress
+    started = Time.now
+    if(self.scrub?)
+      result = scrubbed_dump(debug)
+    else
+      result = normal_dump(debug)
+    end
+    finished = Time.now
+    self.mark_complete
+    if(result[:success])
+      size = File.size(result[:file])
+    end
+    self.app_dump_logs.create(started_at: started, finished_at: finished, runtime: finished - started, success: result[:success], additionaldata: result, size: size)
+    result
   end
 
   def normal_dump(debug = false)
@@ -67,8 +110,15 @@ class AppData < ActiveRecord::Base
     end
 
     # drop
-    self.class.drop_database(scrubbed_database,debug)
-    self.class.create_database(scrubbed_database,debug)
+    result = self.class.drop_database(scrubbed_database,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
+
+    result = self.class.create_database(scrubbed_database,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
 
     # import
     result = self.class.import_database_from_file(scrubbed_database,pre_scrubbed_file,debug)
@@ -118,7 +168,7 @@ class AppData < ActiveRecord::Base
     command_array << "#{database}"
     command_array << "> #{outputfile}"
     command = command_array.join(' ')
-    result = run_command(command,debug)
+    run_command(command,debug)
   end
 
   def self.drop_database(database, debug=false)
@@ -182,6 +232,16 @@ class AppData < ActiveRecord::Base
     logger.debug "running #{command}" if debug
     cmdoutput =  %x{#{command}}
     return cmdoutput
+  end
+
+  # code from: https://github.com/ripienaar/mysql-dump-split
+  def self.humanize_bytes(bytes)
+    if(bytes != 0)
+      units = %w{B KB MB GB TB}
+      e = (Math.log(bytes)/Math.log(1024)).floor
+      s = "%.1f"%(bytes.to_f/1024**e)
+      s.sub(/\.?0*$/,units[e])
+    end
   end
 
 end
