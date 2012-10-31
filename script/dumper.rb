@@ -24,7 +24,7 @@ class DataDumper < Thor
   method_option :debug,:default => false, :aliases => "-d", :desc => "Debug"
   def all_the_things
     load_rails(options[:environment])
-    AppData.daily.each do |appdata|
+    AppDump.daily.each do |appdata|
       puts "Dumping the #{appdata.dbtype} data in #{appdata.dbname} for #{appdata.application.name}..."
       result = appdata.dump(options[:debug])
       if(!result[:success])
