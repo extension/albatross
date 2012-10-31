@@ -3,6 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 require 'fileutils'
+require "open3"
 
 class AppDump < ActiveRecord::Base
   serialize :scrubbers
@@ -230,8 +231,17 @@ class AppDump < ActiveRecord::Base
 
   def self.run_command(command,debug = false)
     logger.debug "running #{command}" if debug
-    cmdoutput =  %x{#{command}}
-    return cmdoutput
+    stdin, stdout, stderr = Open3.popen3(command)
+    results = stdout.readlines + stderr.readlines
+    return results.join('')
+  end
+
+  def self.capture_stderr &block
+    real_stderr, $stderr = $stderr, StringIO.new
+    yield
+    $stderr.string
+  ensure
+    $stderr = real_stderr
   end
 
   # code from: https://github.com/ripienaar/mysql-dump-split
