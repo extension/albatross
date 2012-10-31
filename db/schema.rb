@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121026141709) do
+ActiveRecord::Schema.define(:version => 20121031151106) do
 
   create_table "app_data", :force => true do |t|
     t.integer  "application_id"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20121026141709) do
     t.datetime "last_dumped_at"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
+    t.integer  "last_dump_size", :default => 0
   end
 
   add_index "app_dumps", ["application_id"], :name => "app_ndx"

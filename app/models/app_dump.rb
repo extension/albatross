@@ -20,15 +20,11 @@ class AppDump < ActiveRecord::Base
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.gz"
     end
 
-    if(!File.exists?(dumpfile))
-      return {'success' => false, 'error' => "dumpfile does not exist"}
-    end
-
     if(self.in_progress?)
       return {'success' => false, 'error' => "dump currently in progress"}
     end
 
-    return {'success' => true, 'file' => dumpfile, 'server' => 'data.engineering.extension.org', 'size' => File.size(dumpfile), 'last_dumped_at' => self.last_dumped_at, 'dbtype' => self.dbtype}
+    return {'success' => true, 'file' => dumpfile, 'server' => 'data.engineering.extension.org', 'size' => self.last_dump_size, 'last_dumped_at' => self.last_dumped_at, 'dbtype' => self.dbtype}
   end
 
   def mark_in_progress
@@ -61,6 +57,7 @@ class AppDump < ActiveRecord::Base
     self.mark_complete
     if(result[:success])
       size = File.size(result[:file])
+      self.update_attributes(last_dumped_at: Time.now, last_dump_size: size)
     end
     self.app_dump_logs.create(started_at: started, finished_at: finished, runtime: finished - started, success: result[:success], additionaldata: result, size: size)
     result
@@ -93,8 +90,6 @@ class AppDump < ActiveRecord::Base
     rescue Exception => e
       return {success: false, error: e}
     end
-
-    self.update_attribute(:last_dumped_at, Time.now)
     {success: true, file: "#{target_file}.gz"}
   end
 
