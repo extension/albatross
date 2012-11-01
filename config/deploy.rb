@@ -1,11 +1,11 @@
 set :stages, %w(prod data)
 set :default_stage, "prod"
 require 'capistrano/ext/multistage'
-
 require 'capatross'
 require "bundler/capistrano"
 require './config/boot'
 require 'airbrake/capistrano'
+require "delayed/recipes"
 
 set :application, "albatross"
 set :repository,  "git@github.com:extension/albatross.git"
@@ -20,6 +20,7 @@ set :port, 24
 set :bundle_flags, ''
 set :bundle_dir, ''
 set :rails_env, "production" #added for delayed job
+set :delayed_job_args, "-n 3"
 
 before "deploy", "deploy:web:disable"
 #after "deploy:update_code", "deploy:bundle_install"
@@ -91,19 +92,19 @@ namespace :deploy do
   end
 end
 
-  namespace :delayed_job do
-    desc "stops delayed_job"
-    task :stop, :roles => :app do
-      run "sudo god stop delayed_jobs'"
-    end
+  # namespace :delayed_job do
+  #   desc "stops delayed_job"
+  #   task :stop, :roles => :app do
+  #     run "sudo god stop delayed_jobs'"
+  #   end
 
-    desc "reloads delayed_job"
-    task :reload, :roles => :app do
-      run "sudo god load #{release_path}/config/delayed_job.god"
-    end
+  #   desc "reloads delayed_job"
+  #   task :reload, :roles => :app do
+  #     run "sudo god load #{release_path}/config/delayed_job.god"
+  #   end
 
-    desc "starts delayed_job"
-    task :start, :roles => :app do
-      run "sudo god start delayed_jobs"
-    end
-  end
+  #   desc "starts delayed_job"
+  #   task :start, :roles => :app do
+  #     run "sudo god start delayed_jobs"
+  #   end
+  # end
