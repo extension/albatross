@@ -20,6 +20,7 @@ Albatross::Application.routes.draw do
   resources :dumps, :only => [:index] do
     collection do
       get :dumpinfo
+      post :do
     end
   end
 
