@@ -20,7 +20,7 @@ set :port, 24
 set :bundle_flags, ''
 set :bundle_dir, ''
 set :rails_env, "production" #added for delayed job
-set :delayed_job_args, "-n 3"
+set :delayed_job_args, "-n 3 -m"
 
 before "deploy", "deploy:web:disable"
 #after "deploy:update_code", "deploy:bundle_install"
