@@ -32,7 +32,7 @@ after "deploy", "deploy:web:enable"
 # delayed job
 after "deploy:stop",    "delayed_job:stop"
 after "deploy:start",   "delayed_job:start"
-after "deploy:restart", "delayed_job:reload"
+after "deploy:restart", "delayed_job:restart"
 
 namespace :deploy do
 
