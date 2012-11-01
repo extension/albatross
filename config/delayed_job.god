@@ -14,7 +14,7 @@ God.contact(:email) do |c|
 end
 
 
-1.times do |num|
+3.times do |num|
   God.watch do |w|
     w.env = { 'RAILS_ENV' => "production" }
     w.name     = "delayed_job-#{num}"
