@@ -26,7 +26,7 @@ end
     w.restart = "#{DELAYED_JOB} restart"
     w.log = "#{RAILS_ROOT}/log/delayed_job.log"
     w.start_grace = 45.seconds
-    w.pid_file = "#{RAILS_ROOT}/tmp/pids/delayed_job.pid"
+    w.pid_file = "#{RAILS_ROOT}/tmp/pids/delayed_job.#{num}.pid"
     w.behavior(:clean_pid_file)
 
     # determine the state on startup
