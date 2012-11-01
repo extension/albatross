@@ -11,20 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121031151106) do
-
-  create_table "app_data", :force => true do |t|
-    t.integer  "application_id"
-    t.string   "dbtype"
-    t.string   "dbname"
-    t.boolean  "scrub",          :default => false
-    t.text     "scrubbers"
-    t.datetime "last_dumped_at"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-  end
-
-  add_index "app_data", ["application_id"], :name => "app_ndx"
+ActiveRecord::Schema.define(:version => 20121101195622) do
 
   create_table "app_dump_logs", :force => true do |t|
     t.integer  "app_dump_id"
@@ -34,8 +21,9 @@ ActiveRecord::Schema.define(:version => 20121031151106) do
     t.integer  "size"
     t.float    "runtime"
     t.text     "additionaldata"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.integer  "coder_id",       :default => 1
   end
 
   add_index "app_dump_logs", ["app_dump_id"], :name => "app_dump_ndx"
