@@ -1,4 +1,3 @@
 albatross_uri: 'http://deploys.extension.org'
 appkey: 'fdcc8c3538be734cbddb0c759eecc42fd0fa3c93'
-getdata:
-  dbfile: 'dump_prod_deploys.sql'
+
