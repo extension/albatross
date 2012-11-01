@@ -161,6 +161,8 @@ class AppDump < ActiveRecord::Base
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << "--socket=#{Settings.data_dump_mysql_socket}"
+    command_array << "--extended-insert"
+    command_array << "--no-autocommit"
     command_array << "#{database}"
     command_array << "> #{outputfile}"
     command = command_array.join(' ')
