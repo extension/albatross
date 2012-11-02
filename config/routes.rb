@@ -17,7 +17,7 @@ Albatross::Application.routes.draw do
   resources :crons, :only => [:show, :index]
   resources :notifications, :only => [:show, :index, :create, :update]
 
-  resources :dumps, :only => [:index] do
+  resources :dumps, :only => [:index, :show] do
     collection do
       get :dumpinfo
       post :do

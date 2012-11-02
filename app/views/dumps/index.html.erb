@@ -1,0 +1,43 @@
+<%- @page_title = "Application Database Dumps" -%>
+<div class="page-header">
+  <h1><%= @page_title %></h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+  <table class="table table-bordered">
+  <thead>
+    <tr>
+        <th>Application</th>
+        <th>Database Type</th>
+        <th>Database Name</th>
+        <th>Dump Daily?</th>
+        <th>Scrub?</th>
+        <th>Last Dumped</th>
+        <th>Last Dumped Size</th>
+        <th>&nbsp;</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%- AppDump.all.each do |appdump| -%>
+    <tr>
+      <td><%= appdump.application.name %></td>
+      <td><%= appdump.dbtype %></td>
+      <td><%= appdump.dbname %></td>
+      <td><%= appdump.daily? ? 'Yes' : 'No' %></td>
+      <td><%= appdump.scrub? ? 'Yes' : 'No' %></td>
+      <td><%- if appdump.in_progress? -%>
+          <span class="label label-important">Currently in progress</span>
+        <%- else -%>
+          <%= appdump.last_dumped_at %>
+        <%- end -%>
+      </td>
+      <td><%= humanize_bytes(appdump.last_dump_size) %></td>
+      <td><%= link_to('<span class="label label-success">Details</span>'.html_safe,dump_path(appdump)) %></td>
+    </tr>
+  <%- end -%>
+  </tbody>
+</table>
+  </div>
+</div>

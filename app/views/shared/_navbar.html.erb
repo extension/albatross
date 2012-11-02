@@ -10,25 +10,25 @@
 		<ul class="dropdown-menu">
 			<% Deploy.applications_with_deploys.keys.each do |application| %>
 			<%= nav_item(deploys_path(:application => application.id),application.name) %>
-			<%- end -%>  
+			<%- end -%>
 		</ul>
 	</li>
-	
+
 	<li class="dropdown">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Locations<b class="caret"></b></a>
 		<ul class="dropdown-menu">
 			<% Deploy.locations_with_deploys.keys.each do |location| %>
 			<%= nav_item(deploys_path(:location => location),location) %>
-			<%- end -%>  
+			<%- end -%>
 		</ul>
 	</li>
-	
+
 	<li class="dropdown">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Coders<b class="caret"></b></a>
 		<ul class="dropdown-menu">
 			<% Deploy.coders_with_deploys.keys.each do |coder| %>
 			<%= nav_item(deploys_path(:coder => coder.id),coder.name) %>
-			<%- end -%>  
+			<%- end -%>
 		</ul>
 	</li>
 
@@ -40,9 +40,10 @@
 		  <li class="divider"></li>
 			<% Cron.order("name ASC").each do |cron| %>
 			<%= nav_item(crons_path(:cron => cron.id),cron.name) %>
-			<%- end -%>  
+			<%- end -%>
 		</ul>
 	</li>
+	<%= nav_item(dumps_path,'Data dumps') %>
 	<%- end -%>
 
 </ul>
@@ -61,7 +62,7 @@
 		</ul>
 	</li>
 	<%- else -%>
-	<%= nav_item(url_for(:controller => 'auth', :action => 'people'),'Sign in with eXtension') %>  
+	<%= nav_item(url_for(:controller => 'auth', :action => 'people'),'Sign in with eXtension') %>
 	<%- end -%>
-	
+
 </ul>

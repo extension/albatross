@@ -46,7 +46,8 @@ class Campout
   end
 
   def self.dump_notification_start(dump,coder)
-    message = ":mega: #{coder.name} has started a #{dump.dbtype} database dump for #{dump.application.name}"
+    time_period_string = AppDumpLog.time_period_to_s(dump.average_runtime)
+    message = ":mega: #{coder.name} has started a #{dump.dbtype} database dump for #{dump.application.name}. This typically takes #{time_period_string}"
     delay.speak(message)
   end
 

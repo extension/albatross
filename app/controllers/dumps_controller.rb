@@ -6,6 +6,13 @@
 class DumpsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
+  def index
+  end
+
+  def show
+    @appdump = AppDump.find(params[:id])
+  end
+
 
   def dumpinfo
     if(params[:appkey])
@@ -56,7 +63,7 @@ class DumpsController < ApplicationController
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
 
-    if(params['deployer_email'])
+    if(params['dumper_email'])
       coder = Coder.find_by_deploy_email(params['deployer_email'])
     end
 
