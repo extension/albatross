@@ -64,7 +64,7 @@ class DumpsController < ApplicationController
     end
 
     if(params['dumper_email'])
-      coder = Coder.find_by_deploy_email(params['deployer_email'])
+      coder = Coder.find_by_deploy_email(params['dumper_email'])
     end
 
     if(!coder)
