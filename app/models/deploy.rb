@@ -55,7 +55,7 @@ class Deploy < ActiveRecord::Base
     
     # notifications
     if(deploy.finish.nil?)
-      # first post, verbose only
+      Campout.deploy_start_notification(deploy)
       Campout.verbose_deploy_start_notification(deploy)
     else
       Campout.deploy_notification(deploy,{'from_cli' => provided_params['from_cli']})

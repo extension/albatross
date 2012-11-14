@@ -32,6 +32,11 @@ class Campout
     @verbose_room || campfire_connection.find_room_by_id(Settings.campfire_verbose_room)
   end
 
+  def self.deploy_start_notification(deploy)
+    message = "#{deploy.coder.name} is starting a deploy of #{deploy.application.name} to #{deploy.location}."
+    delay.speak(message)
+  end
+
   def self.deploy_notification(deploy,options={})
     if(options['from_cli'])
       message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{deploy.location} using the cli. Details: #{deploy.campout_url}"
