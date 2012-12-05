@@ -7,15 +7,15 @@ class Deploy < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   default_url_options[:host] = Settings.urlwriter_host
   default_scope where("finish IS NOT NULL")
+
   
-  
-  
-  attr_accessible :application, :coder, :capatross_id, :previous_revision, :deployed_revision, :location, :start, :finish, :success
+  attr_accessible :application, :coder, :capatross_id, :previous_revision, :deployed_revision, :location, :start, :finish, :success, :branch, :app_location_id
   belongs_to :application
+  belongs_to :app_location
   belongs_to :coder
   has_one :deploy_log
   
-  before_save :standardize_location
+  before_save :standardize_location, :set_app_location
   
   
   scope :byapplication, lambda{|application| where(:application_id => application.id)}
@@ -46,6 +46,7 @@ class Deploy < ActiveRecord::Base
     deploy.finish = provided_params['finish']
     deploy.success = provided_params['success']
     deploy.comment = provided_params['comment']
+    deploy.branch = provided_params['branch']
     deploy.save!
     
     if(provided_params['deploy_log'])
@@ -84,7 +85,13 @@ class Deploy < ActiveRecord::Base
     elsif(self.location == 'dev')
       self.location = 'development'
     elsif(self.location == 'demo')
-      self.location = 'staging'
+      self.location = 'development'
+    end
+  end
+
+  def set_app_location
+    if(app_location = application.app_location_for_location(self.location))
+      deploy.app_location_id = app_location.id
     end
   end
     
