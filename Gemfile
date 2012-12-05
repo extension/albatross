@@ -61,6 +61,9 @@ gem "tinder", "~> 1.9.0"
 # command line integration
 gem 'thor'
 
+# memcached
+gem 'dalli'
+
 group :development do
   # require the powder gem
   gem 'powder'
