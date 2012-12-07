@@ -35,5 +35,10 @@ class Coder < ActiveRecord::Base
   def self.coderbot_id
     1
   end
+
+  def set_data_key
+    randval = rand
+    self.update_attribute(:data_key, Digest::SHA1.hexdigest(Settings.session_token+self.id.to_s+self.uid+randval.to_s))
+  end
   
 end

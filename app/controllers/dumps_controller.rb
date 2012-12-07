@@ -5,6 +5,7 @@
 
 class DumpsController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  before_filter :validate_data_key, only: [:dumpinfo, :do]
 
   def index
   end
@@ -14,7 +15,7 @@ class DumpsController < ApplicationController
   end
 
 
-  def dumpinfo
+  def dumpinfo 
     if(params[:appkey])
       application = Application.find_by_appkey(params[:appkey])
     elsif(params[:appname])
@@ -63,18 +64,21 @@ class DumpsController < ApplicationController
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
 
-    if(params['dumper_email'])
-      coder = Coder.find_by_deploy_email(params['dumper_email'])
-    end
-
-    if(!coder)
-      coder = Coder.coderbot
-    end
-
-
-    appdump.delay.dump({announce: true, coder: coder})
+    appdump.delay.dump({announce: true, coder: @coder})
     returninformation = {'message' => 'Scheduled database dump', 'success' => true}
     return render :json => returninformation.to_json, :status => :ok
   end
+
+  def validate_data_key
+    if(!params[:data_key])
+      returninformation = {'message' => 'Data operations require that you add your personal data_key to your capatross settings.', 'success' => false}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+
+    if(!(@coder = Coder.find_by_data_key(params[:data_key])))
+      returninformation = {'message' => 'The personal data_key that you provided is not valid. Check it and try again.', 'success' => false}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+  end            
 
 end
