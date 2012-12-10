@@ -52,6 +52,12 @@
       	<td><%= link_to(@deploy.coder.name,deploys_path(:coder => @deploy.coder.id))  %></td>
 		  </tr>
 
+
+      <tr>
+        <td>Branch</td>
+        <td><%= @deploy.branch %></td>
+      </tr>
+
 		  <tr>
 			  <td>Comment</td>
 				<%- if @currentcoder -%>

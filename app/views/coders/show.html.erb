@@ -1,0 +1,31 @@
+<% @page_title = "Profile for #{@coder.name} (##{@coder.id})" %>
+<div class="page-header">
+  <h1>Profile for <%= @coder.name %></h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+  <table class="table table-bordered">
+
+    <tbody>
+      <%- if @currentcoder and @currentcoder == @coder %>
+      <tr>
+        <td>Your Data Key</td>
+        <td><strong><%= @coder.data_key %></strong></td>
+      </tr>
+      <%- end -%>
+
+      <tr>
+        <td>Last Login</td>
+        <td><%= @coder.last_login_at.blank? ? 'n/a' : @coder.last_login_at.to_s %></td>
+      </tr>
+
+      <tr>
+        <td>Recognized emails</td>
+        <td><%= @coder.coder_emails.map(&:email).join("<br/>\n").html_safe %></td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+</div>
