@@ -82,7 +82,7 @@ class Campout
     if(copy_log.success?)
       message = ":mega: The production => development database copy for #{copy_log.application.name} is complete (dump file size: #{AppCopy.humanize_bytes(copy_log.size)})."
     else
-      message = ":warning: The production => development database copyfor #{copy_log.application.name} has FAILED!. Details: #{copy_log.additionaldata[:error]}"
+      message = ":warning: The production => development database copy for #{copy_log.application.name} has FAILED!. Details: #{copy_log.additionaldata[:error]}"
     end
     delay.speak(message)
   end
