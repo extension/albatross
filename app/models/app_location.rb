@@ -5,5 +5,10 @@
 
 class AppLocation < ActiveRecord::Base
   belongs_to :application
-  attr_accessible :application, :application_id, :location, :url
+  attr_accessible :application, :application_id, :location, :url, :dbname
+
+  PRODUCTION = 'production'
+  DEVELOPMENT = 'development'
+
+
 end

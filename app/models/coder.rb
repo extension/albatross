@@ -9,6 +9,8 @@ class Coder < ActiveRecord::Base
   has_many :notification_prefs, dependent: :destroy
   has_many :coder_emails
   
+  after_create :set_data_key
+
   def login
     self.update_attribute(:last_login_at, Time.now.utc)
   end

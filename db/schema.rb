@@ -11,7 +11,34 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121205233326) do
+ActiveRecord::Schema.define(:version => 20121210201554) do
+
+  create_table "app_copies", :force => true do |t|
+    t.integer  "application_id"
+    t.boolean  "daily",          :default => false
+    t.boolean  "in_progress",    :default => false
+    t.datetime "last_copy_at"
+    t.integer  "last_copy_size", :default => 0
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "app_copies", ["application_id"], :name => "app_ndx", :unique => true
+
+  create_table "app_copy_logs", :force => true do |t|
+    t.integer  "app_copy_id"
+    t.integer  "coder_id",       :default => 1
+    t.boolean  "success"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.integer  "size"
+    t.float    "runtime"
+    t.text     "additionaldata"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "app_copy_logs", ["app_copy_id"], :name => "app_copy_ndx"
 
   create_table "app_dump_logs", :force => true do |t|
     t.integer  "app_dump_id"
@@ -30,16 +57,17 @@ ActiveRecord::Schema.define(:version => 20121205233326) do
 
   create_table "app_dumps", :force => true do |t|
     t.integer  "application_id"
+    t.integer  "app_location_id", :default => 0
     t.string   "dbtype"
     t.string   "dbname"
-    t.boolean  "daily",          :default => true
-    t.boolean  "scrub",          :default => false
+    t.boolean  "daily",           :default => true
+    t.boolean  "scrub",           :default => false
     t.text     "scrubbers"
-    t.boolean  "in_progress",    :default => false
+    t.boolean  "in_progress",     :default => false
     t.datetime "last_dumped_at"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-    t.integer  "last_dump_size", :default => 0
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+    t.integer  "last_dump_size",  :default => 0
   end
 
   add_index "app_dumps", ["application_id"], :name => "app_ndx"
@@ -48,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20121205233326) do
     t.integer  "application_id"
     t.string   "location"
     t.string   "url"
+    t.string   "dbname"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
@@ -76,9 +105,10 @@ ActiveRecord::Schema.define(:version => 20121205233326) do
     t.string   "name"
     t.string   "nickname"
     t.datetime "last_login_at"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-    t.string   "data_key",      :default => ""
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.string   "data_key",       :default => ""
+    t.datetime "last_active_at"
   end
 
   add_index "coders", ["data_key"], :name => "data_key_ndx"
@@ -142,8 +172,8 @@ ActiveRecord::Schema.define(:version => 20121205233326) do
     t.text     "comment"
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
-    t.string   "branch",            :default => ""
     t.integer  "app_location_id",   :default => 0
+    t.string   "branch",            :default => ""
   end
 
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true

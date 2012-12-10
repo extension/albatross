@@ -5,7 +5,7 @@
 
 class DumpsController < ApplicationController
   skip_before_filter :verify_authenticity_token
-  before_filter :validate_data_key, only: [:dumpinfo, :do]
+  before_filter :validate_data_key, only: [:dumpinfo, :do, :copy]
 
   def index
   end
@@ -66,6 +66,30 @@ class DumpsController < ApplicationController
 
     appdump.delay.dump({announce: true, coder: @coder})
     returninformation = {'message' => 'Scheduled database dump', 'success' => true}
+    return render :json => returninformation.to_json, :status => :ok
+  end
+
+  def copy
+    if(params[:appkey])
+      application = Application.find_by_appkey(params[:appkey])
+    elsif(params[:appname])
+      application = Application.find_by_name(params[:appname])
+    end
+
+    if(application.nil?)
+      returninformation = {'message' => 'Unknown application', 'success' => false}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+
+    appcopy = application.app_copy
+
+    if(!appcopy)
+      returninformation = {'message' => 'No application copy configuration exists.', 'success' => false}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+
+    appcopy.delay(run_at: 1.minute.from_now).copy({announce: true, coder: @coder})
+    returninformation = {'message' => 'Scheduled database copy. Please place the development application in maintenance mode.', 'success' => true}
     return render :json => returninformation.to_json, :status => :ok
   end
 

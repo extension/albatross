@@ -4,10 +4,10 @@
 # see LICENSE file
 require 'fileutils'
 
-class AppDumpLog < ActiveRecord::Base
+class AppCopyLog < ActiveRecord::Base
   extend TimeUtils
   serialize :additionaldata
   belongs_to :coder
-  belongs_to :app_dump
-  has_one :application, through: :app_dump
+  belongs_to :app_copy
+  has_one :application, through: :app_copy
 end
