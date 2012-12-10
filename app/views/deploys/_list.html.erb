@@ -4,9 +4,9 @@
         <th>Time</th>
         <th>Application</th>
         <th>Location</th>
+        <th>Branch</th>
         <th>Coder</th>
         <th>Revision</th>
-        <th>Comment</th>
         <th>Runtime</th>
         <th>Details</th>
     </tr>
@@ -18,17 +18,13 @@
       <td><%= deploy.finish.to_s %></td>
       <td><%= deploy.application.name %></td>
       <td><%= deploy.location %></td>
+      <td><%= deploy.branch %></td>
       <td><%= deploy.coder.name %></td>
 	  <%- if(!deploy.deployed_revision.blank?) -%>
 	  <td><%= link_to(deploy.deployed_revision,github_url_for_deploy(deploy)) %></td>
   	  <%- else -%>
 	  	<td>n/a</td>
 	  <%- end -%>
-				<%- if @currentcoder -%>
-				<td><%= best_in_place(deploy, :comment, { :type => :textarea, :path => setcomment_deploy_path(:id => deploy.id)})%></td>
-		  	<%- else -%>
-					<td><%= deploy.comment %></td>
-				<%- end -%>
       <td>
         <%= time_period_to_s(deploy.finish - deploy.start,true) %>
       </td>

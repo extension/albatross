@@ -91,12 +91,18 @@ class Deploy < ActiveRecord::Base
 
   def set_app_location
     if(app_location = application.app_location_for_location(self.location))
-      deploy.app_location_id = app_location.id
+      self.app_location_id = app_location.id
     end
   end
     
   def campout_url
     deploy_url(self)
+  end
+
+  def set_branch_from_log
+    if(self.deploy_log.output =~ %r{executing locally: "git ls-remote git@github.com:extension/(\w+)\.git (\w+)"})
+      self.update_attribute(:branch, $2)
+    end
   end
         
     
