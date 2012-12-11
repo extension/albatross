@@ -72,6 +72,10 @@ class AppCopy < ActiveRecord::Base
   end
 
   def database_copy(production_location,development_location,debug)
+    if(development_location.dbname =~ %r{prod})
+      return {success: false, error: "Incorrect database target"}
+    end
+
     target_copy_file = "#{Settings.data_dump_dir_dump}/copy_#{production_location.dbname}.sql"
 
     result = self.class.dump_database_to_file(production_location.dbname,target_copy_file,debug)
