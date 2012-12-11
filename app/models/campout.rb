@@ -34,18 +34,20 @@ class Campout
   end
 
   def self.deploy_start_notification(deploy)
-    message = "#{deploy.coder.name} is starting a deploy of #{deploy.application.name} to #{deploy.location}."
+    location = (deploy.app_location.nil? ? deploy.location : deploy.app_location.url)
+    message = ":mega: #{deploy.coder.name} is deploying the #{deploy.branch} branch of #{deploy.application.name} to #{location}."
     delay.speak(message)
   end
 
   def self.deploy_notification(deploy,options={})
+    location = (deploy.app_location.nil? ? deploy.location : deploy.app_location.url)
     if(options['from_cli'])
-      message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{deploy.location} using the cli. Details: #{deploy.campout_url}"
+      message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{location} using the cli. Details: #{deploy.campout_url}"
     else
       if(deploy.success?)
-        message = "#{deploy.coder.name} deployed #{deploy.application.name} to #{deploy.location}. Details: #{deploy.campout_url}"
+        message = ":checkered_flag: #{deploy.coder.name} deployed the #{deploy.branch} branch of #{deploy.application.name} to #{location}. Details: #{deploy.campout_url}"
       else
-        message = ":warning: The deploy for #{deploy.application.name} to #{deploy.location} has FAILED!. Details: #{deploy.campout_url}"
+        message = ":warning: The deploy for #{deploy.application.name} to #{location} has FAILED!. Details: #{deploy.campout_url}"
       end
     end
     delay.speak(message)
@@ -66,7 +68,7 @@ class Campout
 
   def self.dump_notification(dump_log)
     if(dump_log.success?)
-      message = ":mega: The #{dump_log.app_dump.dbtype} database for #{dump_log.application.name} has been dumped (compressed size: #{AppDump.humanize_bytes(dump_log.size)})."
+      message = ":checkered_flag: The #{dump_log.app_dump.dbtype} database for #{dump_log.application.name} has been dumped (compressed size: #{AppDump.humanize_bytes(dump_log.size)})."
       if(dump_log.app_dump.dbtype != 'production')
         message += " Use 'capatross getdata --dbtype=#{dump_log.app_dump.dbtype}' to download."
       else
@@ -80,7 +82,7 @@ class Campout
 
   def self.copy_notification(copy_log)
     if(copy_log.success?)
-      message = ":mega: The production => development database copy for #{copy_log.application.name} is complete (dump file size: #{AppCopy.humanize_bytes(copy_log.size)})."
+      message = ":checkered_flag: The production => development database copy for #{copy_log.application.name} is complete (dump file size: #{AppCopy.humanize_bytes(copy_log.size)})."
     else
       message = ":warning: The production => development database copy for #{copy_log.application.name} has FAILED!. Details: #{copy_log.additionaldata[:error]}"
     end
