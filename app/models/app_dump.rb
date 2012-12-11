@@ -91,13 +91,17 @@ class AppDump < ActiveRecord::Base
       return {success: false, error: "#{result}"}
     end
 
+
+    # size it up
+    dump_size = File.size(tmp_dump_file)
+
+
     # compress it
     gzip_command = "#{Settings.data_dump_gzip_cmd} #{tmp_dump_file}"
     result = self.class.run_command(gzip_command,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
-
 
     # move it
     move_source = "#{tmp_dump_file}.gz"
@@ -108,7 +112,7 @@ class AppDump < ActiveRecord::Base
     rescue Exception => e
       return {success: false, error: e}
     end
-    {success: true, file: "#{target_file}.gz"}
+    {success: true, file: "#{target_file}.gz", dump_size: dump_size}
   end
 
   def scrubbed_dump(debug = false)
@@ -149,6 +153,9 @@ class AppDump < ActiveRecord::Base
     # dump
     result = self.class.dump_database_to_file(scrubbed_database,tmp_dump_file,debug)
 
+    # size it up
+    dump_size = File.size(tmp_dump_file)
+
     # compress it
     gzip_command = "#{Settings.data_dump_gzip_cmd} #{tmp_dump_file}"
     result = self.class.run_command(gzip_command,debug)
@@ -169,7 +176,7 @@ class AppDump < ActiveRecord::Base
     # drop
     self.class.drop_database(scrubbed_database,debug)
 
-    {success: true, file: "#{target_file}.gz"}
+    {success: true, file: "#{target_file}.gz", dump_size: dump_size}
 
   end
 
