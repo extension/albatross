@@ -1,5 +1,4 @@
 Albatross::Application.routes.draw do
-  root :to => 'deploys#index'
 
   resources :deploys, :only => [:show, :index, :create] do
     collection do
@@ -36,5 +35,8 @@ Albatross::Application.routes.draw do
       match "/:action"
     end
   end
+
+  root :to => 'dashboard#index'
+
 
 end

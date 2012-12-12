@@ -21,6 +21,8 @@ class Deploy < ActiveRecord::Base
   scope :byapplication, lambda{|application| where(:application_id => application.id)}
   scope :bylocation, lambda{|location| where(:location => location)}
   scope :bycoder, lambda{|coder| where(:coder_id => coder.id)}
+  scope :production, where(location: 'production')
+  scope :production_listing, production.order('finish DESC')
 
   
   def self.create_or_update_from_params(provided_params)
@@ -102,6 +104,14 @@ class Deploy < ActiveRecord::Base
   def set_branch_from_log
     if(self.deploy_log.output =~ %r{executing locally: "git ls-remote git@github.com:extension/(\w+)\.git (\w+)"})
       self.update_attribute(:branch, $2)
+    end
+  end
+
+  def deployed_to_url
+    if(self.app_location)
+      self.app_location.url
+    else
+      nil
     end
   end
         
