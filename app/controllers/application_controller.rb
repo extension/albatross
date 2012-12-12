@@ -6,6 +6,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include AuthLib
+  before_filter :set_time_zone
   before_filter :signin_optional
   helper_method :time_period_to_s
   helper_method :humanize_bytes
@@ -45,6 +46,16 @@ class ApplicationController < ActionController::Base
       s.sub(/\.?0*$/,units[e])
     else
       defaultstring
+    end
+  end
+
+  def set_time_zone
+    mappings = ActiveSupport::TimeZone::MAPPING.invert
+    browser_timezone = URI.unescape(request.cookies["time_zone"].to_s)
+    if(browser_timezone and mappings[browser_timezone])
+      Time.zone = mappings[browser_timezone]
+    else
+      Time.zone = Settings.default_display_timezone
     end
   end
 

@@ -1,3 +1,4 @@
+default_display_timezone: 'Eastern Time (US & Canada)'
 session_token: '123456789012345678901234567890'
 github_key: 'use_local_settings'
 github_secret: 'use_local_settings'
@@ -7,7 +8,6 @@ campfire_token: 'use_local_settings'
 campfire_room: 'use_local_settings'
 campfire_verbose_room: 'use_local_settings'
 cron_notification_email: 'systemnotices@extension.org'
-
 data_dump_mysql_cmd: 'use_local_settings'
 data_dump_mysql_user: 'use_local_settings'
 data_dump_mysql_pass: 'use_local_settings'

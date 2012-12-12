@@ -23,6 +23,12 @@
       <%= render(:partial => 'shared/flashmessages') %>
       </div>
       <%= yield %>
-    </div>    
+    </div>
+
+    <script type="text/javascript">
+      var tz = jstz.determine();
+      $.cookie('time_zone', tz.name());
+    </script>
+
   </body>
 </html>
