@@ -4,6 +4,7 @@
 # see LICENSE file
 
 class Deploy < ActiveRecord::Base
+  include MarkupScrubber
   include Rails.application.routes.url_helpers
   default_url_options[:host] = Settings.urlwriter_host
   default_scope where("finish IS NOT NULL")
@@ -25,6 +26,12 @@ class Deploy < ActiveRecord::Base
   scope :successful, where(success: true)
   scope :production_listing, successful.production.order('finish DESC')
 
+
+  
+  # attr_writer override for comment to scrub html
+  def comment=(commentcontent)
+    write_attribute(:comment, self.cleanup_html(commentcontent))
+  end
   
   def self.create_or_update_from_params(provided_params)
     if(!provided_params['appkey'] or !provided_params['capatross_id'] or !provided_params['deployer_email'])
@@ -69,6 +76,8 @@ class Deploy < ActiveRecord::Base
   
     deploy
   end
+
+
   
   def self.coders_with_deploys
     Deploy.group(:coder).count

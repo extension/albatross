@@ -63,6 +63,9 @@ gem 'thor'
 # memcached
 gem 'dalli'
 
+# html sanitization
+gem 'loofah'
+
 group :development do
   # require the powder gem
   gem 'powder'

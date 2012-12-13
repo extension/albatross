@@ -1,5 +1,5 @@
 <%- if(deploy.comment.present?) -%>
-  <%= deploy.comment %>
+  <%= deploy.comment.html_safe %>
 <%- else -%>
     <p><em>No description provided</em></p>
 <%- end -%>
