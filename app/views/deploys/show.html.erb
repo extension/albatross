@@ -77,9 +77,13 @@
     <div id='comment_for_deploy_<%= @deploy.id %>'>
       <%= render(partial: 'shared/comment', locals: {deploy: @deploy}) %>
     </div>
+    <%- if @currentcoder -%>
+      <p id="edit_comment_link_for_deploy_<%= @deploy.id %>"><small><%= link_to('edit','#',id: "edit_comment_for_deploy_#{@deploy.id}") %></small></p>
+    <%- end -%>
 
     <script class="code" type="text/javascript">
       $('#edit_comment_for_deploy_<%= @deploy.id %>').click(function() {
+        $('#edit_comment_link_for_deploy_<%= @deploy.id %>').hide();
         $('#comment_for_deploy_<%= @deploy.id %>').html('<%= escape_javascript(render(partial: "shared/comment_form", locals: {deploy: @deploy})) %>');
      });
     </script>

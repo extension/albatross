@@ -13,6 +13,7 @@ class DeploysController < ApplicationController
  
   def show
     @deploy = Deploy.find(params[:id])
+    @show_edit_comment = true
   end
   
   def create
@@ -24,10 +25,11 @@ class DeploysController < ApplicationController
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end    
   end
-  
-  
+
   def setcomment
     @deploy = Deploy.find_by_id(params[:id])
+    @show_edit_comment = true
+
     if(@deploy)
       @deploy.update_attribute(:comment,params[:deploy][:comment])
     end
@@ -49,7 +51,7 @@ class DeploysController < ApplicationController
   
 
   def recent
-    @deploylist = Deploy.production_listing.includes(:app_location).limit(50)
+    @deploylist = Deploy.production_listing.includes(:app_location).limit(20)
   end
 
   def production

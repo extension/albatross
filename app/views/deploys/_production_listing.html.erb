@@ -20,11 +20,6 @@
 
   </div>
 
-  <script class="code" type="text/javascript">
-    $('#edit_comment_for_deploy_<%= deploy.id %>').click(function() {
-      $('#comment_for_deploy_<%= deploy.id %>').html('<%= escape_javascript(render(partial: "shared/comment_form", locals: {deploy: deploy})) %>');
-    });
-  </script>
 
 <%- end -%>
 

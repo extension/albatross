@@ -1,1 +1,2 @@
 $("#comment_for_deploy_<%= @deploy.id %>").html("<%= escape_javascript(render partial: 'shared/comment', locals: {deploy: @deploy}) %>");
+$('#edit_comment_link_for_deploy_<%= @deploy.id %>').show();
