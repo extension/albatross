@@ -22,5 +22,11 @@ class Application < ActiveRecord::Base
     self.app_locations.where(location: location).first
   end
 
+  def lastest_production_deploy
+    production_location = self.app_locations.production.first
+    production_location.latest_deploy
+  end
+
+
 
 end
