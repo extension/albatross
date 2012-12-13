@@ -3,7 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 
-class AppsController < ActionController::Base
+class AppsController < ApplicationController
 
   def show
     @application = Application.find(params[:id])

@@ -10,5 +10,6 @@
  *
  *= require_self
  *= require twitter/bootstrap
+ *= require bootstrap-wysihtml5
  *= require bootstrap_overrides
 */

@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
-//= require jquery.purr
-//= require best_in_place
+//= require twitter/bootstrap/transition
+//= require twitter/bootstrap/button
+//= require bootstrap-wysihtml5
 //= require_tree .

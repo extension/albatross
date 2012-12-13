@@ -1,0 +1,15 @@
+<%= form_for(deploy, :url => setcomment_deploy_path(id: deploy.id), remote: true, html: {id: "comment_form_for_deploy_#{deploy.id}"}) do |f| %>
+
+    <fieldset>
+      <%= f.text_area :comment, "rows" => 3, class: 'span8', id: "deploy_comment_field_#{deploy.id}" %>
+    </fieldset>
+  
+    <fieldset>
+      <%= f.submit "Save Changes", :class => "btn" %></p>
+    </fieldset>
+    
+<%- end -%>
+
+<script class="code" type="text/javascript">
+  $('#deploy_comment_field_<%= deploy.id %>').wysihtml5({image: false});
+</script>

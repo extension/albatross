@@ -7,24 +7,10 @@ class DeploysController < ApplicationController
   before_filter :signin_required, :only => [:setcomment]   
   
   
-  def index
-    deploylist_scope = Deploy.order("start DESC")
-    
-    if(params[:coder] and coder = Coder.find_by_id(params[:coder]))
-      deploylist_scope = deploylist_scope.bycoder(coder)
-    end
-    
-    if(params[:application] and application = Application.find_by_id(params[:application]))
-      deploylist_scope = deploylist_scope.byapplication(application)
-    end
-    
-    if(params[:location])
-      deploylist_scope = deploylist_scope.bylocation(params[:location])
-    end
-        
-    @deploylist = deploylist_scope.page(params[:page])
+  def index      
+    @deploylist = Deploy.order("start DESC").page(params[:page])
   end
-  
+ 
   def show
     @deploy = Deploy.find(params[:id])
   end
@@ -45,9 +31,9 @@ class DeploysController < ApplicationController
     if(@deploy)
       @deploy.update_attribute(:comment,params[:deploy][:comment])
     end
-    
+
     respond_to do |format|
-      format.json { respond_with_bip(@deploy) }
+      format.js
     end
   end
   
@@ -61,6 +47,25 @@ class DeploysController < ApplicationController
     end    
   end
   
+
+  def recent
+    @deploylist = Deploy.production_listing.includes(:app_location).limit(50)
+  end
+
+  def production
+    deploylist_scope = Deploy.production_listing.includes(:app_location)
+    
+    if(params[:coder] and @coder = Coder.find_by_id(params[:coder]))
+      deploylist_scope = deploylist_scope.bycoder(@coder)
+    end
+    
+    if(params[:application] and @application = Application.find_by_id(params[:application]))
+      deploylist_scope = deploylist_scope.byapplication(@application)
+    end
+            
+    @deploylist = deploylist_scope.page(params[:page])
+  end
+
   
   
 

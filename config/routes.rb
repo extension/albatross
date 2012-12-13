@@ -3,6 +3,9 @@ Albatross::Application.routes.draw do
   resources :deploys, :only => [:show, :index, :create] do
     collection do
       get :production
+      get :byapplication
+      get :recent
+      get :production
       get :fakeit
       post :fakeit
     end
@@ -23,6 +26,7 @@ Albatross::Application.routes.draw do
     end
   end
 
+  resources :apps, only: [:index, :show]
   resources :coders, only: [:index, :show]
 
   match '/logout' => 'auth#end', :as => 'logout'
@@ -36,7 +40,7 @@ Albatross::Application.routes.draw do
     end
   end
 
-  root :to => 'dashboard#index'
+  root :to => 'deploys#recent'
 
 
 end

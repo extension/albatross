@@ -5,7 +5,7 @@
         <th>Application</th>
         <th>Location</th>
         <th>Branch</th>
-        <th>Coder</th>
+        <th>Who</th>
         <th>Revision</th>
         <th>Runtime</th>
         <th>Details</th>
@@ -15,7 +15,7 @@
   <tbody>
     <%- for deploy in deploylist -%>
   	<tr>
-      <td><%= deploy.finish.to_s %></td>
+      <td><%= deployed_time_for_table(deploy) %></td>
       <td><%= deploy.application.name %></td>
       <td><%= deploy.location %></td>
       <td><%= deploy.branch %></td>

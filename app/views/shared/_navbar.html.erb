@@ -5,23 +5,8 @@
 <!-- Core Navigation -->
 <ul class="nav">
 
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Applications<b class="caret"></b></a>
-		<ul class="dropdown-menu">
-			<% Deploy.applications_with_deploys.keys.each do |application| %>
-			<%= nav_item(deploys_path(:application => application.id),application.name) %>
-			<%- end -%>
-		</ul>
-	</li>
+	<%= nav_item(deploys_path,'All Deployments') %>
 
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Coders<b class="caret"></b></a>
-		<ul class="dropdown-menu">
-			<% Deploy.coders_with_deploys.keys.each do |coder| %>
-			<%= nav_item(deploys_path(:coder => coder.id),coder.name) %>
-			<%- end -%>
-		</ul>
-	</li>
 
 	<%- if @currentcoder -%>
 	<li class="dropdown">
@@ -34,7 +19,6 @@
 			<%- end -%>
 		</ul>
 	</li>
-	<%= nav_item(dumps_path,'Data dumps') %>
 	<%- end -%>
 
 </ul>
@@ -47,7 +31,6 @@
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= @currentcoder.name %><b class="caret"></b></a>
 		<ul class="dropdown-menu">
 			<%= nav_item(coder_path(@currentcoder),'Your Profile') %>
-			<%= nav_item(deploys_path(:coder => @currentcoder.id),'Your Deploys') %>
 			<%= nav_item(notifications_path, 'Notification Preferences')  %>
 			<li class="divider"></li>
 			<%= nav_item(logout_path,'Sign out') %>

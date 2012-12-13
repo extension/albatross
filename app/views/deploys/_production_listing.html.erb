@@ -1,0 +1,31 @@
+<%- @deploylist.each do |deploy| %>
+  <div class="well">
+          <h3>
+      <%= where_deployed(deploy) %>
+      <small></small>
+    </h3>
+    <p class='lead'>
+      <%= deployed_time(deploy) %> by <%= deploy.coder.name %>
+    </p>
+
+    <div id='comment_for_deploy_<%= deploy.id %>'>
+      <%= render(partial: 'shared/comment', locals: {deploy: deploy}) %>
+    </div>
+
+    <%- if !@application -%>
+    <p>
+      <%= link_to("<span class='label'>#{deploy.application.name}</span>".html_safe,production_deploys_path(application: deploy.application.id)) %>
+    </p>
+    <%- end -%>
+
+  </div>
+
+  <script class="code" type="text/javascript">
+    $('#edit_comment_for_deploy_<%= deploy.id %>').click(function() {
+      $('#comment_for_deploy_<%= deploy.id %>').html('<%= escape_javascript(render(partial: "shared/comment_form", locals: {deploy: deploy})) %>');
+    });
+  </script>
+
+<%- end -%>
+
+

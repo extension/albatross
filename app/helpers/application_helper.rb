@@ -35,4 +35,12 @@ module ApplicationHelper
     end
   end
 
+  def deployed_time_for_table(deploy)
+     if(deploy.finish.blank?)
+       ''
+     else
+       deploy.finish.strftime("%Y-%m-%d %H:%M:%S %Z").html_safe
+     end
+  end
+
 end
