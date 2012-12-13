@@ -12,4 +12,5 @@
  *= require twitter/bootstrap
  *= require bootstrap-wysihtml5
  *= require bootstrap_overrides
+ *= require application_styles
 */

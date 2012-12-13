@@ -1,3 +1,4 @@
+<div class='comment'>
 <%- if(deploy.comment.present?) -%>
   <%= deploy.comment.html_safe %>
 <%- else -%>
@@ -6,3 +7,4 @@
 <%- if @currentcoder -%>
   <p><small><%= link_to('edit','#',id: "edit_comment_for_deploy_#{deploy.id}") %></small></p>
 <%- end -%>
+</div>
