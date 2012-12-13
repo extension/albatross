@@ -22,7 +22,8 @@ class Deploy < ActiveRecord::Base
   scope :bylocation, lambda{|location| where(:location => location)}
   scope :bycoder, lambda{|coder| where(:coder_id => coder.id)}
   scope :production, where(location: 'production')
-  scope :production_listing, production.order('finish DESC')
+  scope :successful, where(success: true)
+  scope :production_listing, successful.production.order('finish DESC')
 
   
   def self.create_or_update_from_params(provided_params)
