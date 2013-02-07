@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121210201554) do
+ActiveRecord::Schema.define(:version => 20130207211906) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20121210201554) do
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
     t.integer  "last_dump_size",  :default => 0
+    t.boolean  "is_snapshot",     :default => false
   end
 
   add_index "app_dumps", ["application_id"], :name => "app_ndx"

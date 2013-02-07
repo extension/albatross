@@ -15,13 +15,16 @@ class AppDump < ActiveRecord::Base
 
   scope :production, where(dbtype: 'production')
   scope :daily, where(daily: true)
+  scope :nonsnapshot, where(is_snapshot: false)
 
   def average_runtime
     self.app_dump_logs.average(:runtime)
   end
 
   def dumpinfo
-    if(self.scrub?)
+    if(self.is_snapshot?)
+      dumpfile = "#{Settings.data_dump_dir_dump}/snapshots/#{self.dbname}"
+    elsif(self.scrub?)
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}_scrubbed.sql.gz"
     else
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.gz"
