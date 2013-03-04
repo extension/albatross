@@ -6,16 +6,6 @@ class CronLogsController < ApplicationController
   skip_before_filter :verify_authenticity_token  
   before_filter :signin_required, :except => [:create]   
   
-  def index
-    deploylist_scope = CronLog.order("finished_at DESC")
-    
-    if(params[:cron] and cron = CronLog.find_by_id(params[:cron]))
-      deploylist_scope = deploylist_scope.bycron(cron)
-    end
-        
-    @cronlogs = deploylist_scope.page(params[:page])
-  end
-  
   def show
     @cronlog = CronLog.find(params[:id])
   end

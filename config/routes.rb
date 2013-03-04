@@ -15,7 +15,7 @@ Albatross::Application.routes.draw do
     end
   end
 
-  resources :cron_logs, :only => [:show, :index, :create]
+  resources :cron_logs, :only => [:show, :create]
   resources :crons, :only => [:show, :index]
   resources :notifications, :only => [:show, :index, :create, :update]
 

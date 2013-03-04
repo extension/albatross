@@ -7,6 +7,33 @@
 <div class="row-fluid">
   <div class="span12">
 	  <%= paginate @cronlogs %>
-	  <%= render(:partial => 'list', :locals => {:deploylist => @cronlogs} )%>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+            <th>Server</th>
+            <th>Started At</th>
+            <th>Runtime</th>
+            <th>Details</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <%- for cronlog in @cronlogs -%>
+        <tr>
+          <td><%= cronlog.server %></td>
+          <td><%= cronlog.started_at %></td>
+          <td><%= cronlog.runtime %></td>
+          <td>
+            <%- if cronlog.success? -%>
+            <%= link_to('success', cron_log_path(cronlog), :class => 'label label-success') %></td>
+            <%- else -%>
+            <%= link_to('failed', cron_log_path(cronlog), :class => 'label label-important') %></td>
+            <%- end -%>
+        </td>
+        </tr>
+      <%- end -%>
+      </tbody>
+    </table>
   </div>
 </div>
