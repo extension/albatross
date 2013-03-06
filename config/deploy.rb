@@ -5,7 +5,7 @@ require 'capatross'
 require "bundler/capistrano"
 require './config/boot'
 require 'airbrake/capistrano'
-require "delayed/recipes"
+require 'sidekiq/capistrano'
 
 set :application, "albatross"
 set :repository,  "git@github.com:extension/albatross.git"
@@ -28,11 +28,6 @@ after "deploy:update_code", "deploy:update_maint_msg"
 after "deploy:update_code", "deploy:link_and_copy_configs"
 after "deploy:update_code", "deploy:cleanup"
 after "deploy", "deploy:web:enable"
-
-# delayed job
-after "deploy:stop",    "delayed_job:stop"
-after "deploy:start",   "delayed_job:start"
-after "deploy:restart", "delayed_job:restart"
 
 namespace :deploy do
 
@@ -92,19 +87,3 @@ namespace :deploy do
   end
 end
 
-  # namespace :delayed_job do
-  #   desc "stops delayed_job"
-  #   task :stop, :roles => :app do
-  #     run "sudo god stop delayed_jobs'"
-  #   end
-
-  #   desc "reloads delayed_job"
-  #   task :reload, :roles => :app do
-  #     run "sudo god load #{release_path}/config/delayed_job.god"
-  #   end
-
-  #   desc "starts delayed_job"
-  #   task :start, :roles => :app do
-  #     run "sudo god start delayed_jobs"
-  #   end
-  # end

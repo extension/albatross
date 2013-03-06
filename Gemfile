@@ -51,8 +51,8 @@ gem 'capatross'
 gem 'airbrake'
 
 # background jobs
-gem 'delayed_job_active_record'
-gem 'daemons'
+gem 'sidekiq'
+
 
 # campfire integration
 gem "tinder", "~> 1.9.0"
@@ -60,8 +60,8 @@ gem "tinder", "~> 1.9.0"
 # command line integration
 gem 'thor'
 
-# memcached
-gem 'dalli'
+# cache
+gem 'redis-rails'
 
 # html sanitization
 gem 'loofah'
