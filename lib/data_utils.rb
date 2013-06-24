@@ -79,11 +79,22 @@ module DataUtils
     base_command = base_command_array.join(' ')
 
     scrubbers.keys.each do |table|
-      column = scrubbers[table]['column']
-      value = scrubbers[table]['value']
-      scrub_query = "\"UPDATE #{table} SET #{column}='#{value}';\""
-      command = "#{base_command} -e #{scrub_query}"
-      run_command(command,debug)
+      if(scrubbers[table]['columns'] and scrubbers[table]['columns'].is_a?(Hash))
+        setters = []
+        scrubbers[table]['columns'].each do |column,value|
+          setters << "#{column} = '#{value}'"
+        end
+        scrub_query = "\"UPDATE #{table} SET #{setters.join(', ')};\""
+      elsif(scrubbers[table]['column'] and scrubbers[table]['value'])
+        column = scrubbers[table]['column']
+        value = scrubbers[table]['value']
+        scrub_query = "\"UPDATE #{table} SET #{column}='#{value}';\""
+      end
+
+      if(scrub_query)
+        command = "#{base_command} -e #{scrub_query}"
+        run_command(command,debug)
+      end
     end
   end
 
