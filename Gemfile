@@ -3,6 +3,9 @@ source 'https://systems.extension.org/rubygems/'
 
 gem 'rails', '3.2.13'
 
+# all things xml
+gem 'nokogiri', '1.5.10'
+
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
