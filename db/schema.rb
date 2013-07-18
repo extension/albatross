@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130306182441) do
+ActiveRecord::Schema.define(:version => 20130717152749) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -128,6 +128,48 @@ ActiveRecord::Schema.define(:version => 20130306182441) do
     t.datetime "updated_at",                      :null => false
   end
 
+  create_table "cronmon_log_outputs", :force => true do |t|
+    t.integer  "cronmon_log_id"
+    t.text     "stdout",         :limit => 16777215
+    t.text     "stderr",         :limit => 16777215
+    t.datetime "created_at"
+  end
+
+  add_index "cronmon_log_outputs", ["cronmon_log_id"], :name => "cronmon_log_ndx"
+
+  create_table "cronmon_logs", :force => true do |t|
+    t.integer  "cronmon_id"
+    t.text     "command"
+    t.datetime "start"
+    t.datetime "finish"
+    t.boolean  "success"
+    t.float    "runtime"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "cronmon_logs", ["cronmon_id"], :name => "cronmon_ndx"
+
+  create_table "cronmon_servers", :force => true do |t|
+    t.string   "name",         :null => false
+    t.text     "sysinfo"
+    t.datetime "last_cron_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "cronmon_servers", ["name"], :name => "server_name_ndx", :unique => true
+
+  create_table "cronmons", :force => true do |t|
+    t.integer  "cron_server_id",                       :null => false
+    t.string   "label",                                :null => false
+    t.boolean  "error_notification", :default => true, :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+  end
+
+  add_index "cronmons", ["cron_server_id", "label"], :name => "cronmon_ndx", :unique => true
+
   create_table "crons", :force => true do |t|
     t.string   "name",                              :null => false
     t.boolean  "notify_on_error", :default => true, :null => false
@@ -171,5 +213,47 @@ ActiveRecord::Schema.define(:version => 20130306182441) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
+
+  create_table "oauth_access_grants", :force => true do |t|
+    t.integer  "resource_owner_id", :null => false
+    t.integer  "application_id",    :null => false
+    t.string   "token",             :null => false
+    t.integer  "expires_in",        :null => false
+    t.string   "redirect_uri",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "revoked_at"
+    t.string   "scopes"
+  end
+
+  add_index "oauth_access_grants", ["token"], :name => "index_oauth_access_grants_on_token", :unique => true
+
+  create_table "oauth_access_tokens", :force => true do |t|
+    t.integer  "resource_owner_id"
+    t.integer  "application_id",    :null => false
+    t.string   "token",             :null => false
+    t.string   "refresh_token"
+    t.integer  "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at",        :null => false
+    t.string   "scopes"
+  end
+
+  add_index "oauth_access_tokens", ["refresh_token"], :name => "index_oauth_access_tokens_on_refresh_token", :unique => true
+  add_index "oauth_access_tokens", ["resource_owner_id"], :name => "index_oauth_access_tokens_on_resource_owner_id"
+  add_index "oauth_access_tokens", ["token"], :name => "index_oauth_access_tokens_on_token", :unique => true
+
+  create_table "oauth_applications", :force => true do |t|
+    t.string   "name",         :null => false
+    t.string   "uid",          :null => false
+    t.string   "secret",       :null => false
+    t.string   "redirect_uri", :null => false
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "oauth_applications", ["owner_id", "owner_type"], :name => "index_oauth_applications_on_owner_id_and_owner_type"
+  add_index "oauth_applications", ["uid"], :name => "index_oauth_applications_on_uid", :unique => true
 
 end

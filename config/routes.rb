@@ -1,5 +1,7 @@
 Albatross::Application.routes.draw do
 
+  use_doorkeeper
+
   resources :deploys, :only => [:show, :index, :create] do
     collection do
       get :production
@@ -28,6 +30,12 @@ Albatross::Application.routes.draw do
 
   resources :apps, only: [:index, :show]
   resources :coders, only: [:index, :show]
+
+  resources :cronmons, only: [:index, :show] do
+    collection do
+      post :register
+    end
+  end
 
   match '/logout' => 'auth#end', :as => 'logout'
   match '/auth/:provider/callback' => 'auth#success'

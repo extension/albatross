@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
   helper_method :time_period_to_s
   helper_method :humanize_bytes
 
+  TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE', 'yes','YES','y','Y']
+  FALSE_VALUES = [false, 0, '0', 'f', 'F', 'false', 'FALSE','no','NO','n','N']
+
+
   # Takes a period of time in seconds and returns it in human-readable form (down to minutes)
   # code from http://www.postal-code.com/binarycode/2007/04/04/english-friendly-timespan/
   def time_period_to_s(time_period,abbreviated=false,defaultstring='')

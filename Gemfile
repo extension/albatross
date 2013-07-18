@@ -56,12 +56,14 @@ gem 'airbrake'
 # background jobs
 gem 'sidekiq'
 
-
 # campfire integration
 gem "tinder", "~> 1.9.0"
 
 # command line integration
 gem 'thor'
+
+# oauth
+gem 'doorkeeper'
 
 # cache
 gem 'redis-rails'
