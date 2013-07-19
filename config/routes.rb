@@ -34,6 +34,7 @@ Albatross::Application.routes.draw do
   resources :cronmons, only: [:index, :show] do
     collection do
       post :register
+      post :log
     end
   end
 
