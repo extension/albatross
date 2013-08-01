@@ -7,6 +7,7 @@ class Cronmon < ActiveRecord::Base
   
   belongs_to :cronmon_server
   has_many :cronmon_logs
+  validates :label, :presence => true
 
   def save_log(provided_params)
     create_options = {}
