@@ -29,6 +29,7 @@ class CronmonServer < ActiveRecord::Base
   end
 
   def find_or_create_cronmon_by_label(label)
+    label = 'unknown' if label.nil?
     if(!cronmon = self.cronmons.where(label: label).first)
       cronmon = self.cronmons.create(label: label)
     end
