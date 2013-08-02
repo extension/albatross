@@ -4,8 +4,8 @@
 # see LICENSE file
 class CronmonsController < ApplicationController
   skip_before_filter :verify_authenticity_token  
-  before_filter :signin_required, :except => [:register, :log]
-  doorkeeper_for :register, :log
+  before_filter :signin_required, :except => [:register, :log, :heartbeat]
+  doorkeeper_for :register, :log, :heartbeat
 
 
   def log

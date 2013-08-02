@@ -35,6 +35,7 @@ Albatross::Application.routes.draw do
     collection do
       post :register
       post :log
+      post :heartbeat
     end
   end
 
