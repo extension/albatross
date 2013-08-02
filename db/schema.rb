@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130717152749) do
+ActiveRecord::Schema.define(:version => 20130802183607) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -127,6 +127,8 @@ ActiveRecord::Schema.define(:version => 20130717152749) do
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
   end
+
+  add_index "cron_logs", ["cron_id"], :name => "cron_ndx"
 
   create_table "cronmon_log_outputs", :force => true do |t|
     t.integer  "cronmon_log_id"
