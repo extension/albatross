@@ -26,6 +26,26 @@ class CronmonsController < ApplicationController
     end      
   end
 
+  def heartbeat
+    if(doorkeeper_token and doorkeeper_token.application)
+      if(cs = doorkeeper_token.application.owner and cs.is_a?(CronmonServer))
+        if(params[:sysinfo])
+          cs.update_attributes({sysinfo: params[:sysinfo], last_heartbeat_at: Time.now.utc})
+        else
+          cs.update_attributes({last_heartbeat_at: Time.now.utc})
+        end          
+        returninformation = {'message' => "Found server! #{cs.name}"}      
+        return render :json => returninformation.to_json, :status => :ok        
+      else
+        returninformation = {'message' => 'This heartbeat belongs to an unknown cronmon server'}
+        return render :json => returninformation.to_json, :status => :unprocessable_entity
+      end
+    else
+      returninformation = {'message' => 'This heartbeat belongs to an unknown cronmon server'}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end      
+  end  
+
   def register
     if(!params[:hostname])
       returninformation = {'message' => 'Missing hostname'}

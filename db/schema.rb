@@ -153,11 +153,12 @@ ActiveRecord::Schema.define(:version => 20130802183607) do
   add_index "cronmon_logs", ["cronmon_id"], :name => "cronmon_ndx"
 
   create_table "cronmon_servers", :force => true do |t|
-    t.string   "name",         :null => false
+    t.string   "name",              :null => false
     t.text     "sysinfo"
+    t.datetime "last_heartbeat_at"
     t.datetime "last_cron_at"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "cronmon_servers", ["name"], :name => "server_name_ndx", :unique => true

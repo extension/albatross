@@ -11,9 +11,10 @@ class CronmonTables < ActiveRecord::Migration
     
 
     create_table :cronmon_servers do |t|
-      t.string   :name,         :null => false
-      t.text     :sysinfo
-      t.datetime :last_cron_at      
+      t.string   "name",         :null => false
+      t.text     "sysinfo"
+      t.datetime "last_heartbeat_at"
+      t.datetime "last_cron_at"      
       t.timestamps
     end
 
