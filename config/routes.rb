@@ -36,7 +36,14 @@ Albatross::Application.routes.draw do
       post :register
       post :log
       post :heartbeat
+      get  :servers
+      get  :server
     end
+
+    member do
+      get :showlog
+    end
+    
   end
 
   match '/logout' => 'auth#end', :as => 'logout'

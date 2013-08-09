@@ -1,0 +1,32 @@
+<%- @page_title = "Cronmon details for #{@server.name}" -%>
+<div class="page-header">
+  <h1<%= @page_title %></h1>
+</div>  
+
+<div class="row-fluid">
+  <div class="span12">
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+            <th>Cronmon</th>
+            <th>Created At</th>
+            <th>Last Run At</th>
+            <th>Runs</th>
+            <th>Mean Runtime</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <%- @server.cronmons.each do |cronmon| -%>
+        <tr>
+          <td><%= link_to(cronmon.label,cronmon_path(id: cronmon.id)) %></td>
+          <td><%= cronmon.created_at %></td>
+          <td><%= (cronmon.lastlog.nil? ? 'n/a' : cronmon.lastlog.start) %></td>
+          <td><%= cronmon.cronmon_logs.count %></td>
+          <td><%= cronmon.cronmon_logs.map(&:runtime).mean %></td>
+        </tr>
+      <%- end -%>
+      </tbody>
+    </table>
+  </div>

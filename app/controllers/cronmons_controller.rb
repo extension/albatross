@@ -60,6 +60,26 @@ class CronmonsController < ApplicationController
       returninformation = {'message' => 'An unknown error occurred'}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end 
+  end
+
+
+  def servers
+    @serverlist = CronmonServer.all
+  end
+
+  def server
+    @server = CronmonServer.find(params[:id])
+  end
+
+  def index
+  end
+
+  def show
+    @cronmon = Cronmon.find(params[:id])
+    @cronlogs = @cronmon.cronmon_logs.order("finish DESC").page(params[:page])
+  end
+
+  def showlog
   end   
   
 end

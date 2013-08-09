@@ -12,7 +12,7 @@ class CronmonLog < ActiveRecord::Base
   before_save :set_runtime
 
   def set_runtime
-    if(!self.finish.blank? and !self.start.blank?)
+    if(!self.finish.blank? and !self.start.blank? and !self.runtime.blank?)
       self.runtime = self.finish - self.start
     end
   end

@@ -14,9 +14,20 @@ class Cronmon < ActiveRecord::Base
     create_options[:command] = provided_params[:command] || 'unknown'
     create_options[:start]   = provided_params[:start] 
     create_options[:finish]   = provided_params[:finish]
+    create_options[:runtime]   = provided_params[:runtime]    
     create_options[:success]   = provided_params[:success]
     create_options[:cronmon_log_output_attributes] = {stdout: provided_params[:stdout], stderr: provided_params[:stderr]}
-    self.cronmon_logs.create(create_options)
+    if(cronmon_log = self.cronmon_logs.create(create_options))
+      self.cronmon_server.touch(:last_cron_at)
+      cronmon_log
+    else
+      nil
+    end
+  end
+
+
+  def lastlog
+    self.cronmon_logs.order('start DESC').first
   end
   
 end

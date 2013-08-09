@@ -4,6 +4,7 @@
 # see LICENSE file
 
 class CronmonServer < ActiveRecord::Base
+  serialize :sysinfo
 
   validates :name, :presence => true, :uniqueness => true 
   
