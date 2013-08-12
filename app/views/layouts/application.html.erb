@@ -23,6 +23,15 @@
       <div id="flash">
       <%= render(:partial => 'shared/flashmessages') %>
       </div>
+
+      <%- if !breadcrumbs.blank? -%>
+      <div class="row-fluid">
+        <div class='span12'>
+          <%= render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder %>
+        </div>
+      </div>
+      <%- end -%>
+
       <%= yield %>
     </div>
 

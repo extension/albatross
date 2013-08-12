@@ -65,10 +65,12 @@ class CronmonsController < ApplicationController
 
   def servers
     @serverlist = CronmonServer.all
+    cronmon_breadcrumbs
   end
 
   def server
     @server = CronmonServer.find(params[:id])
+    cronmon_breadcrumbs([@server.name])
   end
 
   def index
@@ -77,11 +79,31 @@ class CronmonsController < ApplicationController
   def show
     @cronmon = Cronmon.find(params[:id])
     @cronlogs = @cronmon.cronmon_logs.order("finish DESC").page(params[:page])
+    cronmon_breadcrumbs([[@cronmon.cronmon_server.name,server_cronmons_path(id: @cronmon.cronmon_server.id)],@cronmon.label])
   end
 
   def showlog
     @cronmon = Cronmon.find(params[:id])
     @cronmon_log = CronmonLog.find(params[:log_id])
-  end   
+    cronmon_breadcrumbs([[@cronmon.cronmon_server.name,server_cronmons_path(id: @cronmon.cronmon_server.id)],
+                         [@cronmon.label,cronmon_path(@cronmon)],
+                         "ID##{@cronmon_log.id} (#{@cronmon_log.start.to_s})"])
+
+  end
+
+  private
+
+  def cronmon_breadcrumbs(endpoints = [])
+    add_breadcrumb("Monitored Servers", :servers_cronmons_path)
+    if(!endpoints.blank?)
+      endpoints.each do |endpoint|
+        if(endpoint.is_a?(Array))  
+          add_breadcrumb(endpoint[0],endpoint[1])
+        else
+          add_breadcrumb(endpoint)
+        end
+      end
+    end
+  end     
   
 end
