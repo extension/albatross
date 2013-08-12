@@ -14,7 +14,9 @@ class Cronmon < ActiveRecord::Base
     create_options[:command] = provided_params[:command] || 'unknown'
     create_options[:start]   = provided_params[:start] 
     create_options[:finish]   = provided_params[:finish]
-    create_options[:runtime]   = provided_params[:runtime]    
+    if(provided_params[:runtime] and provided_params[:runtime].to_f > 0)
+      create_options[:runtime] = provided_params[:runtime].to_f
+    end
     create_options[:success]   = provided_params[:success]
     create_options[:cronmon_log_output_attributes] = {stdout: provided_params[:stdout], stderr: provided_params[:stderr]}
     if(cronmon_log = self.cronmon_logs.create(create_options))
