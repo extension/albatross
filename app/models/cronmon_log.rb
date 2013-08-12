@@ -17,5 +17,12 @@ class CronmonLog < ActiveRecord::Base
     end
   end
 
+  def stdout
+    self.cronmon_log_output.stdout
+  end
+
+  def stderr
+    self.cronmon_log_output.stderr
+  end    
 
 end

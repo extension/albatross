@@ -80,6 +80,8 @@ class CronmonsController < ApplicationController
   end
 
   def showlog
+    @cronmon = Cronmon.find(params[:id])
+    @cronmon_log = CronmonLog.find(params[:log_id])
   end   
   
 end
