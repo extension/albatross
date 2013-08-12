@@ -71,6 +71,9 @@ gem 'redis-rails'
 # html sanitization
 gem 'loofah'
 
+# breadcrumbs
+gem "breadcrumbs_on_rails"
+
 group :development do
   # require the powder gem
   gem 'powder'
