@@ -29,7 +29,6 @@
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= @currentcoder.name %><b class="caret"></b></a>
 		<ul class="dropdown-menu">
 			<%= nav_item(coder_path(@currentcoder),'Your Profile') %>
-			<%= nav_item(notifications_path, 'Notification Preferences')  %>
 			<li class="divider"></li>
 			<%= nav_item(logout_path,'Sign out') %>
 		</ul>
