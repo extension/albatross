@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://systems.extension.org/rubygems/'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.14'
 
 # all things xml
 gem 'nokogiri', '1.5.10'
