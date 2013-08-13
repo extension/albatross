@@ -5,7 +5,6 @@ require 'capatross'
 require "bundler/capistrano"
 require './config/boot'
 require 'airbrake/capistrano'
-require 'sidekiq/capistrano'
 
 set :application, "albatross"
 set :repository,  "git@github.com:extension/albatross.git"
@@ -21,10 +20,11 @@ set :bundle_dir, ''
 set :rails_env, "production" #added for delayed job
 
 before "deploy", "deploy:web:disable"
-#after "deploy:update_code", "deploy:bundle_install"
+before "deploy", "sidekiq:stop"
 after "deploy:update_code", "deploy:update_maint_msg"
 after "deploy:update_code", "deploy:link_and_copy_configs"
 after "deploy:update_code", "deploy:cleanup"
+after "deploy", "sidekiq:start"
 after "deploy", "deploy:web:enable"
 
 namespace :deploy do
@@ -85,3 +85,20 @@ namespace :deploy do
   end
 end
 
+namespace :sidekiq do
+  desc 'Stop sidekiq'
+  task 'stop', :roles => :app do
+    invoke_command 'sudo stop workers'
+  end
+
+  desc 'Start sidekiq'
+  task 'start', :roles => :app do
+    invoke_command 'sudo start workers'
+  end
+
+  desc 'Restart sidekiq'
+  task 'restart', :roles => :app do
+    stop
+    start
+  end
+end   
