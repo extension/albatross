@@ -1,0 +1,22 @@
+===================================================
+Server:  <%= @server.name %>
+Date:  <%= @cronmon_log.created_at %>
+Command:  <%= @cronmon_log.command %>
+Start time: <%= @cronmon_log.start %>
+Finish time: <%= @cronmon_log.finish %>
+Runtime: <%= @cronmon_log.runtime %>
+Logs for <%= @cronmon %>: <%= cronmon_url(@cronmon) -%>
+
+===================================================
+
+
+Cron error output:
+
+<%= @cronmon_log.stderr %>
+
+
+
+Cron standard output:
+
+<%= @cronmon_log.stdout %>
+
