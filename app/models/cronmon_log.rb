@@ -10,6 +10,7 @@ class CronmonLog < ActiveRecord::Base
   accepts_nested_attributes_for :cronmon_log_output
 
   before_save :set_runtime
+  after_create :notify_if_error
 
   def set_runtime
     if(!self.finish.blank? and !self.start.blank? and !self.runtime.blank?)
@@ -23,6 +24,12 @@ class CronmonLog < ActiveRecord::Base
 
   def stderr
     self.cronmon_log_output.stderr
-  end    
+  end
+
+  def notify_if_error(force = false)
+    if(force or !self.success?)
+      Notification.create(notifiable: self, notification_type: Notification::CRONMON_ERROR) 
+    end
+  end
 
 end

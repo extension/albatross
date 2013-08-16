@@ -39,4 +39,16 @@ class EventMailer < ActionMailer::Base
     return_email
   end
 
+  def cronmon_error(options = {})
+    @cronmon_log = options[:cronmon_log]
+    @cronmon = @cronmon_log.cronmon
+    @server = @cronmon.cronmon_server
+
+    @recipient = Settings.cron_notification_email
+    @subject = "#{@server.name}: error encountered running #{@cronmon.label}"
+
+    return_email = mail(to: @recipient, subject: @subject)
+    return_email
+  end
+
 end

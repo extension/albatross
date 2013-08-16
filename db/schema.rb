@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130813213910) do
+ActiveRecord::Schema.define(:version => 20130814155415) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -208,6 +208,19 @@ ActiveRecord::Schema.define(:version => 20130813213910) do
 
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
   add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "notifiable_id"
+    t.string   "notifiable_type",   :limit => 30
+    t.integer  "notification_type",                                  :null => false
+    t.datetime "delivery_time",                                      :null => false
+    t.boolean  "processed",                       :default => false, :null => false
+    t.boolean  "process_on_create",               :default => false
+    t.text     "additionaldata"
+    t.text     "results"
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
+  end
 
   create_table "oauth_access_grants", :force => true do |t|
     t.integer  "resource_owner_id", :null => false
