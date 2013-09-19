@@ -15,9 +15,11 @@ set :keep_releases, 3
 ssh_options[:forward_agent] = true
 set :port, 24
 #ssh_options[:verbose] = :debug
-set :bundle_flags, ''
+set :bundle_flags, '--deployment --binstubs'
 set :bundle_dir, ''
+set :use_sudo, false
 set :rails_env, "production" #added for delayed job
+
 
 before "deploy", "deploy:web:disable"
 before "deploy", "sidekiq:stop"
@@ -88,12 +90,25 @@ end
 namespace :sidekiq do
   desc 'Stop sidekiq'
   task 'stop', :roles => :app do
-    invoke_command 'sudo stop workers'
+    # check status
+    started = false
+    invoke_command 'status workers' do |channel,stream,data|
+      started = (data =~ %r{start})
+    end
+    if(started)
+      invoke_command 'stop workers', via: 'sudo'
+    end
   end
 
   desc 'Start sidekiq'
   task 'start', :roles => :app do
-    invoke_command 'sudo start workers'
+    stopped = false
+    invoke_command 'status workers' do |channel,stream,data|
+      stopped = (data =~ %r{stop})
+    end
+    if(stopped)
+      invoke_command 'start workers', via: 'sudo'
+    end
   end
 
   desc 'Restart sidekiq'

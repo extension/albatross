@@ -5,7 +5,7 @@
 # see LICENSE file
 
 class EventMailer < ActionMailer::Base
-  default_url_options[:host] = 'deploys.extension.org'
+  default_url_options[:host] = 'engineering.extension.org'
   default from: "exsys@extension.org"
   default bcc: "systemsmirror@extension.org"
 
