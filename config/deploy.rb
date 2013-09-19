@@ -15,7 +15,7 @@ set :keep_releases, 3
 ssh_options[:forward_agent] = true
 set :port, 24
 #ssh_options[:verbose] = :debug
-set :bundle_flags, ''
+set :bundle_flags, '--deployment --binstubs'
 set :bundle_dir, ''
 set :rails_env, "production" #added for delayed job
 
