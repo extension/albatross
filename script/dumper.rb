@@ -53,7 +53,14 @@ class DataDumper < Thor
     end
   end
 
-
+  desc "showdaily", "Show the list of daily dump databases"
+  method_option :environment,:default => 'production', :aliases => "-e", :desc => "Rails environment"
+  def dailycount
+    load_rails(options[:environment])
+    AppDump.nonsnapshot.daily.each do |appdump|
+      puts "#{appdump.application.name} : #{appdump.dbname} (#{appdump.dbtype})"
+    end
+  end
 
 end
 
