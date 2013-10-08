@@ -8,6 +8,10 @@ require "open3"
 class AppDump < ActiveRecord::Base
   extend DataUtils
   serialize :scrubbers
+
+  attr_accessible :application, :application_id, :app_location, :app_location_id, :dbtype, :dbname, :daily, :scrub, :scrubbers, :in_progress, :last_dumped_at, :last_dump_size
+
+
   belongs_to :application
   belongs_to :app_location
 

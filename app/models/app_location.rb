@@ -4,8 +4,9 @@
 # see LICENSE file
 
 class AppLocation < ActiveRecord::Base
-  belongs_to :application
   attr_accessible :application, :application_id, :location, :url, :dbname
+
+  belongs_to :application
   has_many :deploys
 
   PRODUCTION = 'production'

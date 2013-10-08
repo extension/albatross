@@ -5,13 +5,16 @@
 
 class Application < ActiveRecord::Base
   attr_accessible :name, :github_url
+
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false} 
+
   has_many :deploys
-  has_many :notification_prefs, dependent: :destroy
   has_many :coders_to_notify, through: :notification_prefs, source: :coder, :conditions => "notification_prefs.notify = true", uniq: true
-  has_many :app_dumps
-  has_one  :app_copy
-  has_many :app_locations
+  has_many :app_dumps, dependent: :destroy
+  has_one  :app_copy, dependent: :destroy
+  has_many :app_locations, dependent: :destroy
   before_create :generate_appkey
+
 
   def generate_appkey
     randval = rand
@@ -26,7 +29,6 @@ class Application < ActiveRecord::Base
     production_location = self.app_locations.production.first
     production_location.latest_deploy
   end
-
 
 
 end
