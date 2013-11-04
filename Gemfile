@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://systems.extension.org/rubygems/'
 
-gem 'rails', '3.2.14'
+gem 'rails', '3.2.15'
 
 # all things xml
 gem 'nokogiri', '1.5.10'
@@ -47,7 +47,7 @@ gem 'jquery-rails'
 gem 'kaminari'
 
 # Deploy with Capistrano
-gem 'capistrano'
+gem 'capistrano', '~> 2.15.5' 
 gem 'capatross'
 
 # exception handling for now
