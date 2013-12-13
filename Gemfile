@@ -28,7 +28,7 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
   # files for bootstrap-in-asset-pipeline integration
-  gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
+  gem 'anjlab-bootstrap-rails', '~> 2.0', :require => 'bootstrap-rails'
   # wysihtml5 + bootstrap + asset pipeline
   gem 'bootstrap-wysihtml5-rails'
 end
