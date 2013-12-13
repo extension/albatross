@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 source 'https://systems.extension.org/rubygems/'
 
-gem 'rails', '3.2.15'
+gem 'rails', '3.2.16'
 
 # all things xml
 gem 'nokogiri', '1.5.10'
@@ -28,7 +28,7 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
   # files for bootstrap-in-asset-pipeline integration
-  gem 'anjlab-bootstrap-rails', '>= 2.0', :require => 'bootstrap-rails'
+  gem 'anjlab-bootstrap-rails', '~> 2.0', :require => 'bootstrap-rails'
   # wysihtml5 + bootstrap + asset pipeline
   gem 'bootstrap-wysihtml5-rails'
 end
