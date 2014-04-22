@@ -3,6 +3,6 @@ set :deploy_to, '/services/engineering/'
 if(branch = ENV['BRANCH'])
   set :branch, branch
 else
-  set :branch, 'development'
+  set :branch, 'master'
 end
 server 'dev-engineering.extension.org', :app, :web, :db, :primary => true
