@@ -6,9 +6,9 @@
 class Application < ActiveRecord::Base
   attr_accessible :name, :github_url
 
-  validates :name, :presence => true, :uniqueness => {:case_sensitive => false} 
+  validates :name, :presence => true, :uniqueness => {:case_sensitive => false}
 
-  has_many :deploys
+  has_many :deploys, dependent: :destroy
   has_many :coders_to_notify, through: :notification_prefs, source: :coder, :conditions => "notification_prefs.notify = true", uniq: true
   has_many :app_dumps, dependent: :destroy
   has_one  :app_copy, dependent: :destroy
@@ -25,7 +25,7 @@ class Application < ActiveRecord::Base
     self.app_locations.where(location: location).first
   end
 
-  def lastest_production_deploy
+  def latest_production_deploy
     production_location = self.app_locations.production.first
     production_location.latest_deploy
   end

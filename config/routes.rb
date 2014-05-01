@@ -10,6 +10,7 @@ Albatross::Application.routes.draw do
       get :production
       get :fakeit
       post :fakeit
+      post :githubnotification
     end
 
     member do

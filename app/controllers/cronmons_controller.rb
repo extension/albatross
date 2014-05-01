@@ -3,7 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 class CronmonsController < ApplicationController
-  skip_before_filter :verify_authenticity_token  
+  skip_before_filter :verify_authenticity_token
   before_filter :signin_required, :except => [:register, :log, :heartbeat]
   doorkeeper_for :register, :log, :heartbeat
 
@@ -14,8 +14,8 @@ class CronmonsController < ApplicationController
         if(cronmon = cs.find_or_create_cronmon_by_label(params[:label]))
           cronmon.save_log(params)
         end
-        returninformation = {'message' => "Found server! #{cs.name}"}      
-        return render :json => returninformation.to_json, :status => :ok        
+        returninformation = {'message' => "Found server! #{cs.name}"}
+        return render :json => returninformation.to_json, :status => :ok
       else
         returninformation = {'message' => 'This log belongs to an unknown cronmon server'}
         return render :json => returninformation.to_json, :status => :unprocessable_entity
@@ -23,7 +23,7 @@ class CronmonsController < ApplicationController
     else
       returninformation = {'message' => 'This log belongs to an unknown cronmon server'}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    end      
+    end
   end
 
   def heartbeat
@@ -33,9 +33,9 @@ class CronmonsController < ApplicationController
           cs.update_attributes({sysinfo: params[:sysinfo], last_heartbeat_at: Time.now.utc})
         else
           cs.update_attributes({last_heartbeat_at: Time.now.utc})
-        end          
-        returninformation = {'message' => "Found server! #{cs.name}"}      
-        return render :json => returninformation.to_json, :status => :ok        
+        end
+        returninformation = {'message' => "Found server! #{cs.name}"}
+        return render :json => returninformation.to_json, :status => :ok
       else
         returninformation = {'message' => 'This heartbeat belongs to an unknown cronmon server'}
         return render :json => returninformation.to_json, :status => :unprocessable_entity
@@ -43,8 +43,8 @@ class CronmonsController < ApplicationController
     else
       returninformation = {'message' => 'This heartbeat belongs to an unknown cronmon server'}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    end      
-  end  
+    end
+  end
 
   def register
     if(!params[:hostname])
@@ -54,17 +54,17 @@ class CronmonsController < ApplicationController
       returninformation = {'message' => "A server named #{params[:hostname]} is already registered"}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     elsif(cs = CronmonServer.register(params[:hostname],true) and oauth = cs.oauth_application)
-      returninformation = {'auth' => {'name' => cs.name, 'uid' => oauth.uid, 'secret' => oauth.secret}, 'message' => 'Server registered.'}      
+      returninformation = {'auth' => {'name' => cs.name, 'uid' => oauth.uid, 'secret' => oauth.secret}, 'message' => 'Server registered.'}
       return render :json => returninformation.to_json, :status => :ok
     else
       returninformation = {'message' => 'An unknown error occurred'}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    end 
+    end
   end
 
 
   def servers
-    @serverlist = CronmonServer.all
+    @serverlist = CronmonServer.active.all
     cronmon_breadcrumbs
   end
 
@@ -97,13 +97,13 @@ class CronmonsController < ApplicationController
     add_breadcrumb("Monitored Servers", :servers_cronmons_path)
     if(!endpoints.blank?)
       endpoints.each do |endpoint|
-        if(endpoint.is_a?(Array))  
+        if(endpoint.is_a?(Array))
           add_breadcrumb(endpoint[0],endpoint[1])
         else
           add_breadcrumb(endpoint)
         end
       end
     end
-  end     
-  
+  end
+
 end

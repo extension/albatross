@@ -68,6 +68,11 @@ class DeploysController < ApplicationController
     @deploylist = deploylist_scope.page(params[:page])
   end
 
+  def githubnotification
+    returninformation = {'message' => 'Thanks!', 'success' => true}
+    return render :json => returninformation.to_json, :status => :ok
+  end
+
   
   
 
