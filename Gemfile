@@ -47,14 +47,14 @@ gem 'jquery-rails'
 gem 'kaminari'
 
 # Deploy with Capistrano
-gem 'capistrano', '~> 2.15.5' 
+gem 'capistrano', '~> 2.15.5'
 gem 'capatross'
 
 # exception handling for now
 gem 'airbrake'
 
 # background jobs
-gem 'sidekiq'
+gem 'sidekiq', '~> 2.17.7'
 
 # campfire integration
 gem "tinder", "~> 1.9.0"

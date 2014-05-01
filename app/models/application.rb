@@ -30,5 +30,34 @@ class Application < ActiveRecord::Base
     production_location.latest_deploy
   end
 
+  def fetch_from_github
+    GitFetch.fetch_from_github(self)
+  end
+
+  def queue_fetch
+    if(!self.fetch_pending?)
+      if(Settings.sidekiq_enabled)
+        self.update_attribute(:fetch_pending,true)
+        self.class.delay_until(Time.now + 10.seconds).delayed_fetch(self.id)
+      else
+        self.fetch_from_github
+      end
+    end
+  end
+
+  def self.delayed_fetch(record_id)
+    if(record = find_by_id(record_id))
+      record.fetch_from_github
+    end
+  end
+
+  def self.find_by_github_reponame(name)
+    # for testing purposes
+    name = 'darmok' if (name == 'webhook_testing')
+    self.where(github_url: "https://github.com/extension/#{name}").first
+  end
+
+
+
 
 end
