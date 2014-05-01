@@ -69,11 +69,6 @@ class Campout
   def self.dump_notification(dump_log)
     if(dump_log.success?)
       message = ":checkered_flag: The #{dump_log.app_dump.dbtype} database for #{dump_log.application.name} has been dumped (compressed size: #{AppDump.humanize_bytes(dump_log.size)})."
-      if(dump_log.app_dump.dbtype != 'production')
-        message += " Use 'capatross getdata --dbtype=#{dump_log.app_dump.dbtype}' to download."
-      else
-        message += " Use 'capatross getdata' to download."
-      end
     else
       message = ":warning: The #{dump_log.app_dump.dbtype} database dump for #{dump_log.application.name} has FAILED!. Details: #{dump_log.additionaldata[:error]}"
     end
