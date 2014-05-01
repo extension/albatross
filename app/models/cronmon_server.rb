@@ -6,10 +6,12 @@
 class CronmonServer < ActiveRecord::Base
   serialize :sysinfo
 
-  validates :name, :presence => true, :uniqueness => true 
-  
+  validates :name, :presence => true, :uniqueness => true
+
   has_many :cronmons
   has_one :oauth_application, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
+
+  scope :active, where(is_active: true)
 
   def self.register(name,reset_oauth_application=false)
   	if(cs = self.where(name: name).first)
@@ -20,7 +22,7 @@ class CronmonServer < ActiveRecord::Base
         else
           cs.create_oauth_application(name: "cronmon-#{cs.name}", redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
         end
-      end          
+      end
   	else
       if(cs = create(name: name))
         cs.create_oauth_application(name: "cronmon-#{cs.name}", redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
