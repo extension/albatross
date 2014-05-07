@@ -2,20 +2,24 @@
 # Copyright (c) 2012 North Carolina State University
 # === LICENSE:
 # see LICENSE file
+
+require 'pp'
+
+
 class DeploysController < ApplicationController
   skip_before_filter :verify_authenticity_token
-  before_filter :signin_required, :only => [:setcomment]   
-  
-  
-  def index      
+  before_filter :signin_required, :only => [:setcomment]
+
+
+  def index
     @deploylist = Deploy.order("start DESC").page(params[:page])
   end
- 
+
   def show
     @deploy = Deploy.find(params[:id])
     @show_edit_comment = true
   end
-  
+
   def create
     if(deploy = Deploy.create_or_update_from_params(params))
       returninformation = {'message' => 'Updated deploy database', 'success' => true}
@@ -23,7 +27,7 @@ class DeploysController < ApplicationController
     else
       returninformation = {'message' => 'Unable to create or update the deploy database', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    end    
+    end
   end
 
   def setcomment
@@ -38,7 +42,7 @@ class DeploysController < ApplicationController
       format.js
     end
   end
-  
+
   def fakeit
     if(params[:success])
       returninformation = {'message' => 'Updated deploy database', 'success' => true}
@@ -46,9 +50,9 @@ class DeploysController < ApplicationController
     else
       returninformation = {'message' => 'Unable to create or update the deploy database', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    end    
+    end
   end
-  
+
 
   def recent
     @deploylist = Deploy.production_listing.includes(:app_location).limit(20)
@@ -56,24 +60,32 @@ class DeploysController < ApplicationController
 
   def production
     deploylist_scope = Deploy.production_listing.includes(:app_location)
-    
+
     if(params[:coder] and @coder = Coder.find_by_id(params[:coder]))
       deploylist_scope = deploylist_scope.bycoder(@coder)
     end
-    
+
     if(params[:application] and @application = Application.find_by_id(params[:application]))
       deploylist_scope = deploylist_scope.byapplication(@application)
     end
-            
+
     @deploylist = deploylist_scope.page(params[:page])
   end
 
   def githubnotification
-    returninformation = {'message' => 'Thanks!', 'success' => true}
-    return render :json => returninformation.to_json, :status => :ok
+    if(gn = GithubNotification.create_from_params(params))
+      gn.application.queue_fetch
+      returninformation = {'message' => 'Logged notification', 'success' => true}
+      return render :json => returninformation.to_json, :status => :ok
+    else
+      returninformation = {'message' => 'Unable to log notification', 'success' => false}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+
+
   end
 
-  
-  
+
+
 
 end

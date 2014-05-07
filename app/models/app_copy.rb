@@ -6,6 +6,7 @@ require 'fileutils'
 require "open3"
 
 class AppCopy < ActiveRecord::Base
+  extend IoUtils
   extend DataUtils
   belongs_to :application
   has_many :app_copy_logs
@@ -25,7 +26,7 @@ class AppCopy < ActiveRecord::Base
   end
 
   def copy(options = {})
-    coder = options[:coder] 
+    coder = options[:coder]
     debug = (options[:debug].present? ? options[:debug] : false)
     announce = (options[:announce].present? ? options[:announce] : false)
 
@@ -98,4 +99,3 @@ class AppCopy < ActiveRecord::Base
   end
 
 end
-

@@ -6,6 +6,7 @@ require 'fileutils'
 require "open3"
 
 class AppDump < ActiveRecord::Base
+  extend IoUtils
   extend DataUtils
   serialize :scrubbers
 

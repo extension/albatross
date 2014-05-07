@@ -98,22 +98,6 @@ module DataUtils
     end
   end
 
-
-  def run_command(command,debug = false)
-    logger.debug "running #{command}" if debug
-    stdin, stdout, stderr = Open3.popen3(command)
-    results = stdout.readlines + stderr.readlines
-    return results.join('')
-  end
-
-  def capture_stderr &block
-    real_stderr, $stderr = $stderr, StringIO.new
-    yield
-    $stderr.string
-  ensure
-    $stderr = real_stderr
-  end
-
   # code from: https://github.com/ripienaar/mysql-dump-split
   def humanize_bytes(bytes)
     if(!bytes.nil? and bytes != 0)

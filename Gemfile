@@ -54,7 +54,7 @@ gem 'capatross'
 gem 'airbrake'
 
 # background jobs
-gem 'sidekiq'
+gem 'sidekiq', '~> 2.17.7'
 
 # campfire integration
 gem "tinder", "~> 1.9.0"

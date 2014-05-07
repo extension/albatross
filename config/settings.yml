@@ -17,3 +17,4 @@ data_dump_mysql_dump_cmd: 'use_local_settings'
 data_dump_mysql_socket: 'use_local_settings'
 data_dump_dir_dump: 'use_local_settings'
 data_dump_mysql_master_server: 'use_local_settings'
+sidekiq_enabled: true

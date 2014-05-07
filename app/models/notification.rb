@@ -2,7 +2,7 @@
 #  Copyright (c) North Carolina State University
 #  Developed with funding for the National eXtension Initiative.
 # === LICENSE:
-# 
+#
 #  see LICENSE file
 
 class Notification < ActiveRecord::Base
@@ -36,7 +36,7 @@ class Notification < ActiveRecord::Base
         return c.to_s.downcase
       end
     end
-  
+
     # if we got here?  return nil
     return nil
   end
@@ -48,7 +48,7 @@ class Notification < ActiveRecord::Base
   end
 
   def queue_notification
-    if(Settings.redis_enabled and !self.process_on_create?)
+    if(Settings.sidekiq_enabled and !self.process_on_create?)
       self.class.delay_until(self.delivery_time).delayed_notify(self.id)
     else
       self.notify
@@ -65,7 +65,7 @@ class Notification < ActiveRecord::Base
     method_name = self.class.code_to_constant_string(self.notification_type)
     methods = self.class.instance_methods.map{|m| m.to_s}
     if(methods.include?(method_name))
-      begin 
+      begin
         self.send(method_name)
         self.update_attributes({processed: true})
       rescue NotificationError => e

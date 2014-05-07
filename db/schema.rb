@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140501131350) do
+ActiveRecord::Schema.define(:version => 20140501180326) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -88,8 +88,9 @@ ActiveRecord::Schema.define(:version => 20140501131350) do
     t.string   "name"
     t.string   "github_url"
     t.string   "appkey"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.boolean  "fetch_pending", :default => false
   end
 
   create_table "coder_emails", :force => true do |t|
@@ -110,6 +111,7 @@ ActiveRecord::Schema.define(:version => 20140501131350) do
     t.datetime "updated_at",                     :null => false
     t.string   "data_key",       :default => ""
     t.datetime "last_active_at"
+    t.string   "github_name"
   end
 
   add_index "coders", ["data_key"], :name => "data_key_ndx"
@@ -209,6 +211,25 @@ ActiveRecord::Schema.define(:version => 20140501131350) do
 
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
   add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
+
+  create_table "git_fetches", :force => true do |t|
+    t.integer  "application_id"
+    t.text     "stdout"
+    t.text     "stderr"
+    t.string   "command"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.float    "runtime"
+    t.datetime "created_at"
+  end
+
+  create_table "github_notifications", :force => true do |t|
+    t.integer  "coder_id"
+    t.integer  "application_id"
+    t.string   "branch"
+    t.text     "payload",        :limit => 16777215
+    t.datetime "created_at"
+  end
 
   create_table "notifications", :force => true do |t|
     t.integer  "notifiable_id"

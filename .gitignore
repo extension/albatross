@@ -32,3 +32,6 @@
 
 # asset related
 .sass-cache/
+
+# ignore "repositories" directory
+/repositories
