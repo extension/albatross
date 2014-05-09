@@ -22,13 +22,11 @@ gem 'turbo-sprockets-rails3'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer'
-
   gem 'uglifier', '>= 1.0.3'
   # files for bootstrap-in-asset-pipeline integration
-  gem 'anjlab-bootstrap-rails', '~> 2.0', :require => 'bootstrap-rails'
+  gem 'bootstrap-sass', '~> 2.3.2.2'
   # wysihtml5 + bootstrap + asset pipeline
   gem 'bootstrap-wysihtml5-rails'
 end

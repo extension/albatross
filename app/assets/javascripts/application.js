@@ -12,8 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require twitter/bootstrap
-//= require twitter/bootstrap/transition
-//= require twitter/bootstrap/button
+//= require bootstrap
+//= require bootstrap-transition
+//= require bootstrap-button
 //= require bootstrap-wysihtml5
 //= require_tree .

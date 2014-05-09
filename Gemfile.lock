@@ -32,10 +32,9 @@ GEM
     airbrake (3.1.16)
       builder
       multi_json
-    anjlab-bootstrap-rails (2.3.1.2)
-      railties (>= 3.0)
-      sass (>= 3.2)
     arel (3.0.3)
+    bootstrap-sass (2.3.2.2)
+      sass (~> 3.2)
     bootstrap-wysihtml5-rails (0.3.1.24)
       railties (>= 3.0)
     breadcrumbs_on_rails (2.3.0)
@@ -225,7 +224,7 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
-  anjlab-bootstrap-rails (~> 2.0)
+  bootstrap-sass (~> 2.3.2.2)
   bootstrap-wysihtml5-rails
   breadcrumbs_on_rails
   capatross
