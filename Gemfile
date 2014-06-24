@@ -26,7 +26,7 @@ group :assets do
   # gem 'therubyracer'
   gem 'uglifier', '>= 1.0.3'
   # files for bootstrap-in-asset-pipeline integration
-  gem 'bootstrap-sass', '~> 2.3.2.2'
+  gem 'bootstrap-sass'
   # wysihtml5 + bootstrap + asset pipeline
   gem 'bootstrap-wysihtml5-rails'
 end
