@@ -12,5 +12,6 @@
  *= require bootstrap
  *= require bootstrap-wysihtml5
  *= require bootstrap_overrides
+ *= require font-awesome
  *= require application_styles
 */

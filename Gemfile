@@ -29,6 +29,8 @@ group :assets do
   gem 'bootstrap-sass'
   # wysihtml5 + bootstrap + asset pipeline
   gem 'bootstrap-wysihtml5-rails'
+  # replaces glyphicons
+  gem 'font-awesome-rails'
 end
 
 # server settings
