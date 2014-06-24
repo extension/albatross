@@ -14,7 +14,7 @@
 
     <%- if !@application -%>
     <p>
-      <%= link_to("<span class='label'>#{deploy.application.name}</span>".html_safe,production_deploys_path(application: deploy.application.id)) %>
+      <%= link_to("<span class='label label-default'>#{deploy.application.name}</span>".html_safe,production_deploys_path(application: deploy.application.id)) %>
     </p>
     <%- end -%>
 
@@ -22,5 +22,3 @@
 
 
 <%- end -%>
-
-

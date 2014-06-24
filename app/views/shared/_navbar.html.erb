@@ -1,40 +1,39 @@
-<ul class="nav">
-	<%= link_to("eXtension Engineering",root_path,:class=>'brand')%>
-</ul>
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<%= link_to("eXtension Engineering",root_path,:class=>'navbar-brand')%>
+		</div>
+		<!-- Core Navigation -->
+		<ul class="nav navbar-nav">
+			<%= nav_item(deploys_path,'All Deployments') %>
+			<%- if @currentcoder -%>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Crons<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+				  <%= nav_item(servers_cronmons_path,"Cronmon Servers") %>
+				  <li class="divider"></li>
+				  <%= nav_item(crons_path,"Legacy Crons") %>
+				</ul>
+			</li>
+			<%- end -%>
 
-<!-- Core Navigation -->
-<ul class="nav">
-
-	<%= nav_item(deploys_path,'All Deployments') %>
-
-
-	<%- if @currentcoder -%>
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Crons<b class="caret"></b></a>
-		<ul class="dropdown-menu">
-		  <%= nav_item(servers_cronmons_path,"Cronmon Servers") %>
-		  <li class="divider"></li>
-		  <%= nav_item(crons_path,"Legacy Crons") %>
 		</ul>
-	</li>
-	<%- end -%>
-
-</ul>
 
 
 
-<ul class="nav pull-right">
-	<%- if @currentcoder -%>
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= @currentcoder.name %><b class="caret"></b></a>
-		<ul class="dropdown-menu">
-			<%= nav_item(coder_path(@currentcoder),'Your Profile') %>
-			<li class="divider"></li>
-			<%= nav_item(logout_path,'Sign out') %>
+		<ul class="nav pull-right">
+			<%- if @currentcoder -%>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= @currentcoder.name %><b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<%= nav_item(coder_path(@currentcoder),'Your Profile') %>
+					<li class="divider"></li>
+					<%= nav_item(logout_path,'Sign out') %>
+				</ul>
+			</li>
+			<%- else -%>
+			<%= nav_item(url_for(:controller => 'auth', :action => 'people'),'Sign in with eXtension') %>
+			<%- end -%>
 		</ul>
-	</li>
-	<%- else -%>
-	<%= nav_item(url_for(:controller => 'auth', :action => 'people'),'Sign in with eXtension') %>
-	<%- end -%>
-
-</ul>
+	</div>
+</nav>

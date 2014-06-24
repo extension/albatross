@@ -4,8 +4,8 @@
 </div>  
 
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-md-12">
 	 <h3>Log Information
   <%- if @cronlog.success? -%>
   <span class="label label-success">Success!</span>
@@ -42,8 +42,8 @@
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-md-12">
 	  <h3>stdout </h3>
   <pre>
 	  <%= @cronlog.stdout %>
@@ -51,8 +51,8 @@
   </div>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
+<div class="row">
+  <div class="col-md-12">
 	  <h3>stderr </h3>
   <pre>
 	  <%= @cronlog.stderr %>

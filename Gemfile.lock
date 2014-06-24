@@ -33,9 +33,9 @@ GEM
       builder
       multi_json
     arel (3.0.3)
-    bootstrap-sass (2.3.2.2)
+    bootstrap-sass (3.1.1.1)
       sass (~> 3.2)
-    bootstrap-wysihtml5-rails (0.3.1.24)
+    bootstrap-wysihtml5-rails (0.3.2.100)
       railties (>= 3.0)
     breadcrumbs_on_rails (2.3.0)
     builder (3.0.4)
@@ -71,6 +71,8 @@ GEM
       multipart-post (~> 1.2.0)
     faraday_middleware (0.9.1)
       faraday (>= 0.7.4, < 0.10)
+    font-awesome-rails (4.1.0.0)
+      railties (>= 3.2, < 5.0)
     grit (2.5.0)
       diff-lcs (~> 1.1)
       mime-types (~> 1.15)
@@ -95,7 +97,7 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.8.2)
     mime-types (1.25.1)
-    multi_json (1.10.0)
+    multi_json (1.10.1)
     multipart-post (1.2.0)
     mysql2 (0.3.15)
     net-scp (1.2.1)
@@ -149,7 +151,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
-    rake (10.3.1)
+    rake (10.3.2)
     rdoc (3.12.2)
       json (~> 1.4)
     redis (3.0.7)
@@ -174,7 +176,7 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     ruby-openid (2.5.0)
-    sass (3.3.6)
+    sass (3.3.8)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -224,13 +226,14 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
-  bootstrap-sass (~> 2.3.2.2)
+  bootstrap-sass
   bootstrap-wysihtml5-rails
   breadcrumbs_on_rails
   capatross
   capistrano (~> 2.15.5)
   coffee-rails (~> 3.2.1)
   doorkeeper
+  font-awesome-rails
   jquery-rails
   kaminari
   loofah

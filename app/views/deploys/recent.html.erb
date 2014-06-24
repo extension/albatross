@@ -1,22 +1,22 @@
 <% @page_title = "Engineering Application Deployments" %>
 
 
-<div class="row-fluid">
-  <div class="span8">
+<div class="row">
+  <div class="col-md-8">
     <div class="page-header">
     <h2>Recent Production Releases</h2>
-    </div>  
+    </div>
     <div id="deployslist"><%= render(partial: 'production_listing') %></div>
   </div>
 
-  <div class="span4">
+  <div class="col-md-4">
     <div class="page-header">
     <h2>Latest Releases</h2>
     </div>
-    <p>   <small><span class='badge badge-info'><i class='icon-forward icon-white'></i></span> indicates a deploy in the last 14 days</small></p>
+    <p>   <small><span class='badge'><i class='fa fa-forward' style="color:white"></i></span> indicates a deploy in the last 14 days</small></p>
 
     <dl>
-    <%- AppLocation.production.order('url ASC').each do |app_location| -%> 
+    <%- AppLocation.production.order('url ASC').each do |app_location| -%>
     <%- if latest_deploy =  app_location.latest_deploy -%>
       <dt>
         <%= app_location.display_url %>
@@ -25,7 +25,7 @@
         <%- if (latest_deploy.finish <= (Time.now - 14.day)) %>
           <%= deployed_time(latest_deploy) %> by <%= latest_deploy.coder.name %>
         <%- else -%>
-          <span class='badge badge-info'><i class='icon-forward icon-white'></i></span> <%= deployed_time(latest_deploy) %> by <%= latest_deploy.coder.name %>
+          <span class='badge'><i class='fa fa-forward' style="color:white"></i></span> <%= deployed_time(latest_deploy) %> by <%= latest_deploy.coder.name %>
         <%- end -%>
       </dd>
    <%- end -%>
