@@ -13,7 +13,7 @@
     <div class="page-header">
     <h2>Latest Releases</h2>
     </div>
-    <p>   <small><span class='badge badge-info'><i class='fa fa-forward' style="color:white"></i></span> indicates a deploy in the last 14 days</small></p>
+    <p>   <small><span class='badge'><i class='fa fa-forward' style="color:white"></i></span> indicates a deploy in the last 14 days</small></p>
 
     <dl>
     <%- AppLocation.production.order('url ASC').each do |app_location| -%>
@@ -25,7 +25,7 @@
         <%- if (latest_deploy.finish <= (Time.now - 14.day)) %>
           <%= deployed_time(latest_deploy) %> by <%= latest_deploy.coder.name %>
         <%- else -%>
-          <span class='badge badge-info'><i class='fa fa-forward' style="color:white"></i></span> <%= deployed_time(latest_deploy) %> by <%= latest_deploy.coder.name %>
+          <span class='badge'><i class='fa fa-forward' style="color:white"></i></span> <%= deployed_time(latest_deploy) %> by <%= latest_deploy.coder.name %>
         <%- end -%>
       </dd>
    <%- end -%>
