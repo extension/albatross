@@ -29,7 +29,7 @@
             <%- if cronlog.success? -%>
             <%= link_to('success', cron_log_path(cronlog), :class => 'label label-success') %></td>
             <%- else -%>
-            <%= link_to('failed', cron_log_path(cronlog), :class => 'label label-important') %></td>
+            <%= link_to('failed', cron_log_path(cronlog), :class => 'label label-danger') %></td>
             <%- end -%>
         </td>
         </tr>

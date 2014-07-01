@@ -28,7 +28,7 @@
       <td><%= appdump.daily? ? 'Yes' : 'No' %></td>
       <td><%= appdump.scrub? ? 'Yes' : 'No' %></td>
       <td><%- if appdump.in_progress? -%>
-          <span class="label label-important">Currently in progress</span>
+          <span class="label label-danger">Currently in progress</span>
         <%- else -%>
           <%= appdump.last_dumped_at %>
         <%- end -%>
