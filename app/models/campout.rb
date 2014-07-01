@@ -7,30 +7,16 @@ class Campout
   extend TimeUtils
 
   def self.speak(msg)
-    room.speak(msg)
+    slack_connection.ping(msg, icon_url: 'https://engineering.extension.org/favicon.ico')
   end
 
-  def self.verbose_speak(msg,sound=nil)
-    if(sound)
-      verbose_room.play(sound)
+  def self.slack_connection
+    if(@slack.nil?)
+      @slack = Slack::Notifier.new(Settings.slack_team,Settings.slack_token)
+      @slack.username = 'Deploy Notifier'
+      @slack.channel = Settings.slack_channel
     end
-    verbose_room.speak(msg)
-  end
-
-  def self.verbose_paste(text)
-    verbose_room.paste(text)
-  end
-
-  def self.campfire_connection
-    @campfire || Tinder::Campfire.new(Settings.campfire_domain,token: Settings.campfire_token)
-  end
-
-  def self.room
-    @room || campfire_connection.find_room_by_id(Settings.campfire_room)
-  end
-
-  def self.verbose_room
-    @verbose_room || campfire_connection.find_room_by_id(Settings.campfire_verbose_room)
+    @slack
   end
 
   def self.deploy_start_notification(deploy)
@@ -84,26 +70,6 @@ class Campout
     delay.speak(message)
   end
 
-
-  def self.verbose_deploy_start_notification(deploy)
-    message = "#{deploy.coder.name} is starting a deploy of #{deploy.application.name} to #{deploy.location}."
-    delay.verbose_speak(message,'pushit')
-  end
-
-  def self.verbose_deploy_finish_notification(deploy,options={})
-    if(options['from_cli'])
-      message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{deploy.location} using the cli. Details: #{deploy.campout_url}"
-    else
-      if(deploy.success?)
-        message = "#{deploy.coder.name} deployed #{deploy.application.name} to #{deploy.location}. Details: #{deploy.campout_url}"
-        sound = 'tada'
-      else
-        message = ":warning: The deploy for #{deploy.application.name} to #{deploy.location} has FAILED!. Details: #{deploy.campout_url}"
-        sound = 'dangerzone'
-      end
-    end
-    delay.verbose_speak(message,sound)
-  end
 
 
 
