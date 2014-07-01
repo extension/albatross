@@ -20,9 +20,8 @@ class BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcrumbs::Builder
       else
         link_or_text = @context.link_to(compute_name(element), compute_path(element), element.options)
       end
-      divider = @context.content_tag(:span, (@options[:separator] || ' / ').html_safe, :class => 'divider') unless current
 
-      (link_or_text + (last ? '' : (divider || ''))).html_safe
+      link_or_text.html_safe
     end
   end
 end

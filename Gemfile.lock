@@ -176,7 +176,7 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     ruby-openid (2.5.0)
-    sass (3.3.8)
+    sass (3.3.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
@@ -226,7 +226,7 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
-  bootstrap-sass
+  bootstrap-sass (~> 3.1.1)
   bootstrap-wysihtml5-rails
   breadcrumbs_on_rails
   capatross
