@@ -59,6 +59,9 @@ gem 'sidekiq', '~> 2.17.7'
 # campfire integration
 gem "tinder", "~> 1.9.0"
 
+# slack integration
+gem "slack-notifier"
+
 # command line integration
 gem 'thor'
 
