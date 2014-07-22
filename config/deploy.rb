@@ -22,7 +22,6 @@ set :rails_env, "production" #added for delayed job
 
 before "deploy", "deploy:web:disable"
 before "deploy", "sidekiq:stop"
-after "deploy:update_code", "deploy:update_maint_msg"
 after "deploy:update_code", "deploy:link_and_copy_configs"
 after "deploy:update_code", "deploy:cleanup"
 after "deploy", "sidekiq:start"
@@ -49,11 +48,6 @@ namespace :deploy do
     run "cd #{release_path} && bundle install"
   end
 
-  desc "Update maintenance mode page/graphics (valid after an update code invocation)"
-  task :update_maint_msg, :roles => :app do
-     invoke_command "cp -f #{release_path}/public/maintenancemessage.html #{shared_path}/system/maintenancemessage.html"
-  end
-
   # Link up various configs (valid after an update code invocation)
   task :link_and_copy_configs, :roles => :app do
     run <<-CMD
@@ -76,12 +70,12 @@ namespace :deploy do
 
     desc "Put Apache in maintenancemode by touching the system/maintenancemode file"
     task :disable, :roles => :app do
-      invoke_command "touch #{shared_path}/system/maintenancemode"
+      invoke_command "touch /services/maintenance/#{vhost}.maintenancemode"
     end
 
     desc "Remove Apache from maintenancemode by removing the system/maintenancemode file"
     task :enable, :roles => :app do
-      invoke_command "rm -f #{shared_path}/system/maintenancemode"
+      invoke_command "rm -f /services/maintenance/#{vhost}.maintenancemode"
     end
 
   end
@@ -116,4 +110,4 @@ namespace :sidekiq do
     stop
     start
   end
-end   
+end
