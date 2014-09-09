@@ -11,31 +11,31 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140501180326) do
+ActiveRecord::Schema.define(:version => 20140909162755) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
-    t.boolean  "daily",          :default => false
-    t.boolean  "in_progress",    :default => false
+    t.boolean  "daily",                       :default => false
+    t.boolean  "in_progress",                 :default => false
     t.datetime "last_copy_at"
-    t.integer  "last_copy_size", :default => 0
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.integer  "last_copy_size", :limit => 8, :default => 0
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
   end
 
   add_index "app_copies", ["application_id"], :name => "app_ndx", :unique => true
 
   create_table "app_copy_logs", :force => true do |t|
     t.integer  "app_copy_id"
-    t.integer  "coder_id",       :default => 1
+    t.integer  "coder_id",                    :default => 1
     t.boolean  "success"
     t.datetime "started_at"
     t.datetime "finished_at"
-    t.integer  "size"
+    t.integer  "size",           :limit => 8
     t.float    "runtime"
     t.text     "additionaldata"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
   end
 
   add_index "app_copy_logs", ["app_copy_id"], :name => "app_copy_ndx"
