@@ -5,12 +5,21 @@
 module DataUtils
 
 
-  def dump_database_to_file(database, outputfile, debug=false)
+  def dump_database_to_file(database, fromhost, outputfile, debug=false)
+    if(fromhost == 'development')
+      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
+    elsif(fromhost == 'scrubbed')
+      host_command = "--socket=#{Settings.data_dump_mysql_socket}"
+    else
+      # production replica
+      host_command = "--host=#{Settings.data_dump_mysql_host_production_replica}"
+    end
+
     command_array = []
     command_array << "#{Settings.data_dump_mysql_dump_cmd}"
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
-    command_array << "--socket=#{Settings.data_dump_mysql_socket}"
+    command_array << host_command
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
     command_array << "#{database}"
@@ -19,50 +28,42 @@ module DataUtils
     run_command(command,debug)
   end
 
-  def drop_database(database, debug=false)
-    if(database =~ %r{^scrubbed})
-      command_array = []
-      command_array << "#{Settings.data_dump_mysql_cmd}"
-      command_array << "--user=#{Settings.data_dump_mysql_user}"
-      command_array << "--password=#{Settings.data_dump_mysql_pass}"
-      command_array << "--socket=#{Settings.data_dump_mysql_socket}"
-      command_array << "-e \"DROP DATABASE IF EXISTS #{database}\""
-      command = command_array.join(' ')
-      run_command(command,debug)
-    end
-  end
-
-  def create_database(database, debug=false)
-    if(database =~ %r{^scrubbed})
-      command_array = []
-      command_array << "#{Settings.data_dump_mysql_cmd}"
-      command_array << "--user=#{Settings.data_dump_mysql_user}"
-      command_array << "--password=#{Settings.data_dump_mysql_pass}"
-      command_array << "--socket=#{Settings.data_dump_mysql_socket}"
-      command_array << "-e \"CREATE DATABASE IF NOT EXISTS #{database}\""
-      command = command_array.join(' ')
-      run_command(command,debug)
-    end
-  end
-
-  def import_database_from_file(database,inputfile, debug=false)
+  def drop_scrubbed_database(database, debug=false)
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << "--socket=#{Settings.data_dump_mysql_socket}"
-    command_array << "#{database}"
-    command_array << "< #{inputfile}"
+    command_array << "-e \"DROP DATABASE IF EXISTS #{database}\""
     command = command_array.join(' ')
     run_command(command,debug)
   end
 
-  def import_database_to_master_server_from_file(database,inputfile, debug=false)
+  def create_scrubbed_database(database, debug=false)
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
-    command_array << "--host=#{Settings.data_dump_mysql_master_server}"
+    command_array << "--socket=#{Settings.data_dump_mysql_socket}"
+    command_array << "-e \"CREATE DATABASE IF NOT EXISTS #{database}\""
+    command = command_array.join(' ')
+    run_command(command,debug)
+  end
+
+  def import_database_from_file(database,fromhost,inputfile, debug=false)
+    if(fromhost == 'development')
+      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
+    elsif(fromhost == 'scrubbed')
+      host_command = "--socket=#{Settings.data_dump_mysql_socket}"
+    else
+      return 'invalid import host'
+    end
+
+    command_array = []
+    command_array << "#{Settings.data_dump_mysql_cmd}"
+    command_array << "--user=#{Settings.data_dump_mysql_user}"
+    command_array << "--password=#{Settings.data_dump_mysql_pass}"
+    command_array << host_command
     command_array << "#{database}"
     command_array << "< #{inputfile}"
     command = command_array.join(' ')

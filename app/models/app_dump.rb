@@ -94,7 +94,17 @@ class AppDump < ActiveRecord::Base
     target_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql"
     tmp_dump_file =  "#{target_file}.tmp"
 
-    result = self.class.dump_database_to_file(self.dbname,tmp_dump_file,debug)
+    if(self.dbtype == 'development')
+      fromhost = 'development'
+    elsif(self.dbtype == 'production')
+      fromhost = 'production_replica'
+    else
+      # bail
+      return {success: false, file: "n/a", dump_size: 0}
+    end
+
+
+    result = self.class.dump_database_to_file(self.dbname,fromhost,tmp_dump_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
@@ -102,7 +112,6 @@ class AppDump < ActiveRecord::Base
 
     # size it up
     dump_size = File.size(tmp_dump_file)
-
 
     # compress it
     gzip_command = "#{Settings.data_dump_gzip_cmd} #{tmp_dump_file}"
@@ -129,25 +138,34 @@ class AppDump < ActiveRecord::Base
     pre_scrubbed_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.pre_scrubbed"
     scrubbed_database = "scrubbed_#{self.dbname}"
 
+    if(self.dbtype == 'development')
+      fromhost = 'development'
+    elsif(self.dbtype == 'production')
+      fromhost = 'production_replica'
+    else
+      # bail
+      return {success: false, file: "n/a", dump_size: 0}
+    end
+
     # dump
-    result = self.class.dump_database_to_file(self.dbname,pre_scrubbed_file,debug)
+    result = self.class.dump_database_to_file(self.dbname,fromhost,pre_scrubbed_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
 
     # drop
-    result = self.class.drop_database(scrubbed_database,debug)
+    result = self.class.drop_scrubbed_database(scrubbed_database,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
 
-    result = self.class.create_database(scrubbed_database,debug)
+    result = self.class.create_scrubbed_database(scrubbed_database,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
 
     # import
-    result = self.class.import_database_from_file(scrubbed_database,pre_scrubbed_file,debug)
+    result = self.class.import_database_from_file(scrubbed_database,'scrubbed',pre_scrubbed_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
@@ -159,7 +177,7 @@ class AppDump < ActiveRecord::Base
     self.class.scrub_database(scrubbed_database,self.scrubbers,debug)
 
     # dump
-    result = self.class.dump_database_to_file(scrubbed_database,tmp_dump_file,debug)
+    result = self.class.dump_database_to_file(scrubbed_database,'scrubbed',tmp_dump_file,debug)
 
     # size it up
     dump_size = File.size(tmp_dump_file)
@@ -182,7 +200,7 @@ class AppDump < ActiveRecord::Base
     end
 
     # drop
-    self.class.drop_database(scrubbed_database,debug)
+    self.class.drop_scrubbed_database(scrubbed_database,debug)
 
     {success: true, file: "#{target_file}.gz", dump_size: dump_size}
 

@@ -79,14 +79,14 @@ class AppCopy < ActiveRecord::Base
 
     target_copy_file = "#{Settings.data_dump_dir_dump}/copy_#{production_location.dbname}.sql"
 
-    result = self.class.dump_database_to_file(production_location.dbname,target_copy_file,debug)
+    result = self.class.dump_database_to_file(production_location.dbname,'production_replica',target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
 
 
     # import
-    result = self.class.import_database_to_master_server_from_file(development_location.dbname,target_copy_file,debug)
+    result = self.class.import_database_from_file(development_location.dbname,'development',target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
