@@ -12,8 +12,6 @@
 
 # environment files
 /.rvmrc
-/.powenv
-/.powrc
 /.tm_properties
 
 # Ignore the default SQLite database.
@@ -35,3 +33,6 @@
 
 # ignore "repositories" directory
 /repositories
+
+# ignore zuul
+/zuul
