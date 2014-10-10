@@ -51,7 +51,7 @@ gem 'capistrano', '~> 2.15.5'
 gem 'capatross'
 
 # exception handling for now
-gem 'airbrake'
+gem 'honeybadger'
 
 # background jobs
 gem 'sidekiq', '~> 2.17.7'
