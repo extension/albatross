@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 source 'https://engineering.extension.org/rubygems'
 
-gem 'rails', '3.2.18'
+gem 'rails', '3.2.19'
 
 # all things xml
-gem 'nokogiri', '1.5.10'
+gem 'nokogiri'
 
 
 # Bundle edge Rails instead:
@@ -55,9 +55,6 @@ gem 'honeybadger'
 
 # background jobs
 gem 'sidekiq', '~> 2.17.7'
-
-# campfire integration
-gem "tinder", "~> 1.9.0"
 
 # slack integration
 gem "slack-notifier"

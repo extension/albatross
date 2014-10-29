@@ -15,6 +15,5 @@ data_dump_mysql_host_development: 'use_local_settings'
 data_dump_mysql_host_production_replica: 'use_local_settings'
 honeybadger_api_key: 'use_local_settings'
 sidekiq_enabled: true
-slack_team: 'use_local_settings'
-slack_token: 'use_local_settings'
 slack_channel: 'use_local_settings'
+slack_webhook: 'use_local_settings'
