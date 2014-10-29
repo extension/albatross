@@ -12,7 +12,7 @@ class Campout
 
   def self.slack_connection
     if(@slack.nil?)
-      @slack = Slack::Notifier.new(Settings.slack_team,Settings.slack_token)
+      @slack = Slack::Notifier.new(Settings.slack_webhook)
       @slack.username = 'Deploy Notifier'
       @slack.channel = Settings.slack_channel
     end
@@ -69,8 +69,5 @@ class Campout
     end
     delay.speak(message)
   end
-
-
-
 
 end
