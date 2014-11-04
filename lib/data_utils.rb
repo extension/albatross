@@ -6,9 +6,11 @@ module DataUtils
 
 
   def dump_database_to_file(database, fromhost, outputfile, debug=false)
+    is_socket = false
     if(fromhost == 'development')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     elsif(fromhost == 'scrubbed')
+      is_socket = true
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
       # production replica
@@ -20,6 +22,9 @@ module DataUtils
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
+    if(!is_socket)
+      command_array << "--port=#{Settings.data_dump_mysql_port}"
+    end
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
     command_array << "#{database}"
@@ -51,9 +56,11 @@ module DataUtils
   end
 
   def import_database_from_file(database,fromhost,inputfile, debug=false)
+    is_socket = false
     if(fromhost == 'development')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     elsif(fromhost == 'scrubbed')
+      is_socket = true
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
       return 'invalid import host'
@@ -64,6 +71,9 @@ module DataUtils
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
+    if(!is_socket)
+      command_array << "--port=#{Settings.data_dump_mysql_port}"
+    end
     command_array << "#{database}"
     command_array << "< #{inputfile}"
     command = command_array.join(' ')
