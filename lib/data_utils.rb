@@ -99,6 +99,24 @@ module DataUtils
     end
   end
 
+  def wp_srdb_database(database,search_host,replace_host,debug)
+    command_array = []
+    command_array << "#{Settings.data_dump_php_cmd} #{Rails.root}/script/srdb/srdb.cli.php"
+    command_array << "--user=#{Settings.data_dump_mysql_user}"
+    command_array << "--pass=#{Settings.data_dump_mysql_pass}"
+    command_array << "--host=#{Settings.data_dump_mysql_host_scrubbed}"
+    command_array << "--port=#{Settings.data_dump_mysql_port}"
+    command_array << "--name=#{database}"
+    command_array << "--search=#{search_host}"
+    command_array << "--replace=#{replace_host}"
+    # if(debug)
+    #   command_array << "--verbose"
+    # end
+    command = command_array.join(' ')
+    run_command(command,debug)
+  end
+
+
   # code from: https://github.com/ripienaar/mysql-dump-split
   def humanize_bytes(bytes)
     if(!bytes.nil? and bytes != 0)
