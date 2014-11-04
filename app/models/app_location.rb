@@ -29,4 +29,13 @@ class AppLocation < ActiveRecord::Base
     end
   end
 
+  def host
+    begin
+      uri = URI.parse(self.url)
+      uri.host
+    rescue
+      self.url
+    end
+  end
+
 end
