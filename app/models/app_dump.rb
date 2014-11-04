@@ -28,7 +28,7 @@ class AppDump < ActiveRecord::Base
   end
 
   def localdev_host
-    "#{self.application.name.downcase}.localdev"
+    "#{self.application.name.downcase}.localdev:#{Settings.data_dump_localdev_port}"
   end
 
   def dumpinfo
