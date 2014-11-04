@@ -242,6 +242,7 @@ class icit_srdb {
 			'user' 				=> '',
 			'pass' 				=> '',
 			'host' 				=> '',
+			'port' 				=> 3306,
 			'search' 			=> '',
 			'replace' 			=> '',
 			'tables'			=> array(),
@@ -411,7 +412,7 @@ class icit_srdb {
 		// switch off PDO
 		$this->set( 'use_pdo', false );
 
-		$connection = @mysql_connect( $this->host, $this->user, $this->pass );
+		$connection = @mysql_connect( "{$this->host}:{$this->port}", $this->user, $this->pass );
 
 		// unset if not available
 		if ( ! $connection ) {
@@ -437,7 +438,7 @@ class icit_srdb {
 	public function connect_pdo() {
 
 		try {
-			$connection = new PDO( "mysql:host={$this->host};dbname={$this->name}", $this->user, $this->pass );
+			$connection = new PDO( "mysql:host={$this->host};port={$this->port};dbname={$this->name}", $this->user, $this->pass );
 		} catch( PDOException $e ) {
 			$this->add_error( $e->getMessage(), 'db' );
 			$connection = false;

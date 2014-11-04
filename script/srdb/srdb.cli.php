@@ -15,6 +15,7 @@ require_once( 'srdb.class.php' );
 
 $opts = array(
 	'h:' => 'host:',
+	'P:' => 'port:',
 	'n:' => 'name:',
 	'u:' => 'user:',
 	'p:' => 'pass:',
@@ -76,6 +77,8 @@ Argument values are strings unless otherwise specified.
 ARGS
   -h, --host
     Required. The hostname of the database server.
+  -P, --port
+    The port to use to connect to the database server, defaults to 3306.
   -n, --name
     Required. Database name.
   -u, --user
