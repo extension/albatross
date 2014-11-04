@@ -39,7 +39,7 @@ class AppDump < ActiveRecord::Base
       return {'success' => false, 'error' => "dump currently in progress"}
     end
 
-    return {'success' => true, 'file' => dumpfile, 'server' => 'data.engineering.extension.org', 'size' => self.last_dump_size, 'last_dumped_at' => self.last_dumped_at, 'dbtype' => self.dbtype}
+    return {'success' => true, 'file' => dumpfile, 'server' => 'engineering.extension.org', 'size' => self.last_dump_size, 'last_dumped_at' => self.last_dumped_at, 'dbtype' => self.dbtype}
   end
 
   def mark_in_progress
