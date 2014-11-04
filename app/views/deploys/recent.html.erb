@@ -16,7 +16,7 @@
     <p>   <small><span class='badge'><i class='fa fa-forward' style="color:white"></i></span> indicates a deploy in the last 14 days</small></p>
 
     <dl>
-    <%- AppLocation.production.order('url ASC').each do |app_location| -%>
+    <%- AppLocation.active.production.order('url ASC').each do |app_location| -%>
     <%- if latest_deploy =  app_location.latest_deploy -%>
       <dt>
         <%= app_location.display_url %>

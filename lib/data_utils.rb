@@ -6,9 +6,11 @@ module DataUtils
 
 
   def dump_database_to_file(database, fromhost, outputfile, debug=false)
+    is_socket = false
     if(fromhost == 'development')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     elsif(fromhost == 'scrubbed')
+      is_socket = true
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
       # production replica
@@ -20,6 +22,9 @@ module DataUtils
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
+    if(!is_socket)
+      command_array << "--port=#{Settings.data_dump_mysql_port}"
+    end
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
     command_array << "#{database}"
@@ -51,9 +56,11 @@ module DataUtils
   end
 
   def import_database_from_file(database,fromhost,inputfile, debug=false)
+    is_socket = false
     if(fromhost == 'development')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     elsif(fromhost == 'scrubbed')
+      is_socket = true
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
       return 'invalid import host'
@@ -64,6 +71,9 @@ module DataUtils
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
+    if(!is_socket)
+      command_array << "--port=#{Settings.data_dump_mysql_port}"
+    end
     command_array << "#{database}"
     command_array << "< #{inputfile}"
     command = command_array.join(' ')
@@ -98,6 +108,30 @@ module DataUtils
       end
     end
   end
+
+  def wp_srdb_database(database,fromhost,search_host,replace_host,debug)
+    if(fromhost == 'development')
+      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
+    else # scrubbed host
+      host_command = "--host=#{Settings.data_dump_mysql_host_scrubbed}"
+    end
+
+    command_array = []
+    command_array << "#{Settings.data_dump_php_cmd} #{Rails.root}/script/srdb/srdb.cli.php"
+    command_array << "--user=#{Settings.data_dump_mysql_user}"
+    command_array << "--pass=#{Settings.data_dump_mysql_pass}"
+    command_array << host_command
+    command_array << "--port=#{Settings.data_dump_mysql_port}"
+    command_array << "--name=#{database}"
+    command_array << "--search=#{search_host}"
+    command_array << "--replace=#{replace_host}"
+    if(!debug)
+      command_array << "--verbose=false"
+    end
+    command = command_array.join(' ')
+    run_command(command,debug)
+  end
+
 
   # code from: https://github.com/ripienaar/mysql-dump-split
   def humanize_bytes(bytes)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140909162755) do
+ActiveRecord::Schema.define(:version => 20141104175235) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20140909162755) do
     t.integer  "last_copy_size", :limit => 8, :default => 0
     t.datetime "created_at",                                     :null => false
     t.datetime "updated_at",                                     :null => false
+    t.boolean  "is_wordpress",                :default => false
   end
 
   add_index "app_copies", ["application_id"], :name => "app_ndx", :unique => true
@@ -69,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20140909162755) do
     t.datetime "updated_at",                         :null => false
     t.integer  "last_dump_size",  :default => 0
     t.boolean  "is_snapshot",     :default => false
+    t.boolean  "is_wordpress",    :default => false
   end
 
   add_index "app_dumps", ["application_id"], :name => "app_ndx"
@@ -91,6 +93,7 @@ ActiveRecord::Schema.define(:version => 20140909162755) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.boolean  "fetch_pending", :default => false
+    t.boolean  "is_active",     :default => true
   end
 
   create_table "coder_emails", :force => true do |t|

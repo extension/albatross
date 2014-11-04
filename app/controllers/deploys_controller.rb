@@ -12,7 +12,7 @@ class DeploysController < ApplicationController
 
 
   def index
-    @deploylist = Deploy.order("start DESC").page(params[:page])
+    @deploylist = scopeit(Deploy.order("start DESC")).page(params[:page])
   end
 
   def show
@@ -55,21 +55,11 @@ class DeploysController < ApplicationController
 
 
   def recent
-    @deploylist = Deploy.production_listing.includes(:app_location).limit(20)
+    @deploylist = scopeit(Deploy.production_listing.includes(:app_location)).limit(20)
   end
 
   def production
-    deploylist_scope = Deploy.production_listing.includes(:app_location)
-
-    if(params[:coder] and @coder = Coder.find_by_id(params[:coder]))
-      deploylist_scope = deploylist_scope.bycoder(@coder)
-    end
-
-    if(params[:application] and @application = Application.find_by_id(params[:application]))
-      deploylist_scope = deploylist_scope.byapplication(@application)
-    end
-
-    @deploylist = deploylist_scope.page(params[:page])
+    @deploylist = scopeit(Deploy.production_listing.includes(:app_location)).page(params[:page])
   end
 
   def githubnotification
@@ -81,10 +71,24 @@ class DeploysController < ApplicationController
       returninformation = {'message' => 'Unable to log notification', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
-
-
   end
 
+
+  private
+
+  def scopeit(base_scope)
+
+    if(params[:coder] and @coder = Coder.find_by_id(params[:coder]))
+      base_scope = base_scope.bycoder(@coder)
+    end
+
+    if(params[:application] and @application = Application.find_by_id(params[:application]))
+      base_scope = base_scope.byapplication(@application)
+    end
+
+    base_scope
+
+  end
 
 
 

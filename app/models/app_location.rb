@@ -13,6 +13,7 @@ class AppLocation < ActiveRecord::Base
   DEVELOPMENT = 'development'
 
   scope :production, where(location: 'production')
+  scope :active, includes(:application).where("applications.is_active = 1")
 
 
   def latest_deploy
@@ -20,6 +21,15 @@ class AppLocation < ActiveRecord::Base
   end
 
   def display_url
+    begin
+      uri = URI.parse(self.url)
+      uri.host
+    rescue
+      self.url
+    end
+  end
+
+  def host
     begin
       uri = URI.parse(self.url)
       uri.host
