@@ -22,8 +22,13 @@ class AppDump < ActiveRecord::Base
   scope :daily, where(daily: true)
   scope :nonsnapshot, where(is_snapshot: false)
 
+
   def average_runtime
     self.app_dump_logs.average(:runtime)
+  end
+
+  def localdev_host
+    "#{self.application.name.downcase}.localdev"
   end
 
   def dumpinfo
@@ -31,6 +36,8 @@ class AppDump < ActiveRecord::Base
       dumpfile = "#{Settings.data_dump_dir_dump}/snapshots/#{self.dbname}"
     elsif(self.scrub?)
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}_scrubbed.sql.gz"
+    elsif(self.is_wordpress?)
+      dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}_localdev.sql.gz"
     else
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.gz"
     end
@@ -72,6 +79,8 @@ class AppDump < ActiveRecord::Base
     started = Time.now
     if(self.scrub?)
       result = scrubbed_dump(debug)
+    elsif(self.is_wordpress?)
+      result = wordpress_dump(debug)
     else
       result = normal_dump(debug)
     end
@@ -175,6 +184,83 @@ class AppDump < ActiveRecord::Base
 
     # scrub
     self.class.scrub_database(scrubbed_database,self.scrubbers,debug)
+
+    # dump
+    result = self.class.dump_database_to_file(scrubbed_database,'scrubbed',tmp_dump_file,debug)
+
+    # size it up
+    dump_size = File.size(tmp_dump_file)
+
+    # compress it
+    gzip_command = "#{Settings.data_dump_gzip_cmd} #{tmp_dump_file}"
+    result = self.class.run_command(gzip_command,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
+
+    # move it
+    move_source = "#{tmp_dump_file}.gz"
+    move_target = "#{target_file}.gz"
+
+    begin
+      FileUtils.mv(move_source,move_target,force: true)
+    rescue Exception => e
+      return {success: false, error: e}
+    end
+
+    # drop
+    self.class.drop_scrubbed_database(scrubbed_database,debug)
+
+    {success: true, file: "#{target_file}.gz", dump_size: dump_size}
+
+  end
+
+  def wordpress_dump(debug = false)
+    target_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}_localdev.sql"
+    tmp_dump_file =  "#{target_file}.tmp"
+    pre_scrubbed_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.pre_scrubbed"
+    scrubbed_database = "localdev_#{self.dbname}"
+
+    if(self.dbtype == 'development')
+      fromhost = 'development'
+    elsif(self.dbtype == 'production')
+      fromhost = 'production_replica'
+    else
+      # bail
+      return {success: false, file: "n/a", dump_size: 0}
+    end
+
+    # dump
+    result = self.class.dump_database_to_file(self.dbname,fromhost,pre_scrubbed_file,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
+
+    # drop
+    result = self.class.drop_scrubbed_database(scrubbed_database,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
+
+    result = self.class.create_scrubbed_database(scrubbed_database,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
+
+    # import
+    result = self.class.import_database_from_file(scrubbed_database,'scrubbed',pre_scrubbed_file,debug)
+    if(!result.blank?)
+      return {success: false, error: "#{result}"}
+    end
+
+    # unlink
+    File.delete(pre_scrubbed_file)
+
+    # search and replace
+    search_host = self.app_location.host
+    replace_host = self.localdev_host
+    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_host,replace_host,debug)
+    # ignore result
 
     # dump
     result = self.class.dump_database_to_file(scrubbed_database,'scrubbed',tmp_dump_file,debug)

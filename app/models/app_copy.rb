@@ -91,6 +91,12 @@ class AppCopy < ActiveRecord::Base
       return {success: false, error: "#{result}"}
     end
 
+    # wordpress transformation
+    if(self.is_wordpress?)
+      result = self.class.wp_srdb_database(development_location.dbname,'development',production_location.host,development_location.host,debug)
+      # ignore result
+    end
+
     size = File.size(target_copy_file)
     # delete
     File.delete(target_copy_file)
