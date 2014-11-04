@@ -99,19 +99,25 @@ module DataUtils
     end
   end
 
-  def wp_srdb_database(database,search_host,replace_host,debug)
+  def wp_srdb_database(database,fromhost,search_host,replace_host,debug)
+    if(fromhost == 'development')
+      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
+    else # scrubbed host
+      host_command = "--host=#{Settings.data_dump_mysql_host_scrubbed}"
+    end
+
     command_array = []
     command_array << "#{Settings.data_dump_php_cmd} #{Rails.root}/script/srdb/srdb.cli.php"
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--pass=#{Settings.data_dump_mysql_pass}"
-    command_array << "--host=#{Settings.data_dump_mysql_host_scrubbed}"
+    command_array << host_command
     command_array << "--port=#{Settings.data_dump_mysql_port}"
     command_array << "--name=#{database}"
     command_array << "--search=#{search_host}"
     command_array << "--replace=#{replace_host}"
-    # if(debug)
-    #   command_array << "--verbose"
-    # end
+    if(!debug)
+      command_array << "--verbose=false"
+    end
     command = command_array.join(' ')
     run_command(command,debug)
   end
