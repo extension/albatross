@@ -13,6 +13,7 @@ class AppLocation < ActiveRecord::Base
   DEVELOPMENT = 'development'
 
   scope :production, where(location: 'production')
+  scope :active, includes(:application).where("applications.is_active = 1")
 
 
   def latest_deploy

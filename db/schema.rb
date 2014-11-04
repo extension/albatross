@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140909162755) do
+ActiveRecord::Schema.define(:version => 20141104151101) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(:version => 20140909162755) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.boolean  "fetch_pending", :default => false
+    t.boolean  "is_active",     :default => true
   end
 
   create_table "coder_emails", :force => true do |t|
