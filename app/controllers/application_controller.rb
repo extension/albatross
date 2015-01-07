@@ -14,6 +14,11 @@ class ApplicationController < ActionController::Base
   TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE', 'yes','YES','y','Y']
   FALSE_VALUES = [false, 0, '0', 'f', 'F', 'false', 'FALSE','no','NO','n','N']
 
+  def append_info_to_payload(payload)
+    super
+    payload[:ip] = request.remote_ip
+    payload[:auth_id] = session[:coder_id] if session[:coder_id]
+  end
 
   # Takes a period of time in seconds and returns it in human-readable form (down to minutes)
   # code from http://www.postal-code.com/binarycode/2007/04/04/english-friendly-timespan/
