@@ -6,14 +6,11 @@ gem 'rails', '3.2.21'
 # all things xml
 gem 'nokogiri'
 
-
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 # storage
 gem 'mysql2'
-
-
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -73,6 +70,9 @@ gem 'loofah'
 
 # breadcrumbs
 gem "breadcrumbs_on_rails"
+
+# log handling
+gem "lograge"
 
 group :development do
   # require the powder gem
