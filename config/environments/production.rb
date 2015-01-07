@@ -76,4 +76,12 @@ Albatross::Application.configure do
     domain: "extension.org",
     enable_starttls_auto: false
   }
+
+  # terse logging
+  config.lograge.enabled = true
+  config.lograge.custom_options = lambda do |event|
+    unwanted_keys = %w[format action controller utf8]
+    params = event.payload[:params].reject { |key,_| unwanted_keys.include? key }
+    {time: event.time.to_s(:db), auth_id: event.payload[:auth_id], ip: event.payload[:ip], params: params}
+  end
 end
