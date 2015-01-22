@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141104175235) do
+ActiveRecord::Schema.define(:version => 20150122161139) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -120,21 +120,6 @@ ActiveRecord::Schema.define(:version => 20141104175235) do
   add_index "coders", ["data_key"], :name => "data_key_ndx"
   add_index "coders", ["uid"], :name => "index_coders_on_uid", :unique => true
 
-  create_table "cron_logs", :force => true do |t|
-    t.integer  "cron_id"
-    t.text     "stdout",      :limit => 16777215
-    t.text     "stderr",      :limit => 16777215
-    t.string   "command"
-    t.string   "server"
-    t.datetime "started_at"
-    t.datetime "finished_at"
-    t.float    "runtime"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
-  add_index "cron_logs", ["cron_id"], :name => "cron_ndx"
-
   create_table "cronmon_log_outputs", :force => true do |t|
     t.integer  "cronmon_log_id"
     t.text     "stdout",         :limit => 16777215
@@ -178,13 +163,6 @@ ActiveRecord::Schema.define(:version => 20141104175235) do
   end
 
   add_index "cronmons", ["cronmon_server_id", "label"], :name => "cronmon_ndx", :unique => true
-
-  create_table "crons", :force => true do |t|
-    t.string   "name",                              :null => false
-    t.boolean  "notify_on_error", :default => true, :null => false
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-  end
 
   create_table "deploy_logs", :force => true do |t|
     t.integer  "deploy_id"

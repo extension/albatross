@@ -4,15 +4,15 @@
 # see LICENSE file
 
 class Cronmon < ActiveRecord::Base
-  
+
   belongs_to :cronmon_server
-  has_many :cronmon_logs
+  has_many :cronmon_logs, :dependent => :destroy
   validates :label, :presence => true
 
   def save_log(provided_params)
     create_options = {}
     create_options[:command] = provided_params[:command] || 'unknown'
-    create_options[:start]   = provided_params[:start] 
+    create_options[:start]   = provided_params[:start]
     create_options[:finish]   = provided_params[:finish]
     if(provided_params[:runtime] and provided_params[:runtime].to_f > 0)
       create_options[:runtime] = provided_params[:runtime].to_f
@@ -31,5 +31,5 @@ class Cronmon < ActiveRecord::Base
   def lastlog
     self.cronmon_logs.order('start DESC').first
   end
-  
+
 end
