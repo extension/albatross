@@ -4,9 +4,9 @@
 # see LICENSE file
 
 class CronmonLog < ActiveRecord::Base
-  
+
   belongs_to :cronmon
-  has_one :cronmon_log_output
+  has_one :cronmon_log_output, :dependent => :destroy
   accepts_nested_attributes_for :cronmon_log_output
 
   before_save :set_runtime
@@ -28,7 +28,7 @@ class CronmonLog < ActiveRecord::Base
 
   def notify_if_error(force = false)
     if(force or !self.success?)
-      Notification.create(notifiable: self, notification_type: Notification::CRONMON_ERROR) 
+      Notification.create(notifiable: self, notification_type: Notification::CRONMON_ERROR)
     end
   end
 
