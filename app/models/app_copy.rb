@@ -52,7 +52,7 @@ class AppCopy < ActiveRecord::Base
 
 
     if(announce)
-      Campout.copy_notification_start(self,coder)
+      SlackNotification.copy_notification_start(self,coder)
     end
 
     self.mark_in_progress
@@ -67,7 +67,7 @@ class AppCopy < ActiveRecord::Base
     copy_log = self.app_copy_logs.create(started_at: started, finished_at: finished, runtime: finished - started, success: result[:success], additionaldata: result, size: size, coder: coder)
 
     if(announce)
-      Campout.copy_notification(copy_log)
+      SlackNotification.copy_notification(copy_log)
     end
     copy_log
   end

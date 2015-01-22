@@ -72,7 +72,7 @@ class AppDump < ActiveRecord::Base
     end
 
     if(announce)
-      Campout.dump_notification_start(self,coder)
+      SlackNotification.dump_notification_start(self,coder)
     end
 
     self.mark_in_progress
@@ -93,7 +93,7 @@ class AppDump < ActiveRecord::Base
     dump_log = self.app_dump_logs.create(started_at: started, finished_at: finished, runtime: finished - started, success: result[:success], additionaldata: result, size: size, coder: coder)
 
     if(announce)
-      Campout.dump_notification(dump_log)
+      SlackNotification.dump_notification(dump_log)
     end
     dump_log
   end

@@ -66,9 +66,9 @@ class Deploy < ActiveRecord::Base
 
     # notifications
     if(deploy.finish.nil?)
-      Campout.deploy_start_notification(deploy)
+      SlackNotification.deploy_start_notification(deploy)
     else
-      Campout.deploy_notification(deploy,{'from_cli' => provided_params['from_cli']})
+      SlackNotification.deploy_notification(deploy,{'from_cli' => provided_params['from_cli']})
       #deploy.application.coders_to_notify.each{|recipient| DeployMailer.delay.deploy(recipient: recipient.email, deploy: self) }
     end
 
@@ -105,7 +105,7 @@ class Deploy < ActiveRecord::Base
     end
   end
 
-  def campout_url
+  def notification_url
     deploy_url(self)
   end
 

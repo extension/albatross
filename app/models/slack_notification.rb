@@ -3,7 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 
-class Campout
+class SlackNotification
   extend TimeUtils
 
   def self.speak(msg)
@@ -28,12 +28,12 @@ class Campout
   def self.deploy_notification(deploy,options={})
     location = (deploy.app_location.nil? ? deploy.location : deploy.app_location.url)
     if(options['from_cli'])
-      message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{location} using the cli. Details: #{deploy.campout_url}"
+      message = "#{deploy.coder.name} uploaded a deploy log for #{deploy.application.name} to #{location} using the cli. Details: #{deploy.notification_url}"
     else
       if(deploy.success?)
-        message = ":checkered_flag: #{deploy.coder.name} deployed the #{deploy.branch} branch of #{deploy.application.name} to #{location}. Details: #{deploy.campout_url}"
+        message = ":checkered_flag: #{deploy.coder.name} deployed the #{deploy.branch} branch of #{deploy.application.name} to #{location}. Details: #{deploy.notification_url}"
       else
-        message = ":warning: The deploy for #{deploy.application.name} to #{location} has FAILED!. Details: #{deploy.campout_url}"
+        message = ":warning: The deploy for #{deploy.application.name} to #{location} has FAILED!. Details: #{deploy.notification_url}"
       end
     end
     delay.speak(message)
