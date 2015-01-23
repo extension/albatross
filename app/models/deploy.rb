@@ -4,6 +4,7 @@
 # see LICENSE file
 
 class Deploy < ActiveRecord::Base
+  include TimeUtils
   include MarkupScrubber
   include Rails.application.routes.url_helpers
   default_url_options[:host] = Settings.urlwriter_host
@@ -26,6 +27,10 @@ class Deploy < ActiveRecord::Base
   scope :successful, where(success: true)
   scope :production_listing, successful.production.order('finish DESC')
 
+
+  def deploy_time
+    (self.finish - self.start)
+  end
 
 
   # attr_writer override for comment to scrub html
@@ -57,6 +62,7 @@ class Deploy < ActiveRecord::Base
     deploy.success = provided_params['success']
     deploy.comment = provided_params['comment']
     deploy.branch = provided_params['branch']
+    deploy.uploaded = provided_params['from_cli']
     deploy.save!
 
     if(provided_params['deploy_log'])
@@ -66,15 +72,131 @@ class Deploy < ActiveRecord::Base
 
     # notifications
     if(deploy.finish.nil?)
-      SlackNotification.deploy_start_notification(deploy)
+      Notification.create(notifiable: self, notification_type: Notification::DEPLOY_START)
     else
-      SlackNotification.deploy_notification(deploy,{'from_cli' => provided_params['from_cli']})
-      #deploy.application.coders_to_notify.each{|recipient| DeployMailer.delay.deploy(recipient: recipient.email, deploy: self) }
+      Notification.create(notifiable: self, notification_type: Notification::DEPLOY_COMPLETE)    
     end
 
     deploy
   end
 
+  def start_notification
+
+    attachment = { "fallback" => "#{self.coder.name} started a #{self.location} of the #{self.branch} branch for #{self.application.name}.",
+      "text" => "#{self.application.name.capitalize} #{self.location} deployment started",
+      "fields" => [
+        {
+         "title" => "Who",
+         "value" => "#{self.coder.name}",
+         "short" => true
+        },
+        {
+          "title" => "Branch",
+          "value" =>  "#{self.branch}",
+          "short" =>  true
+        }
+      ],
+      "color" => "#f47B28"
+    }
+
+    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+  end
+
+
+  def completed_notification
+    if(self.uploaded?)
+      _upload_notification
+    elsif(self.success?)
+      _success_notification
+    else
+      _failure_notification
+    end
+  end
+
+  def _upload_notification
+
+    # "meh" not a color code, falls back to default
+
+    attachment = { "fallback" => "#{self.coder.name} uploaded a previous #{self.location} deployment log of the #{self.branch} branch for #{self.application.name}.",
+    "text" => "#{self.application.name.capitalize} #{self.location} deployment uploaded",
+    "fields" => [
+      {
+        "title" => "Who",
+        "value" => "#{self.coder.name}",
+        "short" => true
+      },
+      {
+        "title" => "Branch",
+        "value" =>  "#{self.branch}",
+        "short" =>  true
+      }
+    ],
+    "color" => "meh"
+  }
+
+  if(!self.comment.blank?)
+    attachment["fields"].push({"title" => "Comments", "value" => self.comment, "short" => false})
+  end
+
+  attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
+
+  SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+end
+
+
+  def _success_notification
+
+    attachment = { "fallback" => "#{self.coder.name} deployed the #{self.branch} branch of #{self.application.name} to #{self.location}. Details #{self.notification_url}.",
+    "text" => "#{self.application.name.capitalize} #{self.location} deployment complete (Deploy time: #{time_period_to_s(self.deploy_time,true,'n/a')})",
+    "fields" => [
+      {
+        "title" => "Who",
+        "value" => "#{self.coder.name}",
+        "short" => true
+      },
+      {
+        "title" => "Branch",
+        "value" =>  "#{self.branch}",
+        "short" =>  true
+      }
+    ],
+    "color" => "good"
+  }
+
+  if(!self.comment.blank?)
+    attachment["fields"].push({"title" => "Comments", "value" => self.comment, "short" => false})
+  end
+
+  attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
+
+  SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+end
+
+def _failure_notification
+
+    attachment = { "fallback" => "rotating_light: The #{self.location} deploy of the #{self.branch} branch of #{self.application.name} failed! Details #{self.notification_url} rotating_light:",
+    "text" => ":rotating_light: #{self.application.name.capitalize} #{self.location} deployment FAILED! :rotating_light:",
+    "fields" => [
+      {
+        "title" => "Who",
+        "value" => "#{self.coder.name}",
+        "short" => true
+      },
+      {
+        "title" => "Branch",
+        "value" =>  "#{self.branch}",
+        "short" =>  true
+      }
+    ],
+    "color" => "danger"
+  }
+
+
+  attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
+
+  SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+
+end
 
 
   def self.coders_with_deploys

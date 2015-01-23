@@ -28,6 +28,10 @@ class Notification < ActiveRecord::Base
   ## Notification types
   CRONMON_ERROR = 100
 
+  DEPLOY_START = 201
+  DEPLOY_COMPLETE = 202
+
+
   def self.code_to_constant_string(code)
     constantslist = self.constants
     constantslist.each do |c|
@@ -81,7 +85,17 @@ class Notification < ActiveRecord::Base
     EventMailer.cronmon_error({cronmon_log: self.notifiable, notification: self}).deliver
   end
 
+  def deploy_start
+    if(deploy = self.notifiable)
+      deploy.start_notification
+    end
+  end
 
+  def deploy_complete
+    if(deploy = self.notifiable)
+      deploy.completed_notification
+    end
+  end
 
 
 end
