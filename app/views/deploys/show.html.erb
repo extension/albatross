@@ -51,7 +51,7 @@
 		  <tr>
 			  <td>Deployed Revision</td>
 			  <%- if(!@deploy.deployed_revision.blank?) -%>
-				  <td><%= link_to(@deploy.deployed_revision,github_url_for_deploy(@deploy)) %></td>
+				  <td><%= link_to(@deploy.deployed_revision,@deploy.github_url_for_deployed_revision) %></td>
 		  	  <%- else -%>
 			  	<td>n/a</td>
 			  <%- end -%>

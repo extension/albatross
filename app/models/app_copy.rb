@@ -8,6 +8,7 @@ require "open3"
 class AppCopy < ActiveRecord::Base
   extend IoUtils
   extend DataUtils
+  include TimeUtils
   belongs_to :application
   has_many :app_copy_logs
 
@@ -15,6 +16,10 @@ class AppCopy < ActiveRecord::Base
 
   def average_runtime
     self.app_copy_logs.average(:runtime)
+  end
+
+  def last_runtime
+    self.app_copy_logs.last.runtime
   end
 
   def mark_in_progress
@@ -44,15 +49,22 @@ class AppCopy < ActiveRecord::Base
       return {success: false, error: "No production database for this application."}
     end
 
-
     development_location = self.application.app_location_for_location(AppLocation::DEVELOPMENT)
     if(!development_location or !development_location.dbname.present?)
       return {success: false, error: "No development database for this application."}
     end
 
+    # check for maintenance mode
+    if(!development_location.check_maintenance)
+      if(announce)
+        self.no_maintenance_notification(coder)
+      end
+      return {success: false, error: "Development application is not in maintenance mode."}
+    end
+
 
     if(announce)
-      SlackNotification.copy_notification_start(self,coder)
+      self.start_notification(coder)
     end
 
     self.mark_in_progress
@@ -67,7 +79,7 @@ class AppCopy < ActiveRecord::Base
     copy_log = self.app_copy_logs.create(started_at: started, finished_at: finished, runtime: finished - started, success: result[:success], additionaldata: result, size: size, coder: coder)
 
     if(announce)
-      SlackNotification.copy_notification(copy_log)
+      self.completed_notification(copy_log)
     end
     copy_log
   end
@@ -102,6 +114,72 @@ class AppCopy < ActiveRecord::Base
     File.delete(target_copy_file)
 
     {success: true, copy_size: size}
+  end
+
+
+  def start_notification(coder = Coder.coderbot)
+      time_period_string_last = time_period_to_s(self.last_runtime)
+      time_period_string_avg = time_period_to_s(self.average_runtime)
+
+      attachment = { "fallback" => "#{coder.name} has started a production :arrow_right: development database copy for #{self.application.name}. This last took #{time_period_string_last}.",
+      "text" => "#{self.application.name.capitalize} production :arrow_right: development database copy started",
+      "fields" => [
+        {
+          "title" => "Who",
+          "value" => "#{coder.name}",
+          "short" => true
+        },
+        {
+          "title" => "Last Runtime",
+          "value" =>  "#{time_period_string_last} (Average: #{time_period_string_avg})",
+          "short" =>  true
+        }
+      ],
+      "color" => "meh"
+    }
+
+    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+  end
+
+  def request_notification(coder = Coder.coderbot)
+    time_period_string_last = time_period_to_s(self.last_runtime)
+    time_period_string_avg = time_period_to_s(self.average_runtime)
+
+      attachment = { "fallback" => "#{coder.name} has requested a production :arrow_right: development database copy for #{self.application.name}. Waiting 60 seconds so that the development application can be put into maintenance mode.",
+      "text" => "#{self.application.name.capitalize} production :arrow_right: development database copy requested. Waiting 60 seconds so that the development application can be put into maintenance mode.",
+      "fields" => [
+        {
+          "title" => "Who",
+          "value" => "#{coder.name}",
+          "short" => true
+        }
+      ],
+      "color" => "meh"
+    }
+
+    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+  end
+
+  def no_maintenance_notification(coder = Coder.coderbot)
+
+    attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} has been canceled!. The development application is not in maintenance mode",
+    "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: development database copy canceled! :rotating_light: ",
+    "fields" => [],
+    "color" => "danger"
+  }
+
+  attachment["fields"].push({"title" => "Reason", "value" => "The development application is not in maintenance mode. #{coder.name} please place the application in maintenance mode.", "short" => false})
+
+    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+  end
+
+
+  def completed_notification(copy_log)
+    if(copy_log.success?)
+      copy_log._success_notification
+    else
+      copy_log._failure_notification
+    end
   end
 
 end

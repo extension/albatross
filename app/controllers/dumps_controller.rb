@@ -15,7 +15,7 @@ class DumpsController < ApplicationController
   end
 
 
-  def dumpinfo 
+  def dumpinfo
     if(params[:appkey])
       application = Application.find_by_appkey(params[:appkey])
     elsif(params[:appname])
@@ -88,6 +88,8 @@ class DumpsController < ApplicationController
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
 
+    # TODO: post initiation
+
     appcopy.delay_for(1.minute).copy({announce: true, coder: @coder})
     returninformation = {'message' => 'Scheduled database copy. Please place the development application in maintenance mode.', 'success' => true}
     return render :json => returninformation.to_json, :status => :ok
@@ -103,6 +105,6 @@ class DumpsController < ApplicationController
       returninformation = {'message' => 'The personal data_key that you provided is not valid. Check it and try again.', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
-  end            
+  end
 
 end

@@ -26,14 +26,7 @@ module ApplicationHelper
     "<li#{list_item_class}>#{link_to(label,path)}</li>".html_safe
   end
 
-  def github_url_for_deploy(deploy)
-    baseurl = deploy.application.github_url
-    if(deploy.deployed_revision != deploy.previous_revision)
-      "#{baseurl}/compare/#{deploy.previous_revision}...#{deploy.deployed_revision}"
-    else
-      "#{baseurl}/commit/#{deploy.deployed_revision}"
-    end
-  end
+
 
   def deployed_time_for_table(deploy)
      if(deploy.finish.blank?)

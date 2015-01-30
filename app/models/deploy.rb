@@ -74,7 +74,7 @@ class Deploy < ActiveRecord::Base
     if(deploy.finish.nil?)
       Notification.create(notifiable: self, notification_type: Notification::DEPLOY_START)
     else
-      Notification.create(notifiable: self, notification_type: Notification::DEPLOY_COMPLETE)    
+      Notification.create(notifiable: self, notification_type: Notification::DEPLOY_COMPLETE)
     end
 
     deploy
@@ -236,6 +236,16 @@ end
       self.update_attribute(:branch, $2)
     end
   end
+
+  def github_url_for_deployed_revision
+    baseurl = self.application.github_url
+    if(self.deployed_revision != self.previous_revision)
+      "#{baseurl}/compare/#{self.previous_revision}...#{self.deployed_revision}"
+    else
+      "#{baseurl}/commit/#{self.deployed_revision}"
+    end
+  end
+
 
   def deployed_to_url
     if(self.app_location)

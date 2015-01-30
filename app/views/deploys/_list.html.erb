@@ -11,7 +11,7 @@
         <th>Details</th>
     </tr>
   </thead>
-  
+
   <tbody>
     <%- for deploy in deploylist -%>
   	<tr>
@@ -21,7 +21,7 @@
       <td><%= deploy.branch %></td>
       <td><%= deploy.coder.name %></td>
 	  <%- if(!deploy.deployed_revision.blank?) -%>
-	  <td><%= link_to(deploy.deployed_revision,github_url_for_deploy(deploy)) %></td>
+	  <td><%= link_to(deploy.deployed_revision,deploy.github_url_for_deployed_revision) %></td>
   	  <%- else -%>
 	  	<td>n/a</td>
 	  <%- end -%>
