@@ -12,17 +12,6 @@ class AppDumpLog < ActiveRecord::Base
   has_one :application, through: :app_dump
 
 
-
-  def dump_notification(dump_log)
-    if(dump_log.success?)
-      message = ":checkered_flag: The #{dump_log.app_dump.dbtype} database for #{dump_log.application.name} has been dumped (compressed size: #{AppDump.humanize_bytes(dump_log.size)})."
-    else
-      message = ":warning: The #{dump_log.app_dump.dbtype} database dump for #{dump_log.application.name} has FAILED!. Details: #{dump_log.additionaldata[:error]}"
-    end
-    delay.speak(message)
-  end
-
-
   def _success_notification
 
       attachment = { "fallback" => "The #{self.app_dump.dbtype} database for #{self.application.name} has been dumped (compressed size: #{AppDump.humanize_bytes(self.size)}.",
@@ -47,7 +36,7 @@ class AppDumpLog < ActiveRecord::Base
       "color" => "good"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
   def _failure_notification
@@ -64,7 +53,7 @@ class AppDumpLog < ActiveRecord::Base
       attachment["fields"].push({"title" => "Details", "value" => "No details available", "short" => false})
     end
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
 

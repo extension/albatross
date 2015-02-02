@@ -99,7 +99,7 @@ class Deploy < ActiveRecord::Base
       "color" => "#f47B28"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
   end
 
 
@@ -140,7 +140,7 @@ class Deploy < ActiveRecord::Base
 
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
 
-  SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+  SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
 end
 
 
@@ -169,7 +169,7 @@ end
 
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
 
-  SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+  SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
 end
 
 def _failure_notification
@@ -194,7 +194,7 @@ def _failure_notification
 
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
 
-  SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Deploy Notification"})
+  SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
 
 end
 

@@ -320,7 +320,7 @@ class AppDump < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
 

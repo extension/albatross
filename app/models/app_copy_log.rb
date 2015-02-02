@@ -11,16 +11,6 @@ class AppCopyLog < ActiveRecord::Base
   belongs_to :app_copy
   has_one :application, through: :app_copy
 
-  def self.copy_notification(copy_log)
-    if(copy_log.success?)
-      message = ":checkered_flag: The production => development database copy for #{copy_log.application.name} is complete (dump file size: #{AppCopy.humanize_bytes(copy_log.size)})."
-    else
-      message = ":warning: The production => development database copy for #{copy_log.application.name} has FAILED!. Details: #{copy_log.additionaldata[:error]}"
-    end
-    delay.speak(message)
-  end
-
-
     def _success_notification
 
       attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} is complete (size: #{AppCopy.humanize_bytes(self.size)}.",
@@ -45,7 +35,7 @@ class AppCopyLog < ActiveRecord::Base
       "color" => "good"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
   def _failure_notification
@@ -62,7 +52,7 @@ class AppCopyLog < ActiveRecord::Base
       attachment["fields"].push({"title" => "Details", "value" => "No details available", "short" => false})
     end
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
 end

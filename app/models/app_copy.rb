@@ -138,7 +138,7 @@ class AppCopy < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
   def request_notification(coder = Coder.coderbot)
@@ -157,7 +157,7 @@ class AppCopy < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
   def no_maintenance_notification(coder = Coder.coderbot)
@@ -170,7 +170,7 @@ class AppCopy < ActiveRecord::Base
 
   attachment["fields"].push({"title" => "Reason", "value" => "The development application is not in maintenance mode. #{coder.name} please place the application in maintenance mode.", "short" => false})
 
-    SlackNotification.post({attachment: attachment, channel: "#testing", username: "Engineering Database Tools Notification"})
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
 
 
