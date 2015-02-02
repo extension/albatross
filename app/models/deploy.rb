@@ -72,9 +72,9 @@ class Deploy < ActiveRecord::Base
 
     # notifications
     if(deploy.finish.nil?)
-      Notification.create(notifiable: self, notification_type: Notification::DEPLOY_START)
+      Notification.create(notifiable: deploy, notification_type: Notification::DEPLOY_START)
     else
-      Notification.create(notifiable: self, notification_type: Notification::DEPLOY_COMPLETE)
+      Notification.create(notifiable: deploy, notification_type: Notification::DEPLOY_COMPLETE)
     end
 
     deploy
