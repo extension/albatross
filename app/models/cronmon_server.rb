@@ -8,7 +8,7 @@ class CronmonServer < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
 
-  has_many :cronmons
+  has_many :cronmons, :dependent => :destroy
   has_one :oauth_application, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
 
   scope :active, where(is_active: true)

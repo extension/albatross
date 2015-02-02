@@ -8,6 +8,7 @@ require "open3"
 class AppDump < ActiveRecord::Base
   extend IoUtils
   extend DataUtils
+  include TimeUtils
   serialize :scrubbers
 
   attr_accessible :application, :application_id, :app_location, :app_location_id, :dbtype, :dbname, :daily, :scrub, :scrubbers, :in_progress, :last_dumped_at, :last_dump_size
@@ -26,6 +27,11 @@ class AppDump < ActiveRecord::Base
   def average_runtime
     self.app_dump_logs.average(:runtime)
   end
+
+  def last_runtime
+    self.app_dump_logs.last.runtime
+  end
+
 
   def localdev_host
     "#{self.application.name.downcase}.localdev:#{Settings.data_dump_localdev_port}"
@@ -72,7 +78,7 @@ class AppDump < ActiveRecord::Base
     end
 
     if(announce)
-      Campout.dump_notification_start(self,coder)
+      self.start_notification(coder)
     end
 
     self.mark_in_progress
@@ -93,7 +99,7 @@ class AppDump < ActiveRecord::Base
     dump_log = self.app_dump_logs.create(started_at: started, finished_at: finished, runtime: finished - started, success: result[:success], additionaldata: result, size: size, coder: coder)
 
     if(announce)
-      Campout.dump_notification(dump_log)
+      self.completed_notification(dump_log)
     end
     dump_log
   end
@@ -290,6 +296,40 @@ class AppDump < ActiveRecord::Base
 
     {success: true, file: "#{target_file}.gz", dump_size: dump_size}
 
+  end
+
+
+  def start_notification(coder = Coder.coderbot)
+     time_period_string_last = time_period_to_s(self.last_runtime)
+     time_period_string_avg = time_period_to_s(self.average_runtime)
+
+      attachment = { "fallback" => "#{coder.name} has started a #{self.dbtype} database dump for #{self.application.name}. This last took #{time_period_string_last}.",
+      "text" => "#{self.application.name.capitalize} #{self.dbtype} database dump started",
+      "fields" => [
+        {
+          "title" => "Who",
+          "value" => "#{coder.name}",
+          "short" => true
+        },
+        {
+          "title" => "Last Runtime",
+          "value" =>  "#{time_period_string_last} (Average: #{time_period_string_avg})",
+          "short" =>  true
+        }
+      ],
+      "color" => "meh"
+    }
+
+    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+  end
+
+
+  def completed_notification(dump_log)
+    if(dump_log.success?)
+      dump_log._success_notification
+    else
+      dump_log._failure_notification
+    end
   end
 
 

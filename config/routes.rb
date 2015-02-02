@@ -18,9 +18,6 @@ Albatross::Application.routes.draw do
     end
   end
 
-  resources :cron_logs, :only => [:show, :create]
-  resources :crons, :only => [:show, :index]
-
   resources :dumps, :only => [:index, :show] do
     collection do
       get :dumpinfo
@@ -43,7 +40,7 @@ Albatross::Application.routes.draw do
     member do
       get :showlog
     end
-    
+
   end
 
   match '/logout' => 'auth#end', :as => 'logout'
