@@ -88,7 +88,7 @@ class DumpsController < ApplicationController
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
 
-    # TODO: post initiation
+    appcopy.request_notification(@coder)
 
     appcopy.delay_for(1.minute).copy({announce: true, coder: @coder})
     returninformation = {'message' => 'Scheduled database copy. Please place the development application in maintenance mode.', 'success' => true}
