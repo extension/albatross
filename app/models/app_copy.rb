@@ -49,17 +49,17 @@ class AppCopy < ActiveRecord::Base
       return {success: false, error: "No production database for this application."}
     end
 
-    development_location = self.application.app_location_for_location(AppLocation::DEVELOPMENT)
-    if(!development_location or !development_location.dbname.present?)
-      return {success: false, error: "No development database for this application."}
+    staging_location = self.application.app_location_for_location(AppLocation::STAGING)
+    if(!staging_location or !staging_location.dbname.present?)
+      return {success: false, error: "No staging database for this application."}
     end
 
     # check for maintenance mode
-    if(!development_location.check_maintenance)
+    if(!staging_location.check_maintenance)
       if(announce)
         self.no_maintenance_notification(coder)
       end
-      return {success: false, error: "Development application is not in maintenance mode."}
+      return {success: false, error: "Staging application is not in maintenance mode."}
     end
 
 
@@ -69,7 +69,7 @@ class AppCopy < ActiveRecord::Base
 
     self.mark_in_progress
     started = Time.now
-    result = database_copy(production_location,development_location,debug)
+    result = database_copy(production_location,staging_location,debug)
     finished = Time.now
     self.mark_complete
     if(result[:success])
@@ -84,8 +84,8 @@ class AppCopy < ActiveRecord::Base
     copy_log
   end
 
-  def database_copy(production_location,development_location,debug)
-    if(development_location.dbname =~ %r{prod})
+  def database_copy(production_location,staging_location,debug)
+    if(staging_location.dbname =~ %r{prod})
       return {success: false, error: "Incorrect database target"}
     end
 
@@ -98,14 +98,14 @@ class AppCopy < ActiveRecord::Base
 
 
     # import
-    result = self.class.import_database_from_file(development_location.dbname,'development',target_copy_file,debug)
+    result = self.class.import_database_from_file(staging_location.dbname,'staging',target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
 
     # wordpress transformation
     if(self.is_wordpress?)
-      result = self.class.wp_srdb_database(development_location.dbname,'development',production_location.host,development_location.host,debug)
+      result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.host,staging_location.host,debug)
       # ignore result
     end
 
@@ -121,8 +121,8 @@ class AppCopy < ActiveRecord::Base
       time_period_string_last = time_period_to_s(self.last_runtime)
       time_period_string_avg = time_period_to_s(self.average_runtime)
 
-      attachment = { "fallback" => "#{coder.name} has started a production :arrow_right: development database copy for #{self.application.name}. This last took #{time_period_string_last}.",
-      "text" => "#{self.application.name.capitalize} production :arrow_right: development database copy started",
+      attachment = { "fallback" => "#{coder.name} has started a production :arrow_right: staging database copy for #{self.application.name}. This last took #{time_period_string_last}.",
+      "text" => "#{self.application.name.capitalize} production :arrow_right: staging database copy started",
       "fields" => [
         {
           "title" => "Who",
@@ -145,8 +145,8 @@ class AppCopy < ActiveRecord::Base
     time_period_string_last = time_period_to_s(self.last_runtime)
     time_period_string_avg = time_period_to_s(self.average_runtime)
 
-      attachment = { "fallback" => "#{coder.name} has requested a production :arrow_right: development database copy for #{self.application.name}. Waiting 60 seconds so that the development application can be put into maintenance mode.",
-      "text" => "#{self.application.name.capitalize} production :arrow_right: development database copy requested. Waiting 60 seconds so that the development application can be put into maintenance mode.",
+      attachment = { "fallback" => "#{coder.name} has requested a production :arrow_right: staging database copy for #{self.application.name}. Waiting 60 seconds so that the staging application can be put into maintenance mode.",
+      "text" => "#{self.application.name.capitalize} production :arrow_right: staging database copy requested. Waiting 60 seconds so that the staging application can be put into maintenance mode.",
       "fields" => [
         {
           "title" => "Who",
@@ -162,13 +162,13 @@ class AppCopy < ActiveRecord::Base
 
   def no_maintenance_notification(coder = Coder.coderbot)
 
-    attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} has been canceled!. The development application is not in maintenance mode",
-    "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: development database copy canceled! :rotating_light: ",
+    attachment = { "fallback" => "The production :arrow_right: staging database copy for #{self.application.name} has been canceled!. The development application is not in maintenance mode",
+    "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: staging database copy canceled! :rotating_light: ",
     "fields" => [],
     "color" => "danger"
   }
 
-  attachment["fields"].push({"title" => "Reason", "value" => "The development application is not in maintenance mode. #{coder.name} please place the application in maintenance mode.", "short" => false})
+  attachment["fields"].push({"title" => "Reason", "value" => "The staging application is not in maintenance mode. #{coder.name} please place the application in maintenance mode.", "short" => false})
 
     SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
   end
