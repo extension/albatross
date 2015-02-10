@@ -118,6 +118,12 @@ class AppCopy < ActiveRecord::Base
 
 
   def start_notification(coder = Coder.coderbot)
+
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering Database Copy Notification"
+    post_options[:icon_emoji] = ':floppy_disk:'
+
       time_period_string_last = time_period_to_s(self.last_runtime)
       time_period_string_avg = time_period_to_s(self.average_runtime)
 
@@ -138,10 +144,18 @@ class AppCopy < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+
+    SlackNotification.post(post_options)
   end
 
   def request_notification(coder = Coder.coderbot)
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering Database Copy Notification"
+    post_options[:icon_emoji] = ':floppy_disk:'
+
     time_period_string_last = time_period_to_s(self.last_runtime)
     time_period_string_avg = time_period_to_s(self.average_runtime)
 
@@ -157,20 +171,30 @@ class AppCopy < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+
+    SlackNotification.post(post_options)
   end
 
   def no_maintenance_notification(coder = Coder.coderbot)
+
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering Database Copy Notification"
+    post_options[:icon_emoji] = ':no_entry_sign:'
 
     attachment = { "fallback" => "The production :arrow_right: staging database copy for #{self.application.name} has been canceled!. The development application is not in maintenance mode",
     "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: staging database copy canceled! :rotating_light: ",
     "fields" => [],
     "color" => "danger"
-  }
+    }
 
-  attachment["fields"].push({"title" => "Reason", "value" => "The staging application is not in maintenance mode. #{coder.name} please place the application in maintenance mode.", "short" => false})
+    attachment["fields"].push({"title" => "Reason", "value" => "The staging application is not in maintenance mode. #{coder.name} please place the application in maintenance mode.", "short" => false})
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+    SlackNotification.post(post_options)
   end
 
 

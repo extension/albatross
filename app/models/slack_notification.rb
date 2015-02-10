@@ -9,7 +9,7 @@ class SlackNotification
 
   def initialize(options = {})
     username = options[:username] || "Engineering Notifier"
-    channel = options[:channel] || Settings.slack_channel
+    channel = options[:channel] || Settings.default_slack_channel
     @slack = Slack::Notifier.new(Settings.slack_webhook)
     @slack.username = username
     @slack.channel = channel

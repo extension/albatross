@@ -14,6 +14,12 @@ class AppDumpLog < ActiveRecord::Base
 
   def _success_notification
 
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.app_dump.dbtype.capitalize} Database Dump Notification"
+    post_options[:icon_emoji] = ':package:'
+
+
       attachment = { "fallback" => "The #{self.app_dump.dbtype} database for #{self.application.name} has been dumped (compressed size: #{AppDump.humanize_bytes(self.size)}.",
       "text" => "#{self.application.name.capitalize} #{self.app_dump.dbtype} dump complete",
       "fields" => [
@@ -36,10 +42,19 @@ class AppDumpLog < ActiveRecord::Base
       "color" => "good"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+
+    SlackNotification.post(post_options)
   end
 
   def _failure_notification
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.app_dump.dbtype.capitalize} Database Dump Notification"
+    post_options[:icon_emoji] = ':package:'
+
+
 
     attachment = { "fallback" => "The #{self.app_dump.dbtype} database dump for #{self.application.name} has FAILED!. Details: #{self.additionaldata[:error]}",
     "text" => ":rotating_light: #{self.application.name.capitalize} #{self.app_dump.dbtype} dump FAILED! :rotating_light:",
@@ -52,8 +67,10 @@ class AppDumpLog < ActiveRecord::Base
     else
       attachment["fields"].push({"title" => "Details", "value" => "No details available", "short" => false})
     end
+    post_options[:attachment] = attachment
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+
+    SlackNotification.post(post_options)
   end
 
 

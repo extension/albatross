@@ -13,6 +13,11 @@ class AppCopyLog < ActiveRecord::Base
 
     def _success_notification
 
+      post_options = {}
+      post_options[:channel] = Settings.deploys_slack_channel
+      post_options[:username] = "Engineering Database Copy Notification"
+      post_options[:icon_emoji] = ':floppy_disk:'
+
       attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} is complete (size: #{AppCopy.humanize_bytes(self.size)}.",
       "text" => "#{self.application.name.capitalize} production :arrow_right: development database copy complete",
       "fields" => [
@@ -35,10 +40,17 @@ class AppCopyLog < ActiveRecord::Base
       "color" => "good"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+
+    SlackNotification.post(post_options)
   end
 
   def _failure_notification
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering Database Copy Notification"
+    post_options[:icon_emoji] = ':floppy_disk:'
 
       attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} has FAILED!. Details: #{self.additionaldata[:error]}",
       "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: development database copy FAILED! :rotating_light:",
@@ -52,7 +64,9 @@ class AppCopyLog < ActiveRecord::Base
       attachment["fields"].push({"title" => "Details", "value" => "No details available", "short" => false})
     end
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+    SlackNotification.post(post_options)
   end
 
 end

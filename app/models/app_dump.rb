@@ -300,6 +300,11 @@ class AppDump < ActiveRecord::Base
 
 
   def start_notification(coder = Coder.coderbot)
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.dbtype.capitalize} Database Dump Notification"
+    post_options[:icon_emoji] = ':package:'
+
      time_period_string_last = time_period_to_s(self.last_runtime)
      time_period_string_avg = time_period_to_s(self.average_runtime)
 
@@ -320,7 +325,9 @@ class AppDump < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+    SlackNotification.post(post_options)
   end
 
 
