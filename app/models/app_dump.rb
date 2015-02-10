@@ -109,8 +109,8 @@ class AppDump < ActiveRecord::Base
     target_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql"
     tmp_dump_file =  "#{target_file}.tmp"
 
-    if(self.dbtype == 'development')
-      fromhost = 'development'
+    if(self.dbtype == 'staging')
+      fromhost = 'staging'
     elsif(self.dbtype == 'production')
       fromhost = 'production_replica'
     else
@@ -227,8 +227,8 @@ class AppDump < ActiveRecord::Base
     pre_scrubbed_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.pre_scrubbed"
     scrubbed_database = "localdev_#{self.dbname}"
 
-    if(self.dbtype == 'development')
-      fromhost = 'development'
+    if(self.dbtype == 'staging')
+      fromhost = 'staging'
     elsif(self.dbtype == 'production')
       fromhost = 'production_replica'
     else
@@ -300,6 +300,11 @@ class AppDump < ActiveRecord::Base
 
 
   def start_notification(coder = Coder.coderbot)
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.dbtype.capitalize} Database Dump Notification"
+    post_options[:icon_emoji] = ':package:'
+
      time_period_string_last = time_period_to_s(self.last_runtime)
      time_period_string_avg = time_period_to_s(self.average_runtime)
 
@@ -320,7 +325,9 @@ class AppDump < ActiveRecord::Base
       "color" => "meh"
     }
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Database Tools Notification"})
+    post_options[:attachment] = attachment
+
+    SlackNotification.post(post_options)
   end
 
 

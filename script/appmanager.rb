@@ -49,7 +49,7 @@ class AppManager < Thor
 
     this_app = Application.create(name: application_name, github_url: github_url)
     if(this_app.present? and this_app.valid?)
-      
+
       # production app_location
       if(!production_url.blank? and !production_database.blank?)
         production_location = AppLocation.create(application_id: this_app.id, location: 'production', url: production_url, dbname: production_database)
@@ -57,7 +57,7 @@ class AppManager < Thor
 
       # development app_location
       if(!dev_url.blank? and !dev_database.blank?)
-        development_location = AppLocation.create(application_id: this_app.id, location: 'development', url: dev_url, dbname: dev_database)
+        staging_location = AppLocation.create(application_id: this_app.id, location: 'staging', url: dev_url, dbname: dev_database)
       end
 
       # dump production db?
@@ -70,11 +70,11 @@ class AppManager < Thor
       end
 
       # dump development db?
-      if(development_location.present? and development_location.valid?)
-        create_development_dump = yes?("Dump development database?")
+      if(staging_location.present? and staging_location.valid?)
+        create_development_dump = yes?("Dump staging database?")
         if(create_development_dump)
-          development_dump_daily = yes?("Dump development database daily?")
-          development_dump = AppDump.create(dbtype: 'development', dbname: development_location.dbname, application_id: this_app.id, app_location_id: development_location.id, daily: development_dump_daily)
+          development_dump_daily = yes?("Dump staging database daily?")
+          development_dump = AppDump.create(dbtype: 'staging', dbname: staging_location.dbname, application_id: this_app.id, app_location_id: staging_location.id, daily: development_dump_daily)
         end
       end
 

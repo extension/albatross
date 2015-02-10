@@ -24,6 +24,7 @@ class Deploy < ActiveRecord::Base
   scope :bylocation, lambda{|location| where(:location => location)}
   scope :bycoder, lambda{|coder| where(:coder_id => coder.id)}
   scope :production, where(location: 'production')
+  scope :staging, where(location: 'staging')
   scope :successful, where(success: true)
   scope :production_listing, successful.production.order('finish DESC')
 
@@ -81,6 +82,15 @@ class Deploy < ActiveRecord::Base
   end
 
   def start_notification
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.location.capitalize} Deploy Notification"
+    if(self.location == 'staging')
+      post_options[:icon_emoji] = ':construction:'
+    else
+      post_options[:icon_emoji] = ':new:'
+    end
+
 
     attachment = { "fallback" => "#{self.coder.name} started a #{self.location} of the #{self.branch} branch for #{self.application.name}.",
       "text" => "#{self.application.name.capitalize} #{self.location} deployment started",
@@ -96,10 +106,11 @@ class Deploy < ActiveRecord::Base
           "short" =>  true
         }
       ],
-      "color" => "#f47B28"
+      "color" => (self.location == 'production' ? "#f47B28" : "meh")
     }
+    post_options[:attachment] = attachment
 
-    SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
+    SlackNotification.post(post_options)
   end
 
 
@@ -114,6 +125,10 @@ class Deploy < ActiveRecord::Base
   end
 
   def _upload_notification
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering Deploy Notification"
+    post_options[:icon_emoji] = ':arrow_up:'
 
     # "meh" not a color code, falls back to default
 
@@ -134,17 +149,28 @@ class Deploy < ActiveRecord::Base
     "color" => "meh"
   }
 
+
   if(!self.comment.blank?)
     attachment["fields"].push({"title" => "Comments", "value" => self.comment, "short" => false})
   end
 
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
+  post_options[:attachment] = attachment
 
-  SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
+
+  SlackNotification.post(post_options)
 end
 
 
   def _success_notification
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.location.capitalize} Deploy Notification"
+    if(self.location == 'staging')
+      post_options[:icon_emoji] = ':construction:'
+    else
+      post_options[:icon_emoji] = ':new:'
+    end
 
     attachment = { "fallback" => "#{self.coder.name} deployed the #{self.branch} branch of #{self.application.name} to #{self.location}. Details #{self.notification_url}.",
     "text" => "#{self.application.name.capitalize} #{self.location} deployment complete (Deploy time: #{time_period_to_s(self.deploy_time,true,'n/a')})",
@@ -167,12 +193,24 @@ end
     attachment["fields"].push({"title" => "Comments", "value" => self.comment, "short" => false})
   end
 
+  attachment["fields"].push({"title" => "Where", "value" => "<#{self.app_location.url}|#{self.app_location.url}>", "short" => false})
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
 
-  SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
+  post_options[:attachment] = attachment
+
+
+  SlackNotification.post(post_options)
 end
 
 def _failure_notification
+    post_options = {}
+    post_options[:channel] = Settings.deploys_slack_channel
+    post_options[:username] = "Engineering #{self.location.capitalize} Deploy Notification"
+    if(self.location == 'staging')
+      post_options[:icon_emoji] = ':construction:'
+    else
+      post_options[:icon_emoji] = ':new:'
+    end
 
     attachment = { "fallback" => "rotating_light: The #{self.location} deploy of the #{self.branch} branch of #{self.application.name} failed! Details #{self.notification_url} rotating_light:",
     "text" => ":rotating_light: #{self.application.name.capitalize} #{self.location} deployment FAILED! :rotating_light:",
@@ -194,7 +232,7 @@ def _failure_notification
 
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
 
-  SlackNotification.post({attachment: attachment, channel: "#deploys", username: "Engineering Deploy Notification"})
+  SlackNotification.post(post_options)
 
 end
 
@@ -214,10 +252,8 @@ end
   def standardize_location
     if(self.location == 'prod')
       self.location = 'production'
-    elsif(self.location == 'dev')
-      self.location = 'development'
-    elsif(self.location == 'demo')
-      self.location = 'development'
+    elsif(['dev','development','demo'].includes?(self.location))
+      self.location = 'staging'
     end
   end
 

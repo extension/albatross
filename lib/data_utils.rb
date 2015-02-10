@@ -7,7 +7,7 @@ module DataUtils
 
   def dump_database_to_file(database, fromhost, outputfile, debug=false)
     is_socket = false
-    if(fromhost == 'development')
+    if(fromhost == 'staging')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     elsif(fromhost == 'scrubbed')
       is_socket = true
@@ -57,7 +57,7 @@ module DataUtils
 
   def import_database_from_file(database,fromhost,inputfile, debug=false)
     is_socket = false
-    if(fromhost == 'development')
+    if(fromhost == 'staging')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     elsif(fromhost == 'scrubbed')
       is_socket = true
@@ -110,7 +110,7 @@ module DataUtils
   end
 
   def wp_srdb_database(database,fromhost,search_host,replace_host,debug)
-    if(fromhost == 'development')
+    if(fromhost == 'staging')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     else # scrubbed host
       host_command = "--host=#{Settings.data_dump_mysql_host_scrubbed}"

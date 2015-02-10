@@ -10,7 +10,7 @@ class AppLocation < ActiveRecord::Base
   has_many :deploys
 
   PRODUCTION = 'production'
-  DEVELOPMENT = 'development'
+  STAGING = 'staging'
 
   scope :production, where(location: 'production')
   scope :active, includes(:application).where("applications.is_active = 1")
