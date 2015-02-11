@@ -1,4 +1,8 @@
+require 'sidekiq/web'
+require 'auth_constraint'
+
 Albatross::Application.routes.draw do
+  mount Sidekiq::Web => '/queues', :constraints => AuthConstraint.new
 
   use_doorkeeper
 
