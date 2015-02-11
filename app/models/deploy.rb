@@ -252,7 +252,7 @@ end
   def standardize_location
     if(self.location == 'prod')
       self.location = 'production'
-    elsif(['dev','development','demo'].includes?(self.location))
+    elsif(['dev','development','demo'].include?(self.location))
       self.location = 'staging'
     end
   end
