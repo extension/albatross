@@ -232,6 +232,8 @@ def _failure_notification
 
   attachment["fields"].push({"title" => "Details", "value" => self.notification_url, "short" => false})
 
+  post_options[:attachment] = attachment
+
   SlackNotification.post(post_options)
 
 end
