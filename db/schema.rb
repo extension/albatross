@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150210171950) do
+ActiveRecord::Schema.define(:version => 20150211215302) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"

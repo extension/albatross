@@ -74,6 +74,9 @@ gem "breadcrumbs_on_rails"
 # log handling
 gem "lograge"
 
+# sidekiq web monitoring
+gem 'sinatra', :require => nil
+
 group :development do
   # require the powder gem
   gem 'powder'
