@@ -18,8 +18,8 @@ class AppCopyLog < ActiveRecord::Base
       post_options[:username] = "Engineering Database Copy Notification"
       post_options[:icon_emoji] = ':floppy_disk:'
 
-      attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} is complete (size: #{AppCopy.humanize_bytes(self.size)}.",
-      "text" => "#{self.application.name.capitalize} production :arrow_right: development database copy complete",
+      attachment = { "fallback" => "The production :arrow_right: staging database copy for #{self.application.name} is complete (size: #{AppCopy.humanize_bytes(self.size)}.",
+      "text" => "#{self.application.name.capitalize} production :arrow_right: staging database copy complete",
       "fields" => [
         {
           "title" => "Who",
@@ -52,8 +52,8 @@ class AppCopyLog < ActiveRecord::Base
     post_options[:username] = "Engineering Database Copy Notification"
     post_options[:icon_emoji] = ':floppy_disk:'
 
-      attachment = { "fallback" => "The production :arrow_right: development database copy for #{self.application.name} has FAILED!. Details: #{self.additionaldata[:error]}",
-      "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: development database copy FAILED! :rotating_light:",
+      attachment = { "fallback" => "The production :arrow_right: staging database copy for #{self.application.name} has FAILED!. Details: #{self.additionaldata[:error]}",
+      "text" => ":rotating_light: #{self.application.name.capitalize} production :arrow_right: staging database copy FAILED! :rotating_light:",
       "fields" => [],
       "color" => "danger"
     }
