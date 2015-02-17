@@ -22,7 +22,7 @@ class AppCopy < ActiveRecord::Base
     if(last_copy = self.app_copy_logs.last)
       self.app_copy_logs.last.runtime
     else
-      'n/a'
+      0
     end
   end
 
