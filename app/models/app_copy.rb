@@ -19,7 +19,11 @@ class AppCopy < ActiveRecord::Base
   end
 
   def last_runtime
-    self.app_copy_logs.last.runtime
+    if(last_copy = self.app_copy_logs.last)
+      self.app_copy_logs.last.runtime
+    else
+      'n/a'
+    end
   end
 
   def mark_in_progress
