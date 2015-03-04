@@ -10,11 +10,11 @@ class CronmonsController < ApplicationController
 
   def log
     if(doorkeeper_token and doorkeeper_token.application)
-      if(cs = doorkeeper_token.application.owner and cs.is_a?(CronmonServer))
-        if(cronmon = cs.find_or_create_cronmon_by_label(params[:label]))
+      if(monserv = doorkeeper_token.application.owner and monserv.is_a?(MonitoredServer))
+        if(cronmon = monserv.find_or_create_cronmon_by_label(params[:label]))
           cronmon.save_log(params)
         end
-        returninformation = {'message' => "Found server! #{cs.name}"}
+        returninformation = {'message' => "Found server! #{monserv.name}"}
         return render :json => returninformation.to_json, :status => :ok
       else
         returninformation = {'message' => 'This log belongs to an unknown cronmon server'}
@@ -50,11 +50,11 @@ class CronmonsController < ApplicationController
     if(!params[:hostname])
       returninformation = {'message' => 'Missing hostname'}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    elsif(cs = CronmonServer.where(name: params[:hostname]).first and !TRUE_VALUES.include?(params[:force]))
+    elsif(monserv = MonitoredServer.where(name: params[:hostname]).first and !TRUE_VALUES.include?(params[:force]))
       returninformation = {'message' => "A server named #{params[:hostname]} is already registered"}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
-    elsif(cs = CronmonServer.register(params[:hostname],true) and oauth = cs.oauth_application)
-      returninformation = {'auth' => {'name' => cs.name, 'uid' => oauth.uid, 'secret' => oauth.secret}, 'message' => 'Server registered.'}
+    elsif(monserv = MonitoredServer.register(params[:hostname],true) and oauth = monserv.oauth_application)
+      returninformation = {'auth' => {'name' => monserv.name, 'uid' => oauth.uid, 'secret' => oauth.secret}, 'message' => 'Server registered.'}
       return render :json => returninformation.to_json, :status => :ok
     else
       returninformation = {'message' => 'An unknown error occurred'}
@@ -64,12 +64,12 @@ class CronmonsController < ApplicationController
 
 
   def servers
-    @serverlist = CronmonServer.active.all
+    @serverlist = MonitoredServer.active.all
     cronmon_breadcrumbs
   end
 
   def server
-    @server = CronmonServer.find(params[:id])
+    @server = MonitoredServer.find(params[:id])
     cronmon_breadcrumbs([@server.name])
   end
 

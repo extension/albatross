@@ -7,12 +7,7 @@
 		<ul class="nav navbar-nav">
 			<%= nav_item(deploys_path,'All Deployments') %>
 			<%- if @currentcoder -%>
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Crons<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-				  <%= nav_item(servers_cronmons_path,"Cronmon Servers") %>
-				</ul>
-			</li>
+			<%= nav_item(servers_cronmons_path,"Monitored Servers") %>
 			<%- end -%>
 
 		</ul>
