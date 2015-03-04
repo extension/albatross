@@ -28,13 +28,20 @@ class CronmonsController < ApplicationController
 
   def heartbeat
     if(doorkeeper_token and doorkeeper_token.application)
-      if(cs = doorkeeper_token.application.owner and cs.is_a?(CronmonServer))
+      if(monserv = doorkeeper_token.application.owner and monserv.is_a?(MonitoredServer))
+        attributes_to_update = {last_heartbeat_at: Time.now.utc}
+
         if(params[:sysinfo])
-          cs.update_attributes({sysinfo: params[:sysinfo], last_heartbeat_at: Time.now.utc})
-        else
-          cs.update_attributes({last_heartbeat_at: Time.now.utc})
+          attributes_to_update[:sysinfo] = params[:sysinfo]
         end
-        returninformation = {'message' => "Found server! #{cs.name}"}
+
+        if(params[:purpose])
+          attributes_to_update[:purpose] = params[:purpose]
+        end
+
+        monserv.update_attributes(attributes_to_update)
+
+        returninformation = {'message' => "Found server! #{monserv.name}"}
         return render :json => returninformation.to_json, :status => :ok
       else
         returninformation = {'message' => 'This heartbeat belongs to an unknown cronmon server'}
