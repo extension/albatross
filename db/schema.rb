@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150303191315) do
+ActiveRecord::Schema.define(:version => 20150304150529) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -183,6 +183,19 @@ ActiveRecord::Schema.define(:version => 20150303191315) do
 
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
   add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
+
+  create_table "engbot_logs", :force => true do |t|
+    t.integer  "coder_id",            :default => 1
+    t.integer  "monitored_server_id"
+    t.integer  "application_id"
+    t.string   "slack_channel_id"
+    t.string   "slack_channel_name"
+    t.string   "slack_user_id"
+    t.string   "slack_user_name"
+    t.string   "command"
+    t.text     "commandtext"
+    t.datetime "created_at"
+  end
 
   create_table "git_fetches", :force => true do |t|
     t.integer  "application_id"
