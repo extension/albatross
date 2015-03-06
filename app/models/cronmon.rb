@@ -20,7 +20,7 @@ class Cronmon < ActiveRecord::Base
     create_options[:success]   = provided_params[:success]
     create_options[:cronmon_log_output_attributes] = {stdout: provided_params[:stdout], stderr: provided_params[:stderr]}
     if(cronmon_log = self.cronmon_logs.create(create_options))
-      self.cronmon_server.touch(:last_cron_at)
+      self.monitored_server.touch(:last_cron_at)
       cronmon_log
     else
       nil
