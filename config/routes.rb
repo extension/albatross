@@ -47,6 +47,11 @@ Albatross::Application.routes.draw do
 
   end
 
+  resources :servers, only: [:index, :show]
+
+  match '/engbot/ask' => 'engbot#ask'
+
+
   match '/logout' => 'auth#end', :as => 'logout'
   match '/auth/:provider/callback' => 'auth#success'
   match '/:controller(/:action(/:id))'

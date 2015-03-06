@@ -5,7 +5,7 @@
 
 class Cronmon < ActiveRecord::Base
 
-  belongs_to :cronmon_server
+  belongs_to :monitored_server
   has_many :cronmon_logs, :dependent => :destroy
   validates :label, :presence => true
 

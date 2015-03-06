@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150211215302) do
+ActiveRecord::Schema.define(:version => 20150304150529) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -90,10 +90,12 @@ ActiveRecord::Schema.define(:version => 20150211215302) do
     t.string   "name"
     t.string   "github_url"
     t.string   "appkey"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
-    t.boolean  "fetch_pending", :default => false
-    t.boolean  "is_active",     :default => true
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.boolean  "fetch_pending",       :default => false
+    t.boolean  "is_active",           :default => true
+    t.text     "description"
+    t.integer  "monitored_server_id"
   end
 
   create_table "coder_emails", :force => true do |t|
@@ -142,27 +144,15 @@ ActiveRecord::Schema.define(:version => 20150211215302) do
 
   add_index "cronmon_logs", ["cronmon_id"], :name => "cronmon_ndx"
 
-  create_table "cronmon_servers", :force => true do |t|
-    t.string   "name",                                :null => false
-    t.text     "sysinfo"
-    t.datetime "last_heartbeat_at"
-    t.datetime "last_cron_at"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.boolean  "is_active",         :default => true
-  end
-
-  add_index "cronmon_servers", ["name"], :name => "server_name_ndx", :unique => true
-
   create_table "cronmons", :force => true do |t|
-    t.integer  "cronmon_server_id",                    :null => false
-    t.string   "label",                                :null => false
-    t.boolean  "error_notification", :default => true, :null => false
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.integer  "monitored_server_id",                   :null => false
+    t.string   "label",                                 :null => false
+    t.boolean  "error_notification",  :default => true, :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
   end
 
-  add_index "cronmons", ["cronmon_server_id", "label"], :name => "cronmon_ndx", :unique => true
+  add_index "cronmons", ["monitored_server_id", "label"], :name => "cronmon_ndx", :unique => true
 
   create_table "deploy_logs", :force => true do |t|
     t.integer  "deploy_id"
@@ -194,6 +184,19 @@ ActiveRecord::Schema.define(:version => 20150211215302) do
   add_index "deploys", ["capatross_id"], :name => "capatross_ndx", :unique => true
   add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
 
+  create_table "engbot_logs", :force => true do |t|
+    t.integer  "coder_id",            :default => 1
+    t.integer  "monitored_server_id"
+    t.integer  "application_id"
+    t.string   "slack_channel_id"
+    t.string   "slack_channel_name"
+    t.string   "slack_user_id"
+    t.string   "slack_user_name"
+    t.string   "command"
+    t.text     "commandtext"
+    t.datetime "created_at"
+  end
+
   create_table "git_fetches", :force => true do |t|
     t.integer  "application_id"
     t.text     "stdout"
@@ -212,6 +215,19 @@ ActiveRecord::Schema.define(:version => 20150211215302) do
     t.text     "payload",        :limit => 16777215
     t.datetime "created_at"
   end
+
+  create_table "monitored_servers", :force => true do |t|
+    t.string   "name",                                :null => false
+    t.text     "sysinfo"
+    t.datetime "last_heartbeat_at"
+    t.datetime "last_cron_at"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.boolean  "is_active",         :default => true
+    t.string   "purpose"
+  end
+
+  add_index "monitored_servers", ["name"], :name => "server_name_ndx", :unique => true
 
   create_table "notifications", :force => true do |t|
     t.integer  "notifiable_id"

@@ -1,0 +1,37 @@
+<%- @page_title = "Monitored Servers" -%>
+<div class="page-header">
+  <h1<%= @page_title %></h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+            <th>Server</th>
+            <th>Purpose</th>
+            <th>Last Reported At</th>
+            <th>Crons</th>
+            <th>Application</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%- @serverlist.each do |server| -%>
+        <tr>
+          <td><%= link_to(server.name,server_path(id: server.id)) %></td>
+          <td><%= server.purpose %></td>
+          <td><%= server.last_heartbeat_at %></td>
+          <td><%= server.cronmons.count %></td>
+          <td>
+          <%- if(app = server.application) -%>
+            <%= app.name %>
+          <%- else -%>
+            &nbsp;
+          </td>
+        </tr>
+      <%- end -%>
+      </tbody>
+    </table>
+  </div>
