@@ -4,6 +4,8 @@
 # see LICENSE file
 
 class SlackNotification
+  include Rails.application.routes.url_helpers
+  default_url_options[:host] = Settings.urlwriter_host
 
   attr_accessor :message, :attachment, :slack, :icon_emoji
 
@@ -28,7 +30,7 @@ class SlackNotification
     if(self.icon_emoji)
       post_parameters[:icon_emoji] = self.icon_emoji
     else
-      post_parameters[:icon_emoji] = 'https://engineering.extension.org/favicon.ico'
+      post_parameters[:icon_emoji] = image_url('askbot.png')
     end
 
     self.slack.ping(self.message, post_parameters)
