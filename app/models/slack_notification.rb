@@ -28,7 +28,7 @@ class SlackNotification
     if(self.icon_emoji)
       post_parameters[:icon_emoji] = self.icon_emoji
     else
-      post_parameters[:icon_emoji] = 'https://engineering.extension.org/assets/askbot.png'
+      post_parameters[:icon_emoji] = 'https://engineering.extension.org/assets/engbot.png'
     end
 
     self.slack.ping(self.message, post_parameters)
