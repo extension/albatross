@@ -8,7 +8,7 @@ class EngbotLog < ActiveRecord::Base
   attr_accessor   :message, :post_to_room
   attr_accessible :slack_channel_id, :slack_channel_name, :slack_user_id, :slack_user_name, :command, :commandtext
 
-  ENGBOT_ACTIONS = ['whatis']
+  ENGBOT_ACTIONS = ['whatis','help','purpose']
 
   after_create :parse_commandtext
 
@@ -31,6 +31,8 @@ class EngbotLog < ActiveRecord::Base
     case action
     when 'whatis'
       return self.whatis(commandterms)
+    when 'purpose'
+      return self.purpose(commandterms)
     when 'help'
       return(self.message = 'not yet implemented')
     else
@@ -41,7 +43,7 @@ class EngbotLog < ActiveRecord::Base
 
   def whatis(commandterms)
     if(commandterms.blank?)
-      return(self.message = 'empty search list')
+      return(self.message = 'empty whatis list')
     end
 
     serverlist = MonitoredServer.where("name IN (#{commandterms.collect{|term| quote_value(term)}.join(',')})")
@@ -56,6 +58,25 @@ class EngbotLog < ActiveRecord::Base
 
     return(self.message = purposes.join("\n"))
 
+  end
+
+  def purpose(commandterms)
+    if(commandterms.blank?)
+      return(self.message = 'empty purpose list')
+    end
+
+    # only going to use the first purpose (well the last since we reverse the terms)
+    serverlist = MonitoredServer.where("purpose LIKE ?",'%' + commandterms.first + '%')
+    if(serverlist.blank?)
+      return(self.message = 'no matches found')
+    end
+
+    purposes = []
+    serverlist.each do |server|
+      purposes << "#{server.name} : #{server.purpose}"
+    end
+
+    return(self.message = purposes.join("\n"))
   end
 
 end
