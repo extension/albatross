@@ -17,7 +17,7 @@ class EngbotController < ApplicationController
                                      slack_user_name: params[:user_name],
                                      command: params[:command],
                                      commandtext: params[:text]))
-      return render :text => 'Thanks, I received your command', :status => :ok
+      return render :text => engbot_log.message, :status => :ok
     else
       # return object errors maybe, but not today
       return render :text => 'An error occurred processing your command', :status => :unprocessable_entity
