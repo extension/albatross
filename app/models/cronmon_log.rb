@@ -50,7 +50,7 @@ class CronmonLog < ActiveRecord::Base
       "fields" => [
         {
           "title" => "Server",
-          "value" => "#{self.cronmon.cronmon_server.name}",
+          "value" => "#{self.cronmon.monitored_server.name}",
           "short" => false
         },
         {
