@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150304150529) do
+ActiveRecord::Schema.define(:version => 20150313202139) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20150304150529) do
     t.string   "data_key",       :default => ""
     t.datetime "last_active_at"
     t.string   "github_name"
+    t.string   "slack_user_id"
   end
 
   add_index "coders", ["data_key"], :name => "data_key_ndx"
@@ -185,9 +186,7 @@ ActiveRecord::Schema.define(:version => 20150304150529) do
   add_index "deploys", ["coder_id", "application_id", "location"], :name => "search_ndx"
 
   create_table "engbot_logs", :force => true do |t|
-    t.integer  "coder_id",            :default => 1
-    t.integer  "monitored_server_id"
-    t.integer  "application_id"
+    t.integer  "coder_id",           :default => 1
     t.string   "slack_channel_id"
     t.string   "slack_channel_name"
     t.string   "slack_user_id"
