@@ -15,26 +15,26 @@ class EventMailer < ActionMailer::Base
     @subject = "#{@app.name} (#{@app.location}) deployment notification"
     @coder = @deploy.coder
     @recipient = options[:recipient]
-    
+
     return_email = mail(to: @recipient.email, subject: @subject)
     return_email
   end
-  
+
   def cron_error(options = {})
     @cronlog = options[:cron_log]
     @server = @cronlog.server
     @cron_name = @cronlog.cron.name
     @subject = "#{@server}: error encountered running #{@cron_name}"
     @recipient = Settings.cron_notification_email
-    
+
     return_email = mail(to: @recipient, subject: @subject)
     return_email
   end
 
   def mailtest(options = {})
     @subject = "This is a test of the Deploys Email System."
-    @coder = options[:coder]  
-    @recipient = options[:coder]    
+    @coder = options[:coder]
+    @recipient = options[:coder]
     return_email = mail(to: @recipient.email, subject: @subject)
     return_email
   end
@@ -42,7 +42,7 @@ class EventMailer < ActionMailer::Base
   def cronmon_error(options = {})
     @cronmon_log = options[:cronmon_log]
     @cronmon = @cronmon_log.cronmon
-    @server = @cronmon.cronmon_server
+    @server = @cronmon.monitored_server
 
     @recipient = Settings.cron_notification_email
     @subject = "#{@server.name}: error encountered running #{@cronmon.label}"

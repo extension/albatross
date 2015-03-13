@@ -86,13 +86,13 @@ class CronmonsController < ApplicationController
   def show
     @cronmon = Cronmon.find(params[:id])
     @cronlogs = @cronmon.cronmon_logs.order("finish DESC").page(params[:page])
-    cronmon_breadcrumbs([[@cronmon.cronmon_server.name,server_cronmons_path(id: @cronmon.cronmon_server.id)],@cronmon.label])
+    cronmon_breadcrumbs([[@cronmon.monitored_server.name,server_cronmons_path(id: @cronmon.monitored_server.id)],@cronmon.label])
   end
 
   def showlog
     @cronmon = Cronmon.find(params[:id])
     @cronmon_log = CronmonLog.find(params[:log_id])
-    cronmon_breadcrumbs([[@cronmon.cronmon_server.name,server_cronmons_path(id: @cronmon.cronmon_server.id)],
+    cronmon_breadcrumbs([[@cronmon.monitored_server.name,server_cronmons_path(id: @cronmon.monitored_server.id)],
                          [@cronmon.label,cronmon_path(@cronmon)],
                          "ID##{@cronmon_log.id} (#{@cronmon_log.start.to_s})"])
 
