@@ -83,9 +83,9 @@ class EngbotLog < ActiveRecord::Base
     helptext = "The /engbot command queries https://engineering.extension.org for information\n"
     helptext += "Available subcommands are:\n"
     helptext += "/engbot whatis servername1 servername2 [...] : returns the purpose for each listed server\n"
-    helptext += "  e.g. /engbot whatis jockeysridge dismalswamp"
+    helptext += "    e.g. /engbot whatis jockeysridge dismalswamp\n"
     helptext += "/engbot purpose search_string : searches the server purpose for search_string and returns all matching records\n"
-    helptext += "  e.g. /engbot purpose rails"
+    helptext += "    e.g. /engbot purpose rails\n"
     return(self.message = helptext)
   end
 
