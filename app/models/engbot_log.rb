@@ -17,7 +17,7 @@ class EngbotLog < ActiveRecord::Base
     # remove nils, duplicates, and reverse it, so we can pop the action off
     action = commandterms.pop
     if(!ENGBOT_ACTIONS.include?(action))
-      return(self.message = 'Unknown action.')
+      return self.help
     end
 
     # check for "room"
@@ -34,9 +34,9 @@ class EngbotLog < ActiveRecord::Base
     when 'purpose'
       return self.purpose(commandterms)
     when 'help'
-      return(self.message = 'not yet implemented')
+      return self.help
     else
-      return(self.message = 'not yet implemented')
+      return self.help
     end
   end
 
@@ -77,6 +77,16 @@ class EngbotLog < ActiveRecord::Base
     end
 
     return(self.message = purposes.join("\n"))
+  end
+
+  def help
+    helptext = "The /engbot command queries https://engineering.extension.org for information\n"
+    helptext += "Available subcommands are:\n"
+    helptext += "/engbot whatis servername1 servername2 [...] : returns the purpose for each listed server\n"
+    helptext += "  e.g. /engbot whatis jockeysridge dismalswamp"
+    helptext += "/engbot purpose search_string : searches the server purpose for search_string and returns all matching records\n"
+    helptext += "  e.g. /engbot purpose rails"
+    return(self.message = helptext)
   end
 
 end
