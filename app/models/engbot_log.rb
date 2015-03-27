@@ -8,7 +8,7 @@ class EngbotLog < ActiveRecord::Base
   attr_accessor   :message, :post_to_room
   attr_accessible :slack_channel_id, :slack_channel_name, :slack_user_id, :slack_user_name, :command, :commandtext
 
-  ENGBOT_ACTIONS = ['whatis','help','purpose']
+  ENGBOT_ACTIONS = ['whatis','help','purpose','hodor']
 
   after_create :parse_commandtext
 
@@ -33,6 +33,8 @@ class EngbotLog < ActiveRecord::Base
       return self.whatis(commandterms)
     when 'purpose'
       return self.purpose(commandterms)
+    when 'hodor'
+      return self.hodor
     when 'help'
       return self.help
     else
@@ -77,6 +79,11 @@ class EngbotLog < ActiveRecord::Base
     end
 
     return(self.message = purposes.join("\n"))
+  end
+
+  def hodor
+    SlackNotification.delay_for(5.seconds).hodor
+    return(self.message = 'hodor?')
   end
 
   def help

@@ -8,7 +8,7 @@ class SlackNotification
   attr_accessor :message, :attachment, :slack, :icon_emoji
 
   def initialize(options = {})
-    username = options[:username] || "Engineering Notifier"
+    username = options[:username] || "EngBot"
     channel = options[:channel] || Settings.default_slack_channel
     @slack = Slack::Notifier.new(Settings.slack_webhook)
     @slack.username = username
@@ -28,7 +28,7 @@ class SlackNotification
     if(self.icon_emoji)
       post_parameters[:icon_emoji] = self.icon_emoji
     else
-      post_parameters[:icon_emoji] = 'https://engineering.extension.org/assets/engbot.png'
+      post_parameters[:icon_emoji] = ':engbot:'
     end
 
     self.slack.ping(self.message, post_parameters)
@@ -39,6 +39,10 @@ class SlackNotification
     if(notification = self.new(options))
       notification.post
     end
+  end
+
+  def self.hodor
+    self.post({channel: '#hodor', message: 'hodor'})
   end
 
 end
