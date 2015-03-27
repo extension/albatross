@@ -82,7 +82,7 @@ group :development do
   gem 'powder'
   gem 'pry'
   gem 'quiet_assets'
-  gem 'net-http-spy'
+  gem 'httplog'
 
   gem 'better_errors'
   gem 'binding_of_caller'

@@ -82,6 +82,7 @@ GEM
     hike (1.2.3)
     honeybadger (1.16.5)
       json
+    httplog (0.2.7)
     i18n (0.6.11)
     journey (1.0.4)
     jquery-rails (3.1.0)
@@ -109,7 +110,6 @@ GEM
     mini_portile (0.6.2)
     multi_json (1.10.1)
     mysql2 (0.3.17)
-    net-http-spy (0.2.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -241,13 +241,13 @@ DEPENDENCIES
   doorkeeper
   font-awesome-rails
   honeybadger
+  httplog
   jquery-rails
   kaminari
   lograge
   loofah
   meta_request
   mysql2
-  net-http-spy
   nokogiri
   omniauth (~> 1.0)
   omniauth-openid
