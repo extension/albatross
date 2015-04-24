@@ -31,7 +31,7 @@ class MonitoredServer < ActiveRecord::Base
         monserv.create_oauth_application(name: "cronmon-#{monserv.name}", redirect_uri: 'urn:ietf:wg:oauth:2.0:oob')
       end
     end
-    cs
+    monserv
   end
 
   def find_or_create_cronmon_by_label(label)
