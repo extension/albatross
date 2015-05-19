@@ -47,6 +47,12 @@ Albatross::Application.routes.draw do
 
   end
 
+  resources :backups, :only => [:index, :show] do
+    collection do
+      post :log
+    end
+  end
+
   resources :servers, only: [:index, :show]
 
   match '/engbot/ask' => 'engbot#ask'

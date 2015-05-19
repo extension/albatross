@@ -27,6 +27,7 @@ class Notification < ActiveRecord::Base
   ## constants
   ## Notification types
   CRONMON_ERROR = 100
+  BACKUP_ERROR = 101
 
   DEPLOY_START = 201
   DEPLOY_COMPLETE = 202
