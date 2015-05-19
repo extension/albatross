@@ -3,12 +3,13 @@
 # === LICENSE:
 # see LICENSE file
 
-class Backup < ActiveRecord::Base
+class BackupLog < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   default_url_options[:host] = Settings.urlwriter_host
 
 
   attr_accessible :monitored_server, :monitored_server_id, :backupcommand, :server_name, :server_fqdn, :start, :finish, :runtime, :success, :stdout, :stderr
+
 
   belongs_to :monitored_server
 
@@ -57,7 +58,7 @@ class Backup < ActiveRecord::Base
   end
 
   def log_url
-    backup_url(self.id)
+    showlog_backup_url(self.id)
   end
 
   def error_notification
