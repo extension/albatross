@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150313202139) do
+ActiveRecord::Schema.define(:version => 20150512131328) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -96,6 +96,20 @@ ActiveRecord::Schema.define(:version => 20150313202139) do
     t.boolean  "is_active",           :default => true
     t.text     "description"
     t.integer  "monitored_server_id"
+  end
+
+  create_table "backups", :force => true do |t|
+    t.integer  "monitored_server_id"
+    t.text     "backupcommand"
+    t.string   "server_name"
+    t.string   "server_fqdn"
+    t.datetime "start"
+    t.datetime "finish"
+    t.float    "runtime"
+    t.boolean  "success"
+    t.text     "stdout"
+    t.text     "stderr"
+    t.datetime "created_at"
   end
 
   create_table "coder_emails", :force => true do |t|
@@ -224,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20150313202139) do
     t.datetime "updated_at",                          :null => false
     t.boolean  "is_active",         :default => true
     t.string   "purpose"
+    t.datetime "last_backup_at"
   end
 
   add_index "monitored_servers", ["name"], :name => "server_name_ndx", :unique => true
