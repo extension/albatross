@@ -97,7 +97,7 @@ class DumpsController < ApplicationController
 
   def validate_data_key
     if(!params[:data_key])
-      returninformation = {'message' => 'Data operations require that you add your personal data_key to your capatross settings.', 'success' => false}
+      returninformation = {'message' => 'Data operations require that you add your personal data_key to your exdata settings.', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
 
