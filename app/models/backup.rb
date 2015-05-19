@@ -3,7 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 
-class BackupLog < ActiveRecord::Base
+class Backup < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   default_url_options[:host] = Settings.urlwriter_host
 
@@ -58,7 +58,7 @@ class BackupLog < ActiveRecord::Base
   end
 
   def log_url
-    showlog_backup_url(self.id)
+    backup_url(self.id)
   end
 
   def error_notification
