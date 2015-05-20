@@ -28,6 +28,10 @@ class Backup < ActiveRecord::Base
     create_options[:success]   = provided_params[:success]
     create_options[:stdout] = provided_params[:stdout]
     create_options[:stderr] = provided_params[:stderr]
+    create_options[:server_name] = provided_params[:server_name]
+    create_options[:server_fqdn] = provided_params[:server_fqdn]
+    create_options[:backupcommand] = provided_params[:backupcommand]
+    
     if(backup_log = self.create(create_options))
       backup_log.monitored_server.touch(:last_backup_at) if backup_log.monitored_server
       backup_log
