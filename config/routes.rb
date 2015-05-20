@@ -50,6 +50,7 @@ Albatross::Application.routes.draw do
   resources :backups, :only => [:index, :show] do
     collection do
       post :log
+      post :ping
     end
   end
 

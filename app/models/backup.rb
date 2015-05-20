@@ -29,7 +29,7 @@ class Backup < ActiveRecord::Base
     create_options[:stdout] = provided_params[:stdout]
     create_options[:stderr] = provided_params[:stderr]
     if(backup_log = self.create(create_options))
-      self.monitored_server.touch(:last_backup_at) if self.monitored_server
+      backup_log.monitored_server.touch(:last_backup_at) if backup_log.monitored_server
       backup_log
     else
       nil

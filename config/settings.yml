@@ -1,6 +1,7 @@
 default_display_timezone: 'Eastern Time (US & Canada)'
 session_token: '123456789012345678901234567890'
-backup_key: 'use_local_settings'
+# testing place holder - use local settings
+backup_key: 'supercalifragilisticexpialidocious'
 github_key: 'use_local_settings'
 github_secret: 'use_local_settings'
 urlwriter_host: 'albatross.dev'

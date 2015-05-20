@@ -5,10 +5,18 @@
 
 class BackupsController < ApplicationController
   skip_before_filter :verify_authenticity_token
-  before_filter :validate_backup_key, only: [:log]
+  before_filter :validate_backup_key, only: [:log, :ping]
+
+  def ping
+    returninformation = {'message' => 'Pong.', 'success' => true}
+    return render :json => returninformation.to_json, :status => :ok
+  end
 
   def log
-    if(backuplog = Backup.save_log(params))
+    if(!params[:results])
+      returninformation = {'message' => 'Provided results are not in the correct format', 'success' => false}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    elsif(backuplog = Backup.save_log(params[:results]))
       returninformation = {'message' => 'Logged backup', 'success' => true}
       return render :json => returninformation.to_json, :status => :ok
     else
