@@ -26,6 +26,8 @@ class BackupsController < ApplicationController
   end
 
   def show
+    @backup = Backup.find(params[:id])
+    @backupserver = @backup.monitored_server
   end
 
   def validate_backup_key

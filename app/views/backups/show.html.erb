@@ -1,0 +1,62 @@
+<% @page_title = "Backup Log for #{@backup.server_name} backup (ID##{@backup.id})" %>
+<div class="page-header">
+  <h1><%= @page_title %></h1>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+   <h3>Log Information
+  <%- if @backup.success? -%>
+  <span class="label label-success">Success!</span>
+  <%- else -%>
+  <span class="label label-danger">Failed!</span>
+  <%- end -%>
+
+   </h3>
+  <table class="table table-bordered">
+
+    <tbody>
+      <tr>
+        <td>Server</td>
+        <%- if @backupserver -%>
+        <td>@backupserver.name</td>
+        <%- else -%>
+        <td>N/A</td>
+        <%- end -%>
+      </tr>
+      <tr>
+        <td>Started</td>
+        <td><%= @backup.start.to_s %></td>
+      </tr>
+      <tr>
+        <td>Finished</td>
+        <td><%= @backup.finish.to_s %></td>
+      </tr>
+      <tr>
+        <td>Runtime</td>
+          <td><%= @backup.runtime %></td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>stdout </h3>
+  <pre>
+    <%= @backup.stdout %>
+  </pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>stderr </h3>
+  <pre>
+    <%= @backup.stderr %>
+  </pre>
+  </div>
+</div>
