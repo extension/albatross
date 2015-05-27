@@ -1,0 +1,39 @@
+<%- @page_title = "Recent Backups" -%>
+<div class="page-header">
+  <h1<%= @page_title %></h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <%= paginate @backups %>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+            <th>Server Name</th>
+            <th>Started</th>
+            <th>Finished</th>
+            <th>Runtime</th>
+            <th>Details</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%- @backups.each do |backup| -%>
+        <tr>
+          <td><%= backup.server_name %></td>
+          <td><%= backup.start %></td>
+          <td><%= backup.finish %></td>
+          <td><%= backup.runtime_to_s %></td>
+          <td>
+            <%- if backup.success? -%>
+            <%= link_to('success', backup_path(backup), :class => 'label label-success') %></td>
+            <%- else -%>
+            <%= link_to('failed', backup_path(backup), :class => 'label label-danger') %></td>
+            <%- end -%>
+        </td>
+        </tr>
+      <%- end -%>
+      </tbody>
+    </table>
+  </div>

@@ -20,7 +20,7 @@
       <tr>
         <td>Server</td>
         <%- if @backupserver -%>
-        <td>@backupserver.name</td>
+        <td><%= @backupserver.name -%></td>
         <%- else -%>
         <td>N/A</td>
         <%- end -%>
@@ -35,7 +35,7 @@
       </tr>
       <tr>
         <td>Runtime</td>
-          <td><%= @backup.runtime %></td>
+          <td><%= @backup.runtime_to_s %></td>
       </tr>
 
     </tbody>
