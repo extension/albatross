@@ -42,7 +42,7 @@ class SlackNotification
   end
 
   def self.hodor
-    self.post({channel: '#hodor', message: 'hodor'})
+    self.post({channel: '#obscurity_and_calm', message: 'hodor'})
   end
 
 end
