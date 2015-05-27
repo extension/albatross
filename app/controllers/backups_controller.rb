@@ -5,6 +5,7 @@
 
 class BackupsController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  before_filter :signin_required, :except => [:log, :ping]
   before_filter :validate_backup_key, only: [:log, :ping]
 
   def ping
@@ -25,9 +26,15 @@ class BackupsController < ApplicationController
     end
   end
 
+  def index
+    @backups = Backup.order("finish DESC").page(params[:page])
+    backup_breadcrumbs
+  end
+
   def show
     @backup = Backup.find(params[:id])
     @backupserver = @backup.monitored_server
+    backup_breadcrumbs(["#{@backup.server_name} ##{@backup.id}"])
   end
 
   def validate_backup_key
@@ -39,6 +46,21 @@ class BackupsController < ApplicationController
     if(params[:backup_key] != Settings.backup_key)
       returninformation = {'message' => 'The backup key provided was not valid.', 'success' => false}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+  end
+
+  private
+
+  def backup_breadcrumbs(endpoints = [])
+    add_breadcrumb("Backups", :backups_path)
+    if(!endpoints.blank?)
+      endpoints.each do |endpoint|
+        if(endpoint.is_a?(Array))
+          add_breadcrumb(endpoint[0],endpoint[1])
+        else
+          add_breadcrumb(endpoint)
+        end
+      end
     end
   end
 
