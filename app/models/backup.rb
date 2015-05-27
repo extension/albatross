@@ -95,7 +95,7 @@ class Backup < ActiveRecord::Base
       post_options[:icon_emoji] = ':vhs:'
 
       attachment = { "fallback" => ":stars: #{self.server_name} backup success! Details #{self.log_url}",
-      "text" => ":stars: #{self.server_name} backup sucess!",
+      "text" => ":stars: #{self.server_name} backup success!",
       "fields" => [
         {
           "title" => "Server",
