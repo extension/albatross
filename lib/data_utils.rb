@@ -80,6 +80,26 @@ module DataUtils
     run_command(command,debug)
   end
 
+  def drop_tables_from_staging_database(database)
+    connection_settings = {}
+    connection_settings[:username] = Settings.data_dump_mysql_user
+    connection_settings[:password] = Settings.data_dump_mysql_pass
+    connection_settings[:port] = Settings.data_dump_mysql_port
+    connection_settings[:host] = Settings.data_dump_mysql_host_development
+    connection_settings[:encoding] = "utf8"
+    client = Mysql2::Client.new(connection_settings)
+    result = client.query("SHOW TABLES FROM #{database}")
+    tables = []
+    result.each do |table_hash|
+      tables += table_hash.values
+    end
+    result = client.query("USE #{database};")
+    tables.each do |table|
+      result = client.query("DROP table #{table};")
+    end
+    true
+  end
+
   def scrub_database(database,scrubbers,debug)
     base_command_array = []
     base_command_array << "#{Settings.data_dump_mysql_cmd}"
