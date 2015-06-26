@@ -100,7 +100,9 @@ class AppCopy < ActiveRecord::Base
       return {success: false, error: "#{result}"}
     end
 
-
+    # drop tables
+    self.class.drop_tables_from_staging_database(staging_location.dbname)
+    
     # import
     result = self.class.import_database_from_file(staging_location.dbname,'staging',target_copy_file,debug)
     if(!result.blank?)
