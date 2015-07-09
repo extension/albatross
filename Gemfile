@@ -1,6 +1,4 @@
 source 'https://rubygems.org'
-source 'https://engineering.extension.org/rubygems'
-
 gem 'rails', '3.2.21'
 
 # all things xml
@@ -45,7 +43,8 @@ gem 'kaminari'
 
 # Deploy with Capistrano
 gem 'capistrano', '~> 2.15.5'
-gem 'capatross'
+gem 'capatross', :source => 'https://engineering.extension.org/rubygems'
+
 
 # exception handling for now
 gem 'honeybadger'
