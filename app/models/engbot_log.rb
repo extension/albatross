@@ -82,7 +82,7 @@ class EngbotLog < ActiveRecord::Base
   end
 
   def hodor
-    SlackNotification.delay_for(5.seconds).hodor
+    SlackNotification.delay_for(1.second).hodor(self.slack_channel_id)
     return(self.message = 'hodor?')
   end
 
@@ -93,6 +93,7 @@ class EngbotLog < ActiveRecord::Base
     helptext += "    e.g. /engbot whatis jockeysridge dismalswamp\n"
     helptext += "/engbot purpose search_string : searches the server purpose for search_string and returns all matching records\n"
     helptext += "    e.g. /engbot purpose rails\n"
+    helptext += "/engbot hodor : returns a hodor heartbeat\n"
     return(self.message = helptext)
   end
 

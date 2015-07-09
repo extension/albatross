@@ -41,8 +41,13 @@ class SlackNotification
     end
   end
 
-  def self.hodor
-    self.post({channel: '#hodor', message: 'hodor'})
+  def self.hodor(slack_channel_id)
+    if(slack_channel_name.blank?)
+      channel = '#testing'
+    else
+      channel = "#{slack_channel_id}"
+    end
+    self.post({channel: channel, message: 'hodor'})
   end
 
 end
