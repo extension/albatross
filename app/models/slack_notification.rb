@@ -42,7 +42,7 @@ class SlackNotification
   end
 
   def self.hodor(slack_channel_id)
-    if(slack_channel_name.blank?)
+    if(slack_channel_id.blank?)
       channel = '#testing'
     else
       channel = "#{slack_channel_id}"
