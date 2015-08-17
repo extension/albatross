@@ -263,9 +263,9 @@ class AppDump < ActiveRecord::Base
     File.delete(pre_scrubbed_file)
 
     # search and replace
-    search_host = self.app_location.host
-    replace_host = self.localdev_host
-    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_host,replace_host,debug)
+    search_url = self.app_location.url
+    replace_url = "http://#{self.localdev_host}"
+    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_url,replace_url,debug)
     # ignore result
 
     # dump
