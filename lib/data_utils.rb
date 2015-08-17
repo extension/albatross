@@ -129,7 +129,7 @@ module DataUtils
     end
   end
 
-  def wp_srdb_database(database,fromhost,search_host,replace_host,debug)
+  def wp_srdb_database(database,fromhost,search_url,replace_url,debug)
     if(fromhost == 'staging')
       host_command = "--host=#{Settings.data_dump_mysql_host_development}"
     else # scrubbed host
@@ -143,8 +143,8 @@ module DataUtils
     command_array << host_command
     command_array << "--port=#{Settings.data_dump_mysql_port}"
     command_array << "--name=#{database}"
-    command_array << "--search=#{search_host}"
-    command_array << "--replace=#{replace_host}"
+    command_array << "--search=#{search_url}"
+    command_array << "--replace=#{replace_url}"
     if(!debug)
       command_array << "--verbose=false"
     end

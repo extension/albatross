@@ -102,7 +102,7 @@ class AppCopy < ActiveRecord::Base
 
     # drop tables
     self.class.drop_tables_from_staging_database(staging_location.dbname)
-    
+
     # import
     result = self.class.import_database_from_file(staging_location.dbname,'staging',target_copy_file,debug)
     if(!result.blank?)
@@ -111,7 +111,7 @@ class AppCopy < ActiveRecord::Base
 
     # wordpress transformation
     if(self.is_wordpress?)
-      result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.host,staging_location.host,debug)
+      result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.url,staging_location.url,debug)
       # ignore result
     end
 
