@@ -124,6 +124,16 @@ class AppDump < ActiveRecord::Base
       return {success: false, error: "#{result}"}
     end
 
+    # concatenate cache tables?
+    if(self.is_drupal?)
+      command = "/bin/cat #{Rails.root}/db/drupal_cache_tables.sql >> #{tmp_dump_file}"
+      result = self.class.run_command(command)
+      if(!result.blank?)
+        return {success: false, error: "#{result}"}
+      end
+    end
+
+
 
     # size it up
     dump_size = File.size(tmp_dump_file)
@@ -166,6 +176,15 @@ class AppDump < ActiveRecord::Base
     result = self.class.dump_database_to_file(self.dbname,fromhost,pre_scrubbed_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
+    end
+
+    # concatenate cache tables?
+    if(self.is_drupal?)
+      command = "/bin/cat #{Rails.root}/db/drupal_cache_tables.sql >> #{pre_scrubbed_file}"
+      result = self.class.run_command(command)
+      if(!result.blank?)
+        return {success: false, error: "#{result}"}
+      end
     end
 
     # drop

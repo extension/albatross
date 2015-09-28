@@ -100,6 +100,15 @@ class AppCopy < ActiveRecord::Base
       return {success: false, error: "#{result}"}
     end
 
+    # concatenate cache tables?
+    if(self.is_drupal?)
+      command = "/bin/cat #{Rails.root}/db/drupal_cache_tables.sql >> #{target_copy_file}"
+      result = self.class.run_command(command)
+      if(!result.blank?)
+        return {success: false, error: "#{result}"}
+      end
+    end
+
     # drop tables
     self.class.drop_tables_from_staging_database(staging_location.dbname)
 
@@ -108,7 +117,6 @@ class AppCopy < ActiveRecord::Base
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
-
     # wordpress transformation
     if(self.is_wordpress?)
       result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.url,staging_location.url,debug)
