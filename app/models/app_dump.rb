@@ -285,6 +285,10 @@ class AppDump < ActiveRecord::Base
     search_url = self.app_location.url
     replace_url = "http://#{self.localdev_host}"
     result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_url,replace_url,debug)
+    # run it again without the protocol
+    bare_url = self.app_location.display_url
+    replace_url = "#{self.localdev_host}"
+    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',bare_url,replace_url,debug)
     # ignore result
 
     # dump
