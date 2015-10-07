@@ -121,6 +121,8 @@ class AppCopy < ActiveRecord::Base
     if(self.is_wordpress?)
       result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.url,staging_location.url,debug)
       # ignore result
+      # run it again without the protocol
+      result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.display_url,staging_location.display_url,debug)
     end
 
     size = File.size(target_copy_file)
