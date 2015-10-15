@@ -286,7 +286,7 @@ class AppDump < ActiveRecord::Base
     replace_url = "#{self.localdev_host}"
     result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',bare_url,replace_url,debug)
     # ignore result
-    if(self.application.name == 'about')
+    if(self.application.name.downcase == 'about')
       bare_url = self.app_location.url
       replace_url = "http://#{self.localdev_host}"
       result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',bare_url,replace_url,debug)
