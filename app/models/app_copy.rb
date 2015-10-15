@@ -120,11 +120,6 @@ class AppCopy < ActiveRecord::Base
     # wordpress transformation
     if(self.is_wordpress?)
       result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.display_url,staging_location.display_url,debug)
-      # ignore result
-      # run it again to change the protocol for about
-      if(staging_location.display_url == 'dev.extension.org')
-        result = self.class.wp_srdb_database(staging_location.dbname,'staging',"http://#{staging_location.display_url}","https://#{staging_location.display_url}",debug)
-      end
     end
 
     size = File.size(target_copy_file)
