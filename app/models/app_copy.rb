@@ -119,7 +119,9 @@ class AppCopy < ActiveRecord::Base
     end
     # wordpress transformation
     if(self.is_wordpress?)
-      result = self.class.wp_srdb_database(staging_location.dbname,'staging',production_location.display_url,staging_location.display_url,debug)
+      search_regex = "'~^(https?:\/\/)?#{Regexp.escape(production_location.display_url)}~'"
+      regplace_regex = "'$1#{staging_location.display_url}'"
+      result = self.class.wp_srdb_database(staging_location.dbname,'staging',search_regex,regplace_regex,true,debug)
     end
 
     size = File.size(target_copy_file)
