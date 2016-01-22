@@ -282,7 +282,7 @@ class AppDump < ActiveRecord::Base
     File.delete(pre_scrubbed_file)
 
     # search and replace
-    search_regex = "'~^(https?:\/\/)?#{Regexp.escape(self.app_location.display_url)}~'"
+    search_regex = "'~\\b(https?:\/\/)?#{Regexp.escape(self.app_location.display_url)}~'"
     regplace_regex = "'$1#{self.localdev_host}'"
     result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_regex,regplace_regex,true,debug)
 
