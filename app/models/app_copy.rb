@@ -119,11 +119,11 @@ class AppCopy < ActiveRecord::Base
     end
     # wordpress transformation
     if(self.is_wordpress?)
-      search_regex = "'~(https?:\\/\\/)#{Regexp.escape(self.app_location.display_url)}~'"
+      search_regex = "'~(https?:\\/\\/)#{Regexp.escape(production_location.display_url)}~'"
       regplace_regex = "'$1#{staging_location.display_url}'"
       result = self.class.wp_srdb_database(staging_location.dbname,'staging',search_regex,regplace_regex,true,debug)
 
-      search_regex = "'~^#{Regexp.escape(self.app_location.display_url)}~'"
+      search_regex = "'~^#{Regexp.escape(production_location.display_url)}~'"
       regplace_regex = "'#{staging_location.display_url}'"
       result = self.class.wp_srdb_database(staging_location.dbname,'staging',search_regex,regplace_regex,true,debug)
     end
