@@ -27,6 +27,7 @@
 /config/settings.local.yml
 /capatross_logs
 /config/capatross.local.yml
+/config/honeybadger.yml
 
 # asset related
 .sass-cache/
