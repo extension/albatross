@@ -40,7 +40,7 @@ GEM
       sass (~> 3.2)
     bootstrap-wysihtml5-rails (0.3.3.8)
       railties (>= 3.0)
-    breadcrumbs_on_rails (2.3.0)
+    breadcrumbs_on_rails (2.3.1)
     builder (3.0.4)
     callsite (0.0.11)
     capatross (1.6.1)
