@@ -53,6 +53,7 @@ namespace :deploy do
     rm -rf #{release_path}/config/database.yml &&
     ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml &&
     ln -nfs #{shared_path}/config/settings.local.yml #{release_path}/config/settings.local.yml &&
+    ln -nfs #{shared_path}/config/honeybadger.yml #{release_path}/config/honeybadger.yml &&
     ln -nfs #{shared_path}/repositories #{release_path} &&
     ln -nfs #{shared_path}/tmpcache    #{release_path}/tmp/cache &&
     ln -nfs #{shared_path}/tmpauth #{release_path}/tmp/auth
