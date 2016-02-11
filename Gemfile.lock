@@ -64,6 +64,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    colorize (0.7.7)
     connection_pool (2.0.0)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
@@ -85,7 +86,8 @@ GEM
     honeybadger (2.4.1)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
-    httplog (0.2.7)
+    httplog (0.3.0)
+      colorize
     i18n (0.7.0)
     journey (1.0.4)
     jquery-rails (3.1.0)
