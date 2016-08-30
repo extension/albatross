@@ -95,7 +95,9 @@ class AppCopy < ActiveRecord::Base
 
     target_copy_file = "#{Settings.data_dump_dir_dump}/copy_#{production_location.dbname}.sql"
 
-    result = self.class.dump_database_to_file(production_location.dbname,'production_replica',target_copy_file,debug)
+    fromhost = production_location.is_aws? ? 'prod-aws' : 'prod-mcnc'
+
+    result = self.class.dump_database_to_file(production_location.dbname,fromhost,target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
@@ -110,10 +112,11 @@ class AppCopy < ActiveRecord::Base
     end
 
     # drop tables
-    self.class.drop_tables_from_staging_database(staging_location.dbname)
+    self.class.drop_tables_from_staging_database(staging_location.dbname,staging_location.is_aws?)
 
     # import
-    result = self.class.import_database_from_file(staging_location.dbname,'staging',target_copy_file,debug)
+    tohost = staging_location.is_aws? ? 'dev-aws' : 'dev-mcnc'
+    result = self.class.import_database_from_file(staging_location.dbname,tohost,target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
@@ -121,11 +124,11 @@ class AppCopy < ActiveRecord::Base
     if(self.is_wordpress?)
       search_regex = "'~(https?:\\/\\/)#{Regexp.escape(production_location.display_url)}~'"
       regplace_regex = "'$1#{staging_location.display_url}'"
-      result = self.class.wp_srdb_database(staging_location.dbname,'staging',search_regex,regplace_regex,true,debug)
+      result = self.class.wp_srdb_database(staging_location.dbname,tohost,search_regex,regplace_regex,true,debug)
 
       search_regex = "'~^#{Regexp.escape(production_location.display_url)}~'"
       regplace_regex = "'#{staging_location.display_url}'"
-      result = self.class.wp_srdb_database(staging_location.dbname,'staging',search_regex,regplace_regex,true,debug)
+      result = self.class.wp_srdb_database(staging_location.dbname,tohost,search_regex,regplace_regex,true,debug)
     end
 
     size = File.size(target_copy_file)

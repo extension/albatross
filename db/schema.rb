@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150928192746) do
+ActiveRecord::Schema.define(:version => 20160830213347) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20150928192746) do
     t.boolean  "is_snapshot",     :default => false
     t.boolean  "is_wordpress",    :default => false
     t.boolean  "is_drupal",       :default => false
+    t.boolean  "is_aws",          :default => false
   end
 
   add_index "app_dumps", ["application_id"], :name => "app_ndx"
@@ -82,8 +83,9 @@ ActiveRecord::Schema.define(:version => 20150928192746) do
     t.string   "location"
     t.string   "url"
     t.string   "dbname"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+    t.boolean  "is_aws",         :default => false
   end
 
   add_index "app_locations", ["application_id", "location"], :name => "app_loc_ndx", :unique => true

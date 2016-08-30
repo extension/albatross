@@ -110,9 +110,9 @@ class AppDump < ActiveRecord::Base
     tmp_dump_file =  "#{target_file}.tmp"
 
     if(self.dbtype == 'staging')
-      fromhost = 'staging'
+      fromhost = self.is_aws? ? 'dev-aws' : 'dev-mcnc'
     elsif(self.dbtype == 'production')
-      fromhost = 'production_replica'
+      fromhost = self.is_aws? ? 'prod-aws' : 'prod-mcnc'
     else
       # bail
       return {success: false, file: "n/a", dump_size: 0}
@@ -163,10 +163,10 @@ class AppDump < ActiveRecord::Base
     pre_scrubbed_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.pre_scrubbed"
     scrubbed_database = "scrubbed_#{self.dbname}"
 
-    if(self.dbtype == 'development')
-      fromhost = 'development'
+    if(self.dbtype == 'staging')
+      fromhost = self.is_aws? ? 'dev-aws' : 'dev-mcnc'
     elsif(self.dbtype == 'production')
-      fromhost = 'production_replica'
+      fromhost = self.is_aws? ? 'prod-aws' : 'prod-mcnc'
     else
       # bail
       return {success: false, file: "n/a", dump_size: 0}
@@ -247,9 +247,9 @@ class AppDump < ActiveRecord::Base
     scrubbed_database = "localdev_#{self.dbname}"
 
     if(self.dbtype == 'staging')
-      fromhost = 'staging'
+      fromhost = self.is_aws? ? 'dev-aws' : 'dev-mcnc'
     elsif(self.dbtype == 'production')
-      fromhost = 'production_replica'
+      fromhost = self.is_aws? ? 'prod-aws' : 'prod-mcnc'
     else
       # bail
       return {success: false, file: "n/a", dump_size: 0}

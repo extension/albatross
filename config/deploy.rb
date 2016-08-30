@@ -12,7 +12,7 @@ set :scm, "git"
 set :user, "pacecar"
 set :keep_releases, 3
 ssh_options[:forward_agent] = true
-set :port, 24
+set :port, 22
 #ssh_options[:verbose] = :debug
 set :bundle_flags, '--deployment --binstubs'
 set :use_sudo, false
