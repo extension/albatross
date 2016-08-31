@@ -77,7 +77,7 @@ gem "lograge"
 gem 'sinatra', :require => nil
 
 # wtf
-gem 'minitest'
+gem 'test-unit'
 
 group :development do
   # require the powder gem
