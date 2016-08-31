@@ -6,25 +6,24 @@ module DataUtils
 
 
   def dump_database_to_file(database, fromhost, outputfile, debug=false)
-    is_socket = false
-    if(fromhost == 'staging')
-      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
+    if(fromhost == 'dev-aws')
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{data_dump_mysql_host_aws_dev_port}"
+    elsif(fromhost == 'dev-mcnc')
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{data_dump_mysql_host_mcnc_dev_port}"
+    elsif(fromhost == 'prod-aws')
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_prod} --port=#{data_dump_mysql_host_aws_prod_port}"
+    elsif(fromhost == 'prod-mcnc')
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_prod} --port=#{data_dump_mysql_host_mcnc_prod_port}"
     elsif(fromhost == 'scrubbed')
-      is_socket = true
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
-      # production replica
-      host_command = "--host=#{Settings.data_dump_mysql_host_production_replica}"
+      return 'invalid export host'
     end
-
     command_array = []
     command_array << "#{Settings.data_dump_mysql_dump_cmd}"
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
-    if(!is_socket)
-      command_array << "--port=#{Settings.data_dump_mysql_port}"
-    end
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
     command_array << "#{database}"
@@ -56,36 +55,37 @@ module DataUtils
   end
 
   def import_database_from_file(database,fromhost,inputfile, debug=false)
-    is_socket = false
-    if(fromhost == 'staging')
-      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
+    if(fromhost == 'dev-aws')
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{data_dump_mysql_host_aws_dev_port}"
+    elsif(fromhost == 'dev-mcnc')
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{data_dump_mysql_host_mcnc_dev_port}"
     elsif(fromhost == 'scrubbed')
-      is_socket = true
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
       return 'invalid import host'
     end
-
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--password=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
-    if(!is_socket)
-      command_array << "--port=#{Settings.data_dump_mysql_port}"
-    end
     command_array << "#{database}"
     command_array << "< #{inputfile}"
     command = command_array.join(' ')
     run_command(command,debug)
   end
 
-  def drop_tables_from_staging_database(database)
+  def drop_tables_from_staging_database(database,is_aws)
     connection_settings = {}
     connection_settings[:username] = Settings.data_dump_mysql_user
     connection_settings[:password] = Settings.data_dump_mysql_pass
-    connection_settings[:port] = Settings.data_dump_mysql_port
-    connection_settings[:host] = Settings.data_dump_mysql_host_development
+    if(is_aws)
+      connection_settings[:port] = Settings.data_dump_mysql_host_aws_dev_port
+      connection_settings[:host] = Settings.data_dump_mysql_host_aws_dev
+    else
+      connection_settings[:port] = Settings.data_dump_mysql_host_mcnc_dev_port
+      connection_settings[:host] = Settings.data_dump_mysql_host_mcnc_dev
+    end
     connection_settings[:encoding] = "utf8"
     client = Mysql2::Client.new(connection_settings)
     result = client.query("SHOW TABLES FROM #{database}")
@@ -130,10 +130,14 @@ module DataUtils
   end
 
   def wp_srdb_database(database,fromhost,search_url,replace_url,is_regex,debug)
-    if(fromhost == 'staging')
-      host_command = "--host=#{Settings.data_dump_mysql_host_development}"
-    else # scrubbed host
-      host_command = "--host=#{Settings.data_dump_mysql_host_scrubbed}"
+    if(fromhost == 'dev-aws')
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{data_dump_mysql_host_aws_dev_port}"
+    elsif(fromhost == 'dev-mcnc')
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{data_dump_mysql_host_mcnc_dev_port}"
+    elsif(fromhost == 'scrubbed')
+      host_command = "--socket=#{Settings.data_dump_mysql_socket}"
+    else
+      return 'invalid import host'
     end
 
     command_array = []
@@ -141,7 +145,6 @@ module DataUtils
     command_array << "--user=#{Settings.data_dump_mysql_user}"
     command_array << "--pass=#{Settings.data_dump_mysql_pass}"
     command_array << host_command
-    command_array << "--port=#{Settings.data_dump_mysql_port}"
     command_array << "--name=#{database}"
     command_array << "--search=#{search_url}"
     command_array << "--replace=#{replace_url}"
