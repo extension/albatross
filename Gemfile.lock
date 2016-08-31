@@ -113,6 +113,7 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.6.2)
+    minitest (5.9.0)
     multi_json (1.11.2)
     mysql2 (0.3.17)
     net-scp (1.2.1)
@@ -259,6 +260,7 @@ DEPENDENCIES
   lograge
   loofah
   meta_request
+  minitest
   mysql2
   nokogiri
   omniauth (~> 1.0)
@@ -278,4 +280,4 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
 
 BUNDLED WITH
-   1.10.6
+   1.12.5

@@ -76,6 +76,9 @@ gem "lograge"
 # sidekiq web monitoring
 gem 'sinatra', :require => nil
 
+# wtf
+gem 'minitest'
+
 group :development do
   # require the powder gem
   gem 'powder'
