@@ -7,13 +7,13 @@ module DataUtils
 
   def dump_database_to_file(database, fromhost, outputfile, debug=false)
     if(fromhost == 'dev-aws')
-      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{data_dump_mysql_host_aws_dev_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{Settings.data_dump_mysql_host_aws_dev_port}"
     elsif(fromhost == 'dev-mcnc')
-      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{data_dump_mysql_host_mcnc_dev_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{Settings.data_dump_mysql_host_mcnc_dev_port}"
     elsif(fromhost == 'prod-aws')
-      host_command = "--host=#{Settings.data_dump_mysql_host_aws_prod} --port=#{data_dump_mysql_host_aws_prod_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_prod} --port=#{Settings.data_dump_mysql_host_aws_prod_port}"
     elsif(fromhost == 'prod-mcnc')
-      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_prod} --port=#{data_dump_mysql_host_mcnc_prod_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_prod} --port=#{Settings.data_dump_mysql_host_mcnc_prod_port}"
     elsif(fromhost == 'scrubbed')
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
@@ -56,9 +56,9 @@ module DataUtils
 
   def import_database_from_file(database,fromhost,inputfile, debug=false)
     if(fromhost == 'dev-aws')
-      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{data_dump_mysql_host_aws_dev_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{Settings.data_dump_mysql_host_aws_dev_port}"
     elsif(fromhost == 'dev-mcnc')
-      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{data_dump_mysql_host_mcnc_dev_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{Settings.data_dump_mysql_host_mcnc_dev_port}"
     elsif(fromhost == 'scrubbed')
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
@@ -131,9 +131,9 @@ module DataUtils
 
   def wp_srdb_database(database,fromhost,search_url,replace_url,is_regex,debug)
     if(fromhost == 'dev-aws')
-      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{data_dump_mysql_host_aws_dev_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{Settings.data_dump_mysql_host_aws_dev_port}"
     elsif(fromhost == 'dev-mcnc')
-      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{data_dump_mysql_host_mcnc_dev_port}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_mcnc_dev} --port=#{Settings.data_dump_mysql_host_mcnc_dev_port}"
     elsif(fromhost == 'scrubbed')
       host_command = "--socket=#{Settings.data_dump_mysql_socket}"
     else
