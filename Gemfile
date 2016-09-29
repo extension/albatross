@@ -76,7 +76,7 @@ gem "lograge"
 # sidekiq web monitoring
 gem 'sinatra', :require => nil
 
-# wtf
+# Ruby 2.2 wtf
 gem 'test-unit'
 
 group :development do
