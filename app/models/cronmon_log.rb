@@ -30,13 +30,48 @@ class CronmonLog < ActiveRecord::Base
 
   def notify_if_error(force = false)
     if(force or !self.success?)
-      Notification.create(notifiable: self, notification_type: Notification::CRONMON_ERROR)
-      self.error_notification
+      # haltfile error?
+      if /^Haltfile found/ =~ self.stderr
+        self.haltfile_notification
+      else
+        Notification.create(notifiable: self, notification_type: Notification::CRONMON_ERROR)
+        self.error_notification
+      end
     end
   end
 
   def log_url
     showlog_cronmon_url(self.cronmon,log_id: self.id)
+  end
+
+  def haltfile_notification
+      post_options = {}
+      post_options[:channel] = Settings.systems_slack_channel
+      post_options[:username] = "Cronmon Notification"
+      post_options[:icon_emoji] = ':clock5:'
+
+      attachment = { "fallback" => ":rotating_light:  #{self.cronmon.label} execution error! Details #{self.log_url} :rotating_light:",
+      "text" => ":warning: #{self.cronmon.label} execution halted!",
+      "fields" => [
+        {
+          "title" => "Server",
+          "value" => "#{self.cronmon.monitored_server.name}",
+          "short" => true
+        },
+        {
+          "title" => "Command",
+          "value" =>  "#{self.command}",
+          "short" =>  true
+        }
+      ],
+      "color" => "warning"
+    }
+
+    attachment["fields"].push({"title" => "Details", "value" => self.log_url, "short" => false})
+    post_options[:attachment] = attachment
+
+    SlackNotification.post(post_options)
+
   end
 
   def error_notification
