@@ -95,7 +95,7 @@ class AppCopy < ActiveRecord::Base
 
     target_copy_file = "#{Settings.data_dump_dir_dump}/copy_#{production_location.dbname}.sql"
 
-    fromhost = production_location.is_aws? ? 'prod-aws' : 'prod-mcnc'
+    fromhost = 'prod-aws'
 
     result = self.class.dump_database_to_file(production_location.dbname,fromhost,target_copy_file,debug)
     if(!result.blank?)
@@ -112,10 +112,10 @@ class AppCopy < ActiveRecord::Base
     end
 
     # drop tables
-    self.class.drop_tables_from_staging_database(staging_location.dbname,staging_location.is_aws?)
+    self.class.drop_tables_from_staging_database(staging_location.dbname)
 
     # import
-    tohost = staging_location.is_aws? ? 'dev-aws' : 'dev-mcnc'
+    tohost = 'dev-aws'
     result = self.class.import_database_from_file(staging_location.dbname,tohost,target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
