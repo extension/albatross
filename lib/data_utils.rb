@@ -121,29 +121,47 @@ module DataUtils
 
   def wp_srdb_database(database,fromhost,search_url,replace_url,is_regex,debug)
     if(fromhost == 'dev-aws')
-      host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{Settings.data_dump_mysql_host_aws_dev_port}"
+      host = Settings.data_dump_mysql_host_aws_dev
+      port = Settings.data_dump_mysql_host_aws_dev_port
     elsif(fromhost == 'scrubbed')
-      host_command = "--host=127.0.0.1 --port=3306"
+      host = '127.0.0.1'
+      port = '3306'
     else
       return 'invalid import host'
     end
 
+    srdb_options = {}
+    srdb_options[:database] = database
+    srdb_options[:host] = host
+    srdb_options[:port] = port
+    srdb_options[:user] = Settings.data_dump_mysql_user
+    srdb_options[:pass] = Settings.data_dump_mysql_pass
+    srdb_options[:search_url] = search_url
+    srdb_options[:replace_url] = replace_url
+    srdb_options[:is_regex] = is_regex
+    srdb_options[:debug] = debug
+    self._wp_srdb_database(srdb_options)
+
+  end
+
+  def _wp_srdb_database(options)
+
     command_array = []
     command_array << "#{Settings.data_dump_php_cmd} #{Rails.root}/script/srdb/srdb.cli.php"
-    command_array << "--user=#{Settings.data_dump_mysql_user}"
-    command_array << "--pass=#{Settings.data_dump_mysql_pass}"
-    command_array << host_command
-    command_array << "--name=#{database}"
-    command_array << "--search=#{search_url}"
-    command_array << "--replace=#{replace_url}"
-    if(is_regex)
+    command_array << "--user=#{options[:user]}"
+    command_array << "--pass=#{options[:pass]}"
+    command_array << "--host=#{options[:host]} --port=#{options[:port]}"
+    command_array << "--name=#{options[:database]}"
+    command_array << "--search=#{options[:search_url]}"
+    command_array << "--replace=#{options[:replace_url]}"
+    if(options[:is_regex])
       command_array << "--regex"
     end
-    if(!debug)
+    if(!options[:debug])
       command_array << "--verbose=false"
     end
     command = command_array.join(' ')
-    run_command(command,debug)
+    run_command(command,options[:debug])
   end
 
 
