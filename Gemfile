@@ -79,6 +79,9 @@ gem 'sinatra', :require => nil
 # Ruby 2.2 wtf
 gem 'test-unit'
 
+# tracing gem
+gem 'ddtrace'
+
 group :development do
   # require the powder gem
   gem 'powder'
