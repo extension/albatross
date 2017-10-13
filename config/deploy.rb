@@ -10,6 +10,7 @@ set :repository,  "git@github.com:extension/albatross.git"
 set :branch, "master"
 set :scm, "git"
 set :user, "pacecar"
+set :gateway, 'deploy.extension.org'
 set :keep_releases, 3
 ssh_options[:forward_agent] = true
 set :port, 22
