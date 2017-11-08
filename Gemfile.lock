@@ -83,7 +83,7 @@ GEM
     hashie (3.5.5)
     highline (1.7.2)
     hike (1.2.3)
-    honeybadger (2.6.1)
+    honeybadger (3.1.2)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     httplog (0.3.0)
