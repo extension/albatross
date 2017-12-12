@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160830213347) do
+ActiveRecord::Schema.define(:version => 20171212134205) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -233,16 +233,30 @@ ActiveRecord::Schema.define(:version => 20160830213347) do
     t.datetime "created_at"
   end
 
+  create_table "monitored_server_heartbeats", :force => true do |t|
+    t.integer  "monitored_server_id", :null => false
+    t.datetime "created_at"
+  end
+
+  create_table "monitored_server_reboot_checks", :force => true do |t|
+    t.integer  "monitored_server_id",                    :null => false
+    t.text     "rebootinfo"
+    t.boolean  "needs_reboot",        :default => false, :null => false
+    t.datetime "created_at"
+  end
+
   create_table "monitored_servers", :force => true do |t|
-    t.string   "name",                                :null => false
+    t.string   "name",                                   :null => false
     t.text     "sysinfo"
     t.datetime "last_heartbeat_at"
     t.datetime "last_cron_at"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.boolean  "is_active",         :default => true
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.boolean  "is_active",           :default => true
     t.string   "purpose"
     t.datetime "last_backup_at"
+    t.boolean  "needs_reboot",        :default => false, :null => false
+    t.datetime "last_rebootcheck_at"
   end
 
   add_index "monitored_servers", ["name"], :name => "server_name_ndx", :unique => true

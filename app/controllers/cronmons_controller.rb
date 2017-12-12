@@ -4,8 +4,8 @@
 # see LICENSE file
 class CronmonsController < ApplicationController
   skip_before_filter :verify_authenticity_token
-  before_filter :signin_required, :except => [:register, :log, :heartbeat]
-  doorkeeper_for :register, :log, :heartbeat
+  before_filter :signin_required, :except => [:register, :log, :heartbeat, :rebootcheck]
+  doorkeeper_for :register, :log, :heartbeat, :rebootcheck
 
 
   def log
@@ -29,18 +29,10 @@ class CronmonsController < ApplicationController
   def heartbeat
     if(doorkeeper_token and doorkeeper_token.application)
       if(monserv = doorkeeper_token.application.owner and monserv.is_a?(MonitoredServer))
-        attributes_to_update = {last_heartbeat_at: Time.now.utc}
-
-        if(params[:sysinfo])
-          attributes_to_update[:sysinfo] = params[:sysinfo]
-        end
-
         if(params[:purpose])
-          attributes_to_update[:purpose] = params[:purpose]
+          purpose = params[:purpose]
         end
-
-        monserv.update_attributes(attributes_to_update)
-
+        monserv.log_heartbeat(purpose: purpose)
         returninformation = {'message' => "Found server! #{monserv.name}"}
         return render :json => returninformation.to_json, :status => :ok
       else
@@ -49,6 +41,22 @@ class CronmonsController < ApplicationController
       end
     else
       returninformation = {'message' => 'This heartbeat belongs to an unknown cronmon server'}
+      return render :json => returninformation.to_json, :status => :unprocessable_entity
+    end
+  end
+
+  def rebootcheck
+    if(doorkeeper_token and doorkeeper_token.application)
+      if(monserv = doorkeeper_token.application.owner and monserv.is_a?(MonitoredServer))
+        monserv.log_rebootcheck(params[:needs_reboot],params[:rebootinfo])
+        returninformation = {'message' => "Found server! #{monserv.name}"}
+        return render :json => returninformation.to_json, :status => :ok
+      else
+        returninformation = {'message' => 'This reboot check belongs to an unknown cronmon server'}
+        return render :json => returninformation.to_json, :status => :unprocessable_entity
+      end
+    else
+      returninformation = {'message' => 'This reboot check belongs to an unknown cronmon server'}
       return render :json => returninformation.to_json, :status => :unprocessable_entity
     end
   end
@@ -71,11 +79,11 @@ class CronmonsController < ApplicationController
 
 
   def servers
-    @serverlist = MonitoredServer.active.all
+    @serverlist = MonitoredServer.active.order(:name)
     cronmon_breadcrumbs
   end
 
-  def server
+  def crons
     @server = MonitoredServer.find(params[:id])
     cronmon_breadcrumbs([@server.name])
   end
@@ -86,13 +94,13 @@ class CronmonsController < ApplicationController
   def show
     @cronmon = Cronmon.find(params[:id])
     @cronlogs = @cronmon.cronmon_logs.order("finish DESC").page(params[:page])
-    cronmon_breadcrumbs([[@cronmon.monitored_server.name,server_cronmons_path(id: @cronmon.monitored_server.id)],@cronmon.label])
+    cronmon_breadcrumbs([[@cronmon.monitored_server.name,crons_cronmons_path(id: @cronmon.monitored_server.id)],@cronmon.label])
   end
 
   def showlog
     @cronmon = Cronmon.find(params[:id])
     @cronmon_log = CronmonLog.find(params[:log_id])
-    cronmon_breadcrumbs([[@cronmon.monitored_server.name,server_cronmons_path(id: @cronmon.monitored_server.id)],
+    cronmon_breadcrumbs([[@cronmon.monitored_server.name,crons_cronmons_path(id: @cronmon.monitored_server.id)],
                          [@cronmon.label,cronmon_path(@cronmon)],
                          "ID##{@cronmon_log.id} (#{@cronmon_log.start.to_s})"])
 

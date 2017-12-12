@@ -13,18 +13,30 @@
             <th>Registered At</th>
             <th>Last Heartbeat At</th>
             <th>Last Cron At</th>
-            <th>Crons</th>
+            <th>Reboot Check</th>
         </tr>
       </thead>
 
       <tbody>
         <%- @serverlist.each do |monserv| -%>
         <tr>
-          <td><%= link_to(monserv.name,server_cronmons_path(id: monserv.id)) %></td>
+          <td>
+            <%- if monserv.cronmons.count > 0 -%>
+              <%= link_to(monserv.name,crons_cronmons_path(id: monserv.id)) %>
+            <%- else -%>
+              <%= monserv.name -%>
+            <%- end -%>
+          </td>
           <td><%= monserv.created_at %></td>
           <td><%= monserv.last_heartbeat_at %></td>
           <td><%= monserv.last_cron_at %></td>
-          <td><%= monserv.cronmons.count %></td>
+          <td>
+            <%- if monserv.needs_reboot? -%>
+              <span class="label label-danger"> REBOOT NEEDED </span>
+            <%- else -%>
+              <span class="label label-success"> OK </span>
+            <%- end -%>
+          </td>
         </tr>
       <%- end -%>
       </tbody>

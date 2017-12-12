@@ -38,7 +38,7 @@ Albatross::Application.routes.draw do
       post :log
       post :heartbeat
       get  :servers
-      get  :server
+      get  :crons
     end
 
     member do
@@ -54,11 +54,7 @@ Albatross::Application.routes.draw do
     end
   end
 
-  resources :servers, only: [:index, :show]
-
   match '/engbot/ask' => 'engbot#ask'
-
-
   match '/logout' => 'auth#end', :as => 'logout'
   match '/auth/:provider/callback' => 'auth#success'
   match '/:controller(/:action(/:id))'
