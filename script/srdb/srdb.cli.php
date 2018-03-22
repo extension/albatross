@@ -11,11 +11,10 @@
 date_default_timezone_set( 'Europe/London' );
 
 // include the srdb class
-require_once( 'srdb.class.php' );
+require_once( realpath( dirname( __FILE__ ) ) . '/srdb.class.php' );
 
 $opts = array(
 	'h:' => 'host:',
-	'P:' => 'port:',
 	'n:' => 'name:',
 	'u:' => 'user:',
 	'p:' => 'pass:',
@@ -30,7 +29,8 @@ $opts = array(
 	'z' => 'dry-run',
 	'e:' => 'alter-engine:',
 	'a:' => 'alter-collation:',
-	'v::' => 'verbose::',
+	'v:' => 'verbose:',
+	'port:',
 	'help'
 );
 
@@ -77,14 +77,15 @@ Argument values are strings unless otherwise specified.
 ARGS
   -h, --host
     Required. The hostname of the database server.
-  -P, --port
-    The port to use to connect to the database server, defaults to 3306.
   -n, --name
     Required. Database name.
   -u, --user
     Required. Database user.
   -p, --pass
     Required. Database user's password.
+  --port
+    Optional. Port on database server to connect to.
+    The default is 3306. (MySQL default port).
   -s, --search
     String to search for or `preg_replace()` style
     regular expression.
@@ -156,15 +157,16 @@ foreach( $options as $key => $value ) {
 	if ( ( $is_short = array_search( $key, $short_opts_normal ) ) !== false )
 		$key = $long_opts_normal[ $is_short ];
 
-	// true/false string mapping
-	if ( is_string( $value ) && in_array( $value, array( 'false', 'no', '0' ) ) )
-		$value = false;
-	if ( is_string( $value ) && in_array( $value, array( 'true', 'yes', '1' ) ) )
-		$value = true;
-
 	// boolean options as is, eg. a no value arg should be set true
 	if ( in_array( $key, $long_opts ) )
 		$value = true;
+
+	switch ( $key ) {
+		// boolean options.
+		case 'verbose':
+			$value = (boolean)filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+		break;
+	}
 
 	// change to underscores
 	$key = str_replace( '-', '_', $key );
@@ -175,7 +177,7 @@ foreach( $options as $key => $value ) {
 // modify the log output
 class icit_srdb_cli extends icit_srdb {
 
-	public function log( $type ) {
+	public function log( $type = '' ) {
 
 		$args = array_slice( func_get_args(), 1 );
 
