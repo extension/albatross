@@ -102,13 +102,13 @@ module DataUtils
       if(scrubbers[table]['columns'] and scrubbers[table]['columns'].is_a?(Hash))
         setters = []
         scrubbers[table]['columns'].each do |column,value|
-          setters << "#{column} = '#{value}'"
+          setters << "#{column} = \"#{value}\""
         end
-        scrub_query = "\"UPDATE #{table} SET #{setters.join(', ')};\""
+        scrub_query = "'UPDATE #{table} SET #{setters.join(', ')};'"
       elsif(scrubbers[table]['column'] and scrubbers[table]['value'])
         column = scrubbers[table]['column']
         value = scrubbers[table]['value']
-        scrub_query = "\"UPDATE #{table} SET #{column}='#{value}';\""
+        scrub_query = "'UPDATE #{table} SET #{column}=\"#{value}\";'"
       end
 
       if(scrub_query)
