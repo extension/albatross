@@ -15,6 +15,9 @@ class Application < ActiveRecord::Base
   has_many :app_locations, dependent: :destroy
   before_create :generate_appkey
 
+  scope :active, where(is_active: true)
+  scope :wordpress_apps, where(is_wordpress: true)
+
 
   def generate_appkey
     randval = rand
@@ -44,6 +47,39 @@ class Application < ActiveRecord::Base
       end
     end
   end
+
+  def get_staging_dbname
+    if(app_location = staging_location)
+      app_location.dbname
+    else
+      nil
+    end
+  end
+
+  def get_production_dbname
+    if(app_location = production_location)
+      app_location.dbname
+    else
+      nil
+    end
+  end
+
+  def get_scrubhost_dbname
+    if(app_dump = self.app_dumps.where(is_snapshot: false).first)
+      app_dump.scrubhost_dbname
+    else
+      nil
+    end
+  end
+
+  def production_location
+    self.app_locations.where(location: AppLocation::PRODUCTION).first
+  end
+
+  def staging_location
+    self.app_locations.where(location: AppLocation::STAGING).first
+  end
+
 
   def self.delayed_fetch(record_id)
     if(record = find_by_id(record_id))

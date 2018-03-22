@@ -95,9 +95,7 @@ class AppCopy < ActiveRecord::Base
 
     target_copy_file = "#{Settings.data_dump_dir_dump}/copy_#{production_location.dbname}.sql"
 
-    fromhost = 'prod-aws'
-
-    result = self.class.dump_database_to_file(production_location.dbname,fromhost,target_copy_file,debug)
+    result = self.class.dump_database_to_file(production_location.dbname,'prod-aws',target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
@@ -115,20 +113,14 @@ class AppCopy < ActiveRecord::Base
     self.class.drop_tables_from_staging_database(staging_location.dbname)
 
     # import
-    tohost = 'dev-aws'
-    result = self.class.import_database_from_file(staging_location.dbname,tohost,target_copy_file,debug)
+    result = self.class.import_database_from_file(staging_location.dbname,'dev-aws',target_copy_file,debug)
     if(!result.blank?)
       return {success: false, error: "#{result}"}
     end
-    # wordpress transformation
-    if(self.is_wordpress?)
-      search_regex = "'~(https?:\\/\\/)#{Regexp.escape(production_location.display_url)}~'"
-      regplace_regex = "'$1#{staging_location.display_url}'"
-      result = self.class.wp_srdb_database(staging_location.dbname,tohost,search_regex,regplace_regex,true,debug)
 
-      search_regex = "'~^#{Regexp.escape(production_location.display_url)}~'"
-      regplace_regex = "'#{staging_location.display_url}'"
-      result = self.class.wp_srdb_database(staging_location.dbname,tohost,search_regex,regplace_regex,true,debug)
+    # wordpress transformation
+    if(self.application.is_wordpress?)
+      AppUrlRewrite.rewrite_wordpress_urls_for_app_and_location(self.application,'staging')
     end
 
     size = File.size(target_copy_file)

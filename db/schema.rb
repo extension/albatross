@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171212134205) do
+ActiveRecord::Schema.define(:version => 20180322141838) do
 
   create_table "app_copies", :force => true do |t|
     t.integer  "application_id"
@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(:version => 20171212134205) do
     t.integer  "last_copy_size", :limit => 8, :default => 0
     t.datetime "created_at",                                     :null => false
     t.datetime "updated_at",                                     :null => false
-    t.boolean  "is_wordpress",                :default => false
     t.boolean  "is_drupal",                   :default => false
   end
 
@@ -71,9 +70,7 @@ ActiveRecord::Schema.define(:version => 20171212134205) do
     t.datetime "updated_at",                         :null => false
     t.integer  "last_dump_size",  :default => 0
     t.boolean  "is_snapshot",     :default => false
-    t.boolean  "is_wordpress",    :default => false
     t.boolean  "is_drupal",       :default => false
-    t.boolean  "is_aws",          :default => false
   end
 
   add_index "app_dumps", ["application_id"], :name => "app_ndx"
@@ -83,12 +80,32 @@ ActiveRecord::Schema.define(:version => 20171212134205) do
     t.string   "location"
     t.string   "url"
     t.string   "dbname"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
-    t.boolean  "is_aws",         :default => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   add_index "app_locations", ["application_id", "location"], :name => "app_loc_ndx", :unique => true
+
+  create_table "app_url_rewrite_logs", :force => true do |t|
+    t.integer  "app_url_rewrite_id"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.float    "runtime"
+    t.text     "results",            :limit => 16777215
+    t.datetime "created_at",                             :null => false
+  end
+
+  add_index "app_url_rewrite_logs", ["app_url_rewrite_id"], :name => "app_rewrite_ndx"
+
+  create_table "app_url_rewrites", :force => true do |t|
+    t.integer  "application_id"
+    t.string   "location"
+    t.string   "search_host"
+    t.string   "replace_host"
+    t.datetime "created_at",     :null => false
+  end
+
+  add_index "app_url_rewrites", ["application_id", "location"], :name => "app_loc_ndx"
 
   create_table "applications", :force => true do |t|
     t.string   "name"
@@ -100,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20171212134205) do
     t.boolean  "is_active",           :default => true
     t.text     "description"
     t.integer  "monitored_server_id"
+    t.boolean  "is_wordpress",        :default => false
   end
 
   create_table "backups", :force => true do |t|

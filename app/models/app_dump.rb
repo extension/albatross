@@ -33,16 +33,19 @@ class AppDump < ActiveRecord::Base
   end
 
 
-  def localdev_host
-    "#{self.application.name.downcase}.localdev:#{Settings.data_dump_localdev_port}"
+
+  def scrubhost_dbname
+    "transform_#{self.dbname}"
   end
+
+
 
   def dumpinfo
     if(self.is_snapshot?)
       dumpfile = "#{Settings.data_dump_dir_dump}/snapshots/#{self.dbname}"
     elsif(self.scrub?)
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}_scrubbed.sql.gz"
-    elsif(self.is_wordpress?)
+    elsif(self.application.is_wordpress?)
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}_localdev.sql.gz"
     else
       dumpfile = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.gz"
@@ -85,7 +88,7 @@ class AppDump < ActiveRecord::Base
     started = Time.now
     if(self.scrub?)
       result = scrubbed_dump(debug)
-    elsif(self.is_wordpress?)
+    elsif(self.application.is_wordpress?)
       result = wordpress_dump(debug)
     else
       result = normal_dump(debug)
@@ -161,7 +164,7 @@ class AppDump < ActiveRecord::Base
     target_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}_scrubbed.sql"
     tmp_dump_file =  "#{target_file}.tmp"
     pre_scrubbed_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.pre_scrubbed"
-    scrubbed_database = "scrubbed_#{self.dbname}"
+    scrubbed_database = self.scrubhost_dbname
 
     if(self.dbtype == 'staging')
       fromhost = 'dev-aws'
@@ -210,6 +213,12 @@ class AppDump < ActiveRecord::Base
     # scrub
     self.class.scrub_database(scrubbed_database,self.scrubbers,debug)
 
+    # is this also wordpress? - rewrite urls
+    if(self.application.is_wordpress?)
+      AppUrlRewrite.rewrite_wordpress_urls_for_app_and_location(self.application,'localdev')
+    end
+
+
     # dump
     result = self.class.dump_database_to_file(scrubbed_database,'scrubbed',tmp_dump_file,debug)
 
@@ -244,7 +253,7 @@ class AppDump < ActiveRecord::Base
     target_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}_localdev.sql"
     tmp_dump_file =  "#{target_file}.tmp"
     pre_scrubbed_file = "#{Settings.data_dump_dir_dump}/#{self.dbname}.sql.pre_scrubbed"
-    scrubbed_database = "localdev_#{self.dbname}"
+    scrubbed_database = self.scrubhost_dbname
 
     if(self.dbtype == 'staging')
       fromhost = 'dev-aws'
@@ -281,22 +290,8 @@ class AppDump < ActiveRecord::Base
     # unlink
     File.delete(pre_scrubbed_file)
 
-    # search and replace
-    search_regex = "'~(https?:\\/\\/)#{Regexp.escape(self.app_location.display_url)}~'"
-    regplace_regex = "'$1#{self.localdev_host}'"
-    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_regex,regplace_regex,true,debug)
-
-    search_regex = "'~^#{Regexp.escape(self.app_location.display_url)}~'"
-    regplace_regex = "'#{self.localdev_host}'"
-    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_regex,regplace_regex,true,debug)
-
-
-
-    # search and replace https localhost with http localhost
-    search_url = "https://#{self.localdev_host}"
-    replace_url = "http://#{self.localdev_host}"
-    result = self.class.wp_srdb_database(scrubbed_database,'scrubbed',search_url,replace_url,false,debug)
-
+    # wordpress transformation
+    AppUrlRewrite.rewrite_wordpress_urls_for_app_and_location(self.application,'localdev')
 
     # dump
     result = self.class.dump_database_to_file(scrubbed_database,'scrubbed',tmp_dump_file,debug)
