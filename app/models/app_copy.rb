@@ -164,33 +164,6 @@ class AppCopy < ActiveRecord::Base
     SlackNotification.post(post_options)
   end
 
-  def request_notification(coder = Coder.coderbot)
-    post_options = {}
-    post_options[:channel] = Settings.deploys_slack_channel
-    post_options[:username] = "Engineering Database Copy Notification"
-    post_options[:icon_emoji] = ':floppy_disk:'
-
-    time_period_string_last = time_period_to_s(self.last_runtime)
-    time_period_string_avg = time_period_to_s(self.average_runtime)
-
-      attachment = { "fallback" => "#{coder.name} has requested a production :arrow_right: staging database copy for #{self.application.name}. Waiting 60 seconds so that the staging application can be put into maintenance mode.",
-      "text" => "#{self.application.name.capitalize} production :arrow_right: staging database copy requested. Waiting 60 seconds so that the staging application can be put into maintenance mode.",
-      "fields" => [
-        {
-          "title" => "Who",
-          "value" => "#{coder.name}",
-          "short" => true
-        }
-      ],
-      "color" => "meh"
-    }
-
-    post_options[:attachment] = attachment
-
-
-    SlackNotification.post(post_options)
-  end
-
   def no_maintenance_notification(coder = Coder.coderbot)
 
     post_options = {}
