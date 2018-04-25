@@ -29,7 +29,11 @@ class AppDump < ActiveRecord::Base
   end
 
   def last_runtime
-    self.app_dump_logs.last.runtime
+    if(last_dump = self.app_dump_logs.last)
+      last_dump.runtime
+    else
+      0
+    end
   end
 
 
