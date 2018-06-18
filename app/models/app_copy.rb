@@ -59,13 +59,11 @@ class AppCopy < ActiveRecord::Base
     end
 
     # check for maintenance mode
-    if(!self.skip_maintenance_check)
-      if(!staging_location.check_maintenance)
-        if(announce)
-          self.no_maintenance_notification(coder)
-        end
-        return {success: false, error: "Staging application is not in maintenance mode."}
+    if(!staging_location.check_maintenance)
+      if(announce)
+        self.no_maintenance_notification(coder)
       end
+      return {success: false, error: "Staging application is not in maintenance mode."}
     end
 
 
