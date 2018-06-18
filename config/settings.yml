@@ -7,8 +7,8 @@ github_secret: 'use_local_settings'
 urlwriter_host: 'albatross.dev'
 cron_notification_email: 'systemnotices@extension.org'
 data_dump_mysql_cmd: 'use_local_settings'
-data_dump_mysql_user: 'use_local_settings'
-data_dump_mysql_pass: 'use_local_settings'
+data_mysql_albatross_user: 'use_local_settings'
+data_mysql_albatross_pass: 'use_local_settings'
 data_dump_gzip_cmd: 'use_local_settings'
 data_dump_mysql_dump_cmd: 'use_local_settings'
 data_dump_mysql_socket: 'use_local_settings'
@@ -20,7 +20,6 @@ data_dump_mysql_host_aws_dev_port: 3306
 data_dump_mysql_host_aws_prod_port: 3306
 data_dump_mysql_host_scrubbed_port: 3306
 data_dump_php_cmd: 'use_local_settings'
-honeybadger_api_key: 'use_local_settings'
 sidekiq_enabled: true
 slack_webhook: 'use_local_settings'
 default_slack_channel: '#code_and_data'

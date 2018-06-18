@@ -35,8 +35,8 @@ class AppUrlRewrite < ActiveRecord::Base
     base_srdb_options[:dbname] = dbname
     base_srdb_options[:host] = host
     base_srdb_options[:port] = port
-    base_srdb_options[:user] = Settings.data_dump_mysql_user
-    base_srdb_options[:pass] = Settings.data_dump_mysql_pass
+    base_srdb_options[:user] = Settings.data_mysql_albatross_user
+    base_srdb_options[:pass] = Settings.data_mysql_albatross_pass
     base_srdb_options[:debug] = debug_srdb
 
     started = Time.now

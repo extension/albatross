@@ -16,8 +16,8 @@ module DataUtils
     end
     command_array = []
     command_array << "#{Settings.data_dump_mysql_dump_cmd}"
-    command_array << "--user=#{Settings.data_dump_mysql_user}"
-    command_array << "--password=#{Settings.data_dump_mysql_pass}"
+    command_array << "--user=#{Settings.data_mysql_albatross_user}"
+    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
     command_array << host_command
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
@@ -30,8 +30,8 @@ module DataUtils
   def drop_scrubbed_database(database, debug=false)
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
-    command_array << "--user=#{Settings.data_dump_mysql_user}"
-    command_array << "--password=#{Settings.data_dump_mysql_pass}"
+    command_array << "--user=#{Settings.data_mysql_albatross_user}"
+    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
     command_array << "--socket=#{Settings.data_dump_mysql_socket}"
     command_array << "-e \"DROP DATABASE IF EXISTS #{database}\""
     command = command_array.join(' ')
@@ -41,8 +41,8 @@ module DataUtils
   def create_scrubbed_database(database, debug=false)
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
-    command_array << "--user=#{Settings.data_dump_mysql_user}"
-    command_array << "--password=#{Settings.data_dump_mysql_pass}"
+    command_array << "--user=#{Settings.data_mysql_albatross_user}"
+    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
     command_array << "--socket=#{Settings.data_dump_mysql_socket}"
     command_array << "-e \"CREATE DATABASE IF NOT EXISTS #{database}\""
     command = command_array.join(' ')
@@ -59,8 +59,8 @@ module DataUtils
     end
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
-    command_array << "--user=#{Settings.data_dump_mysql_user}"
-    command_array << "--password=#{Settings.data_dump_mysql_pass}"
+    command_array << "--user=#{Settings.data_mysql_albatross_user}"
+    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
     command_array << host_command
     command_array << "#{database}"
     command_array << "< #{inputfile}"
@@ -70,8 +70,8 @@ module DataUtils
 
   def drop_tables_from_staging_database(database)
     connection_settings = {}
-    connection_settings[:username] = Settings.data_dump_mysql_user
-    connection_settings[:password] = Settings.data_dump_mysql_pass
+    connection_settings[:username] = Settings.data_mysql_albatross_user
+    connection_settings[:password] = Settings.data_mysql_albatross_pass
     connection_settings[:port] = Settings.data_dump_mysql_host_aws_dev_port
     connection_settings[:host] = Settings.data_dump_mysql_host_aws_dev
 
@@ -92,8 +92,8 @@ module DataUtils
   def scrub_database(database,scrubbers,debug)
     base_command_array = []
     base_command_array << "#{Settings.data_dump_mysql_cmd}"
-    base_command_array << "--user=#{Settings.data_dump_mysql_user}"
-    base_command_array << "--password=#{Settings.data_dump_mysql_pass}"
+    base_command_array << "--user=#{Settings.data_mysql_albatross_user}"
+    base_command_array << "--password=#{Settings.data_mysql_albatross_pass}"
     base_command_array << "--socket=#{Settings.data_dump_mysql_socket}"
     base_command_array << "--database=#{database}"
     base_command = base_command_array.join(' ')

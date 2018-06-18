@@ -40,6 +40,11 @@ class AppLocation < ActiveRecord::Base
 
 
   def check_maintenance
+    # special case of 'dbonly' urls
+    if(self.url == 'dbonly')
+      return true
+    end
+    
     headers = {'User-Agent' => 'engineering maintenance verification'}
     # the URL should have likely already be validated, but let's do it again for good measure
     begin
