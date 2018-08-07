@@ -10,14 +10,19 @@ module DataUtils
     elsif(fromhost == 'prod-aws')
       host_command = "--host=#{Settings.data_dump_mysql_host_aws_prod} --port=#{Settings.data_dump_mysql_host_aws_prod_port}"
     elsif(fromhost == 'scrubbed')
-      host_command = "--socket=#{Settings.data_dump_mysql_socket}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_scrubbed} --port=#{Settings.data_dump_mysql_host_scrubbed_port}"
     else
       return 'invalid export host'
     end
     command_array = []
     command_array << "#{Settings.data_dump_mysql_dump_cmd}"
-    command_array << "--user=#{Settings.data_mysql_albatross_user}"
-    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
+    if(fromhost == 'scrubbed')
+      command_array << "--user=#{Settings.data_mysql_scrub_user}"
+      command_array << "--password=#{Settings.data_mysql_scrub_pass}"
+    else
+      command_array << "--user=#{Settings.data_mysql_albatross_user}"
+      command_array << "--password=#{Settings.data_mysql_albatross_pass}"
+    end
     command_array << host_command
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
@@ -30,9 +35,9 @@ module DataUtils
   def drop_scrubbed_database(database, debug=false)
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
-    command_array << "--user=#{Settings.data_mysql_albatross_user}"
-    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
-    command_array << "--socket=#{Settings.data_dump_mysql_socket}"
+    command_array << "--user=#{Settings.data_mysql_scrub_user}"
+    command_array << "--password=#{Settings.data_mysql_scrub_pass}"
+    command_array << "--host=#{Settings.data_dump_mysql_host_scrubbed} --port=#{Settings.data_dump_mysql_host_scrubbed_port}"
     command_array << "-e \"DROP DATABASE IF EXISTS #{database}\""
     command = command_array.join(' ')
     run_command(command,debug)
@@ -41,9 +46,9 @@ module DataUtils
   def create_scrubbed_database(database, debug=false)
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
-    command_array << "--user=#{Settings.data_mysql_albatross_user}"
-    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
-    command_array << "--socket=#{Settings.data_dump_mysql_socket}"
+    command_array << "--user=#{Settings.data_mysql_scrub_user}"
+    command_array << "--password=#{Settings.data_mysql_scrub_pass}"
+    command_array << "--host=#{Settings.data_dump_mysql_host_scrubbed} --port=#{Settings.data_dump_mysql_host_scrubbed_port}"
     command_array << "-e \"CREATE DATABASE IF NOT EXISTS #{database}\""
     command = command_array.join(' ')
     run_command(command,debug)
@@ -53,7 +58,7 @@ module DataUtils
     if(fromhost == 'dev-aws')
       host_command = "--host=#{Settings.data_dump_mysql_host_aws_dev} --port=#{Settings.data_dump_mysql_host_aws_dev_port}"
     elsif(fromhost == 'scrubbed')
-      host_command = "--socket=#{Settings.data_dump_mysql_socket}"
+      host_command = "--host=#{Settings.data_dump_mysql_host_scrubbed} --port=#{Settings.data_dump_mysql_host_scrubbed_port}"
     else
       return 'invalid import host'
     end
@@ -92,9 +97,9 @@ module DataUtils
   def scrub_database(database,scrubbers,debug)
     base_command_array = []
     base_command_array << "#{Settings.data_dump_mysql_cmd}"
-    base_command_array << "--user=#{Settings.data_mysql_albatross_user}"
-    base_command_array << "--password=#{Settings.data_mysql_albatross_pass}"
-    base_command_array << "--socket=#{Settings.data_dump_mysql_socket}"
+    base_command_array << "--user=#{Settings.data_mysql_scrub_user}"
+    base_command_array << "--password=#{Settings.data_mysql_scrub_pass}"
+    base_command_array << "--host=#{Settings.data_dump_mysql_host_scrubbed} --port=#{Settings.data_dump_mysql_host_scrubbed_port}"
     base_command_array << "--database=#{database}"
     base_command = base_command_array.join(' ')
 

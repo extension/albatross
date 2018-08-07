@@ -19,6 +19,8 @@ data_dump_mysql_host_scrubbed: 'use_local_settings'
 data_dump_mysql_host_aws_dev_port: 3306
 data_dump_mysql_host_aws_prod_port: 3306
 data_dump_mysql_host_scrubbed_port: 3306
+data_mysql_scrub_user: 'use_local_settings'
+data_mysql_scrub_pass: 'use_local_settings'
 data_dump_php_cmd: 'use_local_settings'
 sidekiq_enabled: true
 slack_webhook: 'use_local_settings'
