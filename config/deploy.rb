@@ -86,12 +86,25 @@ end
 namespace :sidekiq do
   desc 'Stop sidekiq'
   task 'stop', :roles => :app do
-    invoke_command 'service sidekiq stop', via: 'sudo'
+    # check status
+    started = false
+    invoke_command 'status sidekiq' do |channel,stream,data|
+      started = (data =~ %r{start})
+    end
+    if(started)
+      invoke_command 'stop sidekiq', via: 'sudo'
+    end
   end
 
   desc 'Start sidekiq'
   task 'start', :roles => :app do
-    invoke_command 'service sidekiq start', via: 'sudo'
+    stopped = false
+    invoke_command 'status sidekiq' do |channel,stream,data|
+      stopped = (data =~ %r{stop})
+    end
+    if(stopped)
+      invoke_command 'start sidekiq', via: 'sudo'
+    end
   end
 
   desc 'Restart sidekiq'
