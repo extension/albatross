@@ -64,8 +64,13 @@ module DataUtils
     end
     command_array = []
     command_array << "#{Settings.data_dump_mysql_cmd}"
-    command_array << "--user=#{Settings.data_mysql_albatross_user}"
-    command_array << "--password=#{Settings.data_mysql_albatross_pass}"
+    if(fromhost == 'scrubbed')
+      command_array << "--user=#{Settings.data_mysql_scrub_user}"
+      command_array << "--password=#{Settings.data_mysql_scrub_pass}"
+    else
+      command_array << "--user=#{Settings.data_mysql_albatross_user}"
+      command_array << "--password=#{Settings.data_mysql_albatross_pass}"
+    end
     command_array << host_command
     command_array << "#{database}"
     command_array << "< #{inputfile}"
