@@ -29,7 +29,10 @@ class DataDumper < Thor
       puts "Dumping the #{appdump.dbtype} data in #{appdump.dbname} for #{appdump.application.name}..."
       dump_log = appdump.dump({debug: options[:debug], announce: options[:announce]})
       if(!dump_log.success?)
-        $stderr.puts("Error with #{appdump.application.name} data dump: #{dump_log.additionaldata[:error]}")
+        # ignore mysql password error
+        if(dump_log.additionaldata[:error]) != '[Warning] Using a password on the command line interface can be insecure.'
+          $stderr.puts("Error with #{appdump.application.name} data dump: #{dump_log.additionaldata[:error]}")
+        end
       else
         puts "  Saved as #{dump_log.additionaldata[:file]}"
       end
@@ -46,7 +49,10 @@ class DataDumper < Thor
       puts "Dumping the #{appdump.dbtype} data in #{appdump.dbname} for #{appdump.application.name}..."
       dump_log = appdump.dump({debug: options[:debug], announce: options[:announce]})
       if(!dump_log.success?)
-        $stderr.puts("Error with #{appdump.application.name} data dump: #{dump_log.additionaldata[:error]}")
+        # ignore mysql password error
+        if(dump_log.additionaldata[:error]) != '[Warning] Using a password on the command line interface can be insecure.'
+          $stderr.puts("Error with #{appdump.application.name} data dump: #{dump_log.additionaldata[:error]}")
+        end
       else
         puts "  Saved as #{dump_log.additionaldata[:file]}"
       end
