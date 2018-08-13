@@ -8,16 +8,20 @@ module IoUtils
   def run_command(command,debug = false)
     logger.debug "running #{command}" if debug
     stdin, stdout, stderr = Open3.popen3(command)
-    results = stdout.readlines + stderr.readlines
+    # ignore stdout [Warning]
+    stdout_results = stdout.readlines
+    stderr_results = stderr.readlines
     # this is really a dumb idea to allow run_command to have
     # knowledge of a mysql warning at this level, but given
     # that mysql doesn't allow for suppressing the error
     # i guess we have to deal with it
-    if(results == '[Warning] Using a password on the command line interface can be insecure.')
-      return ''
-    else
-      return results.join('')
+    results = stdout_results + stderr_results
+    results.each do |line|
+      if(line =~ %r{Using a password})
+        results.delete(line)
+      end
     end
+    return results.join('')
   end
 
   def capture_stderr &block
