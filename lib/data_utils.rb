@@ -26,6 +26,7 @@ module DataUtils
     command_array << host_command
     command_array << "--extended-insert"
     command_array << "--no-autocommit"
+    command_array << "--set-gtid-purged=OFF"
     command_array << "#{database}"
     command_array << "> #{outputfile}"
     command = command_array.join(' ')
